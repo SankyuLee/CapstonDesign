@@ -6,6 +6,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <!-- 출처: https://commin.tistory.com/63 [Commin의 일상코딩] -->
+        <!-- No title bar -->
+        <item name="windowActionBar">false</item>
+        <item name="windowN*oTitle">true</item>
     </style>
 
 </resources>
