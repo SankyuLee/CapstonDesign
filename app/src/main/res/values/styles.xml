@@ -10,7 +10,7 @@
         <!-- 출처: https://commin.tistory.com/63 [Commin의 일상코딩] -->
         <!-- No title bar -->
         <item name="windowActionBar">false</item>
-        <item name="windowN*oTitle">true</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
 </resources>
