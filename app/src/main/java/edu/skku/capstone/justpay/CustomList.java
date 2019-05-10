@@ -41,7 +41,7 @@ public class CustomList extends BaseAdapter {
         }
 
         // 화면에 표시될 View(Layout이 inflate된)으로부터 위젯에 대한 참조 획득
-         TextView nameTextView = (TextView) convertView.findViewById(R.id.textView1) ;
+        TextView nameTextView = (TextView) convertView.findViewById(R.id.textView1) ;
         TextView payTextView = (TextView) convertView.findViewById(R.id.textView2) ;
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
@@ -49,7 +49,7 @@ public class CustomList extends BaseAdapter {
 
         // 아이템 내 각 위젯에 데이터 반영
         nameTextView.setText(listViewItem.getName());
-        payTextView.setText(listViewItem.getPay());
+        payTextView.setText(String.valueOf(listViewItem.getPay()));
 
         return convertView;
     }
@@ -66,7 +66,6 @@ public class CustomList extends BaseAdapter {
         return listViewItemList.get(position) ;
     }
 
-    // 아이템 데이터 추가를 위한 함수. 개발자가 원하는대로 작성 가능.
     public void addItem(String name, int pay) {
         resultlist_item item = new resultlist_item(name,pay);
 
