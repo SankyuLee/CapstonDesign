@@ -45,14 +45,15 @@ tools:context=".ResultActivity1">
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
         </LinearLayout>
-        <ListView
+        <ExpandableListView
             android:id="@+id/listView"
             style="@style/Widget.AppCompat.ListView.DropDown"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:dividerHeight="1dp"
             android:divider="#A8A8A8"
-            ></ListView>
+            >
+        </ExpandableListView>
     </LinearLayout>
 
     <Button
@@ -105,6 +106,7 @@ tools:context=".ResultActivity1">
     </android.support.v7.widget.Toolbar>
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="395dp"
         android:layout_height="84dp"
         android:layout_marginStart="8dp"
@@ -112,7 +114,7 @@ tools:context=".ResultActivity1">
         android:layout_marginBottom="8dp"
         android:background="@drawable/roundedge"
         app:layout_constraintBottom_toTopOf="@+id/button"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
 
 </android.support.constraint.ConstraintLayout>
