@@ -116,13 +116,89 @@
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:layout_marginLeft="5dp"
+        android:layout_marginTop="3dp"
         android:layout_marginRight="5dp"
-        android:background="@drawable/content_box"
-        android:orientation="vertical"
+        android:background="@drawable/box_round"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/room_top_bar">
 
+        <ImageButton
+            android:id="@+id/receipt_prev_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/previous_btn" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/receipt_image_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="15"
+            android:background="@drawable/box_angular"
+            android:padding="1dp">
+
+            <ImageView
+                android:id="@+id/receipt_image"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@color/colorJustPaySub" />
+
+            <ImageButton
+                android:id="@+id/add_receipt_btn"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginBottom="8dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toTopOf="@+id/receipt_status"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/receipt_image"
+                app:srcCompat="@drawable/add_btn" />
+
+            <TextView
+                android:id="@+id/receipt_add_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/receipt_add"
+                android:textColor="@color/colorBlurred"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_receipt_btn" />
+
+            <TextView
+                android:id="@+id/receipt_status"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:text="@string/receipt_status"
+                android:textColor="@color/colorBlurred"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+        <ImageButton
+            android:id="@+id/receipt_next_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/next_btn" />
     </LinearLayout>
 
     <LinearLayout
