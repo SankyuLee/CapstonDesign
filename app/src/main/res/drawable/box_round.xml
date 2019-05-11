@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- 출처: https://wimir-dev.tistory.com/ [[위미르 개발팀] Android, iOS , Web 제작] -->
+    <item
+        android:bottom="0.5dp"
+        android:left="0.5dp"
+        android:right="0.5dp"
+        android:top="0.5dp">
+        <shape android:shape="rectangle" >
+            <stroke
+                android:width="0.5dp"
+                android:color="@color/colorBlurred" />
+            <solid android:color="#FFF" />
+            <corners
+                android:bottomLeftRadius="3dp"
+                android:bottomRightRadius="3dp"
+                android:topLeftRadius="3dp"
+                android:topRightRadius="3dp" />
+        </shape>
+    </item>
+
+</layer-list>
