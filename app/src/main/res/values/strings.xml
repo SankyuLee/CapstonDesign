@@ -1,3 +1,31 @@
 <resources>
     <string name="app_name">Justpay</string>
+
+    <string name="room_name">5지조</string>
+    <string name="room_id">#1234</string>
+
+    <string name="receipt_add">영수증 추가하기</string>
+    <string name="receipt_status">3 / 5</string>
+
+    <string name="room_status1">"영수증 업로드 "</string>
+    <string name="room_status2">"항목 입력"</string>
+    <string name="room_status3">"개인별 항목 체크"</string>
+    <string name="room_status4">"결과 확인"</string>
+    <string name="room_status_arrow">">"</string>
+
+    <string name="chart_category1">항목 명</string>
+    <string name="chart_category2">총 금액</string>
+    <string name="chart_category3">수량</string>
+    <string name="chart_category4">참여</string>
+
+    <string name="item_chart_category1">커피</string>
+    <string name="item_chart_category2">6000</string>
+    <string name="item_chart_category3">2</string>
+
+    <string name="room_status_prev">이전 단계로</string>
+    <string name="room_status_next">다음 단계로</string>
+
+    <string name="room_typing_status">2명이 작업중 ⋯ 이지훈, 오승민</string>
+
+    <string name="room_result_confirm">결과 확인</string>
 </resources>
