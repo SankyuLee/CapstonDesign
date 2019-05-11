@@ -9,7 +9,7 @@
     <LinearLayout
         android:id="@+id/room_top_bar"
         android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_height="@dimen/tob_bar_size"
         android:background="@color/colorJustPay"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
