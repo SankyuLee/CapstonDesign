@@ -35,7 +35,7 @@
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
                 android:scaleType="fitStart"
-                app:srcCompat="@drawable/go_back" />
+                app:srcCompat="@drawable/go_back_btn" />
 
             <LinearLayout
                 android:id="@+id/room_info"
@@ -76,7 +76,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:scaleType="fitStart"
-                app:srcCompat="@drawable/ban_user" />
+                app:srcCompat="@drawable/ban_user_btn" />
 
             <ImageButton
                 android:id="@+id/add_user_btn"
@@ -87,7 +87,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:scaleType="fitStart"
-                app:srcCompat="@drawable/add_user" />
+                app:srcCompat="@drawable/add_user_btn" />
 
             <ImageButton
                 android:id="@+id/change_user_btn"
@@ -98,7 +98,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:scaleType="fitStart"
-                app:srcCompat="@drawable/change_user" />
+                app:srcCompat="@drawable/change_user_btn" />
 
         </LinearLayout>
 
@@ -108,7 +108,14 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:orientation="horizontal"></LinearLayout>
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/room_tab_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="horizontal" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
