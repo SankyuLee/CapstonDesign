@@ -13,10 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.os.Build;
-import android.widget.Toast;
 
-import java.util.regex.Pattern;
 
 
 public class SignupActivity extends AppCompatActivity {
@@ -82,35 +79,33 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
         final EditText emailval = (EditText) findViewById(R.id.input_email);
-        final String email = emailval.getText().toString().trim();
-        final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
         final TextView EmailOutput = findViewById(R.id.text_email_val);
+
 
         //email check
         emailval.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                if (Patterns.EMAIL_ADDRESS.matcher(email).matches())
+                String text=s.toString();
+                if (Patterns.EMAIL_ADDRESS.matcher(text).matches()){
                     EmailOutput.setText("올바른 이메일 형식입니다");
-                else
-                    EmailOutput.setText("이메일 형식이 아닙니다");
+                    EmailOutput.setTextColor(Color.BLACK);
+
+                }
+                else {
+                    EmailOutput.setText("올바른 이메일 형식이 아닙니다");
+                    EmailOutput.setTextColor(Color.RED);
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (Patterns.EMAIL_ADDRESS.matcher(email).matches())
-                    EmailOutput.setText("올바른 이메일 형식입니다");
-                else
-                    EmailOutput.setText("이메일 형식이 아닙니다");
             }
         });
-
 
         //When cancel
         Button btn1 = (Button)findViewById(R.id.btn_signup_cancel);
