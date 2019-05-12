@@ -5,7 +5,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fitsSystemWindows="true"
-    tools:context=".LoginActivity">
+    android:background="#06194e"
+    tools:context=".LoginActivity"
+    >
 
     <LinearLayout
         android:layout_width="418dp"
@@ -19,61 +21,88 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="100dp"
+            android:layout_height="114dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp"
             android:src="@drawable/logo" />
 
+
         <!-- ID Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+            android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/input_email"
+            <TextView
+                android:id="@+id/text_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="아이디"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="14dp"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:text="아이디"
+                android:textAlignment="center"
+                android:textSize="16dip" />
+
+            <EditText
+                android:id="@+id/input_id"
+                android:textColor="#ffffff"
+                android:layout_width="326dp"
+                android:layout_marginLeft="10dp"
+                android:layout_height="wrap_content"
                 android:inputType="textShortMessage" />
-        </android.support.design.widget.TextInputLayout>
 
+        </LinearLayout>
         <!-- Password Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-
-            <EditText
-                android:id="@+id/input_password"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/text_ps"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="비밀번호"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:textColor="#ffffff"
+                android:text="비밀번호"
+                android:textSize="16dip"
+                android:textAlignment="center"/>
+
+            <EditText
+                android:id="@+id/input_ps"
+                android:layout_width="326dp"
+                android:layout_marginLeft="10dp"
+                android:textColor="#ffffff"
+                android:layout_height="wrap_content"
                 android:inputType="textPassword" />
-        </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:text="아이디 저장"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginRight="80dp"
-                    android:checked="false" />
-             <CheckBox
-                 android:layout_width="wrap_content"
-                 android:text="자동 로그인"
-                 android:layout_height="wrap_content"
-                 android:layout_marginRight="40dp"
-                 android:checked="false"/>
+            <CheckBox
+                android:id="@+id/option_id_store"
+                android:layout_width="wrap_content"
+                android:textColor="#ffffff"
+                android:text="아이디 저장"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="80dp"
+                android:checked="false" />
+            <CheckBox
+                android:id="@+id/option_auto_login"
+                android:layout_width="wrap_content"
+                android:textColor="#ffffff"
+                android:text="자동 로그인"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="40dp"
+                android:checked="false"/>
 
         </LinearLayout>
-
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_login"
@@ -87,28 +116,35 @@
             android:shadowColor="@color/cardview_dark_background"
             android:textAlignment="center" />
 
-        <TextView
-            android:id="@+id/find_id"
-            android:layout_width="fill_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            android:onClick="onClick"
-            android:clickable="true"
-            android:text="아이디/비밀번호 찾기"
-            android:textSize="16dip"
-            android:textAlignment="center"/>
-        <TextView
-            android:id="@+id/link_signup"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:gravity="center"
-            android:onClick="onClick"
-            android:clickable="true"
-            android:text="회원가입"
-            android:textSize="16dip"
-            android:textAlignment="center"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/link_find_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="50dp"
+                android:textColor="#ffffff"
+                android:clickable="true"
+                android:text="아이디/비밀번호 찾기"
+                android:textSize="16dip"
+                android:textAlignment="center"/>
+            <TextView
+                android:id="@+id/link_signup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:onClick="onClick"
+                android:clickable="true"
+                android:textColor="#ffffff"
+                android:text="회원가입"
+                android:textSize="16dip"
+                android:textAlignment="center"/>
+        </LinearLayout>
+
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

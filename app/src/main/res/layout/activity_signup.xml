@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fitsSystemWindows="true">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,85 +15,145 @@
         android:paddingTop="56dp"
         android:paddingRight="24dp"
         android:paddingBottom="240dp">
-
-        <!-- Email Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
+        <!-- ID Label -->
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
+                android:textColor="#06194e"
+                android:text="이메일"
+                android:textAlignment="center"
+                android:textSize="16dip" />
 
             <EditText
                 android:id="@+id/input_email"
-                android:layout_width="match_parent"
+                android:layout_width="326dp"
                 android:layout_height="wrap_content"
-                android:hint="이메일"
+                android:layout_marginLeft="38dp"
                 android:inputType="textEmailAddress" />
-        </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+        <TextView
+            android:id="@+id/text_email_val"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="end"
+            android:text="이메일을 입력해주세요"/>
 
         <!-- Password Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-
-            <EditText
-                android:id="@+id/input_password"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/text_ps"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="비밀번호"
-                android:inputType="textPassword" />
-        </android.support.design.widget.TextInputLayout>
-
-        <!-- Check password Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:text="비밀번호"
+                android:textColor="#06194e"
+                android:textSize="16dip"
+                android:textAlignment="center"/>
 
             <EditText
-                android:id="@+id/input_password_check"
+                android:id="@+id/input_ps"
+                android:layout_width="326dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="34dp"
+                android:inputType="textPassword" />
+
+        </LinearLayout>
+        <TextView
+            android:id="@+id/text_ps_val"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="end"
+            android:textColor="#000000"
+            android:text="8-16자 영문 대,소문자,숫자,특수문자를 사용하세요"
+            />
+        <!-- Password Checking Label -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/text_ps_check"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="비밀번호 확인"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:text="비밀번호 확인"
+                android:textColor="#06194e"
+                android:textSize="16dip"
+                android:textAlignment="center"/>
+
+            <EditText
+                android:id="@+id/input_ps_check"
+                android:layout_width="326dp"
+                android:layout_height="wrap_content"
                 android:inputType="textPassword" />
-        </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+        <TextView
+            android:id="@+id/text_ps_check_val"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="end"
+            android:textColor="#000000"
+            android:text="입력한 비밀번호와 일치합니다"/>
 
         <!--  Nickname Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-
-            <EditText
-                android:id="@+id/input_name"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/text_nickname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="닉네임"
-                android:inputType="textCapWords" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:textColor="#06194e"
+                android:text="닉네임"
+                android:textSize="16dip"
+                android:textAlignment="center"/>
 
-        <!-- Signup Button -->
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_signup"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:padding="12dp"
-            android:text="회원 가입" />
+            <EditText
+                android:id="@+id/input_nickname"
+                android:layout_width="326dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="49dp"
+                android:inputType="textShortMessage" />
 
-        <TextView
-            android:id="@+id/link_login"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+        </LinearLayout>
+        <!--Confirm/Cancel button-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:text="이미 회원이신가요? 로그인 하기"
-            android:textSize="16dip" />
+            android:layout_marginTop="150dp">
 
+            <Button
+                android:id="@+id/btn_signup_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="취소"
+                android:layout_marginRight="30dp"/>
+            <Button
+                android:id="@+id/btn_signup_confirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="확인"/>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
+
