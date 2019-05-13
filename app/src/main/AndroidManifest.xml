@@ -9,6 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".RoomListActivity"
+            android:label="@string/title_activity_room_list"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -16,8 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RoomActivity"></activity>
-        <activity android:name=".ResultActivity1"></activity>
+        <activity android:name=".RoomActivity" />
+        <activity android:name=".ResultActivity1" />
     </application>
 
 </manifest>
