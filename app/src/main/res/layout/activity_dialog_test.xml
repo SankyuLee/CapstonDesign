@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DialogTestActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <Button
+        android:id="@+id/dialogButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="멤버 추가" />
+
+    <Button
+        android:id="@+id/dialogButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="멤버 추방"/>
+
+    <Button
+        android:id="@+id/dialogButton3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="방 생성" />
+
+    <Button
+        android:id="@+id/dialogButton4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="방 입장" />
+
+    <Button
+        android:id="@+id/dialogButton5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="입력멤버 변경" />
+
+    <Button
+        android:id="@+id/dialogButton6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="결과 확인" />
+
+    <Button
+        android:id="@+id/dialogButton7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="공유하기" />
+    </LinearLayout>
+
+</LinearLayout>
