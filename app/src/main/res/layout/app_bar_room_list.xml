@@ -9,8 +9,9 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/list_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/tob_bar_size"
         android:background="@color/colorJustPay"
+        android:gravity="center_vertical"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <LinearLayout
@@ -25,8 +26,8 @@
                 android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="1"
                 android:layout_marginRight="5dp"
+                android:layout_weight="1"
                 android:src="@drawable/ic_iconfinder___profile_1904670" />
 
             <EditText
@@ -44,9 +45,9 @@
                 android:id="@+id/search_btn"
                 android:layout_width="20dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:background="@drawable/ic_iconfinder___search_1904672" />
 
