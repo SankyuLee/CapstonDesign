@@ -1,6 +1,8 @@
 package edu.skku.capstone.justpay;
 
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.graphics.drawable.ColorDrawable;
@@ -22,6 +24,8 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class ResultActivity1 extends AppCompatActivity {
+
+    Button shareBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +117,22 @@ public class ResultActivity1 extends AppCompatActivity {
             }
         });*/
 
+        shareBtn = findViewById(R.id.button);
+        shareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final CharSequence[] items = {"카카오톡 메시지로 공유", "엑셀 파일로 공유", "URL로 공유"};
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(ResultActivity1.this);  // context 변경 (-Activity.this -> this)
+                builder.setTitle("공유하기");
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int pos) {  // pos 0: 카카오톡, pos 1: 엑셀, pos 2: URL
+
+                    }
+                });
+                builder.show();
+            }
+        });
     }
 
 }
