@@ -1,13 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 'android-Q'
+    compileSdkVersion 28
     defaultConfig {
         applicationId "edu.skku.capstone.justpay"
-        minSdkVersion 15
+        minSdkVersion 23
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
