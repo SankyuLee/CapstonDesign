@@ -99,6 +99,7 @@
         <ExpandableListView
             android:id="@+id/listView"
             style="@style/Widget.AppCompat.ListView.DropDown"
+            android:groupIndicator="@null"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="#A8A8A8"
