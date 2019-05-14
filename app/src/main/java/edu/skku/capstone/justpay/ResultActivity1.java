@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.support.v7.app.ActionBar;
@@ -17,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class ResultActivity1 extends AppCompatActivity {
 
@@ -26,7 +29,7 @@ public class ResultActivity1 extends AppCompatActivity {
         setContentView(R.layout.activity_result);
 
         //ListView listview ;
-        CustomList customadapter;
+        final CustomList customadapter;
         customadapter = new CustomList() ;
 
         // 리스트뷰 참조 및 Adapter달기
@@ -58,6 +61,49 @@ public class ResultActivity1 extends AppCompatActivity {
         customadapter.addItem(5,new personal_item("군고구라떼",1000,1));
         listview.setAdapter(customadapter);
 
+        Button buttonNoAsc = (Button) findViewById(R.id.orderbutton) ;
+        buttonNoAsc.setOnClickListener(new Button.OnClickListener() {
+            int state=0;
+            @Override
+            public void onClick(View v) {
+                Comparator<resultlist_item> moneyAsc = new Comparator<resultlist_item>() {
+                    @Override
+                    public int compare(resultlist_item item1, resultlist_item item2) {
+                        int ret ;
+
+                        if (item1.getPay() < item2.getPay())
+                            ret = -1 ;
+                        else if (item1.getPay() == item2.getPay())
+                            ret = 0 ;
+                        else
+                            ret = 1 ;
+
+                        return ret ;
+
+
+                    }
+                } ;
+                Comparator<resultlist_item> nameAsc = new Comparator<resultlist_item>() {
+                    @Override
+                    public int compare(resultlist_item item1, resultlist_item item2) {
+                        int ret;
+                        ret = item2.getName().compareTo(item1.getName()) ;
+                        return -ret;
+
+
+                    }
+                } ;
+                if(state == 1) {
+                    Collections.sort(customadapter.personlists, moneyAsc);
+                    state = 0;
+                }
+                else {
+                    Collections.sort(customadapter.personlists, nameAsc);
+                    state = 1;
+                }
+                customadapter.notifyDataSetChanged() ;
+            }
+        });
         /*listview.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {

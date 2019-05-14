@@ -70,20 +70,20 @@ public class CustomList extends BaseExpandableListAdapter {
         }
 
         //View들은 반드시 아이템 레이아웃을 inflate한 뒤에 작성할 것
-        //ImageView arrowIcon = (ImageView) v.findViewById(R.id.expand_icon);
+        ImageView arrowIcon = (ImageView) v.findViewById(R.id.imageView);
         TextView name = (TextView) v.findViewById(R.id.textView1);
         TextView pay = (TextView) v.findViewById(R.id.textView2);
 
         //그룹 펼쳐짐 여부에 따라 아이콘 변경
-        //if (isExpanded)
-        //    arrowIcon.setImageResource(R.drawable.ic_arrow_down_24dp);
-        //else
-         //   arrowIcon.setImageResource(R.drawable.ic_arrow_up_24dp);
+        if (getGroup(groupPosition).getName() == "오승민")
+            arrowIcon.setImageResource(R.drawable.green_circle_filled);
+        else
+           arrowIcon.setImageResource(R.drawable.empty_background);
 
         //리스트 아이템의 내용 설정
         name.setText(getGroup(groupPosition).getName());
         pay.setText(String.valueOf(getGroup(groupPosition).getPay()));
-
+        //
         return v;
     }
 
@@ -106,7 +106,7 @@ public class CustomList extends BaseExpandableListAdapter {
         pay.setText(String.valueOf(getChild(groupPosition, childPosition).getPay()));
         number.setText(String.valueOf(getChild(groupPosition, childPosition).getNumber()));
 
-        //category에 따라 다른 아이콘이 표시되도록 설정
+
 
         return v;
     }
