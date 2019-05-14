@@ -41,27 +41,25 @@
                     android:src="@drawable/go_back_btn" />
 
                 <TextView
-                android:id="@+id/toolbar_title"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="5지조 4/30 회식"
-                android:gravity="center"
-                android:layout_weight="8"
-                android:textColor="#FFFFFF"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                />
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="8"
+                    android:gravity="center"
+                    android:text="5지조 4/30 회식"
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/title_text_size"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/toolbar_subtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center|left"
                     android:text="  정산결과"
-                    android:layout_weight="1"
                     android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    />
+                    android:textSize="@dimen/sub_text_size" />
             </LinearLayout>
 
         </android.support.v7.widget.Toolbar>
@@ -81,17 +79,17 @@
                 android:lineSpacingExtra="8sp"
                 android:text="                  사용자별 - 이름순"
                 android:textColor="@color/colorJustPay"
-                android:textSize="24dp"
+                android:textSize="@dimen/normal_text_size"
                 app:fontFamily="sans-serif" />
 
             <Button
                 android:id="@+id/orderbutton"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:background="#00ff0000"
+                android:background="@android:color/transparent"
                 android:text="이름순/금액"
                 android:textColor="#929292"
-                android:textSize="14sp"
+                android:textSize="@dimen/sub_text_size"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -110,12 +108,12 @@
     <Button
         android:id="@+id/button"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/bottom_bar_size"
         android:background="@color/colorJustPay"
         android:text="공유하기"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="#FFFFFF"
-        android:textSize="20sp"
+        android:textSize="@dimen/normal_text_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

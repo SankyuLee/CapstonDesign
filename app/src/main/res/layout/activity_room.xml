@@ -362,7 +362,7 @@
                     android:layout_weight="1"
                     android:background="@color/colorJustPay"
                     android:text="@string/room_status_prev"
-                    android:textColor="@color/colorBlurred" />
+                    android:textColor="@android:color/white" />
 
                 <Button
                     android:id="@+id/button2"
@@ -371,7 +371,7 @@
                     android:layout_weight="1"
                     android:background="@color/colorJustPay"
                     android:text="@string/room_status_next"
-                    android:textColor="@color/colorBlurred" />
+                    android:textColor="@android:color/white" />
             </LinearLayout>
 
         </LinearLayout>

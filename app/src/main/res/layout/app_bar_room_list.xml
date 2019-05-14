@@ -39,7 +39,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/box_round"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:paddingLeft="@dimen/edit_text_left_padding" />
 
             <Button
                 android:id="@+id/search_btn"
