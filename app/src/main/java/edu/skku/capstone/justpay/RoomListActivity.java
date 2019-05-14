@@ -1,5 +1,6 @@
 package edu.skku.capstone.justpay;
 
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,8 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
+
+import java.util.List;
 
 public class RoomListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -87,6 +94,11 @@ public class RoomListActivity extends AppCompatActivity
             }
         });
         */
+
+        //item
+        ListView roomList;
+        roomList = (ListView)findViewById(R.id.roomList);
+        
     }
 
     @Override
