@@ -1,7 +1,9 @@
 package edu.skku.capstone.justpay;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,13 +20,21 @@ import android.widget.TextView;
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
-    EditText et_email, et_pw, et_pw_chk;
+    EditText et_pw, et_pw_chk;
     TextView s_em, s_pw, s_pw_chk;
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        /*assert actionBar != null;
+        actionBar.show();
+        actionBar.setTitle("회원가입");*/
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.actionbar_layout);
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#06194e")));
+
 
 
 
