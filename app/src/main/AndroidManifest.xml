@@ -20,14 +20,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<<<<<<< HEAD
         <activity android:name=".RoomActivity" />
         <activity android:name=".ResultActivity1" />
-=======
-        <activity android:name=".RoomActivity"></activity>
-        <activity android:name=".ResultActivity1"></activity>
-        <activity android:name=".DialogTestActivity"></activity>
->>>>>>> temp
+
+        <activity android:name=".DialogTestActivity" />
+
     </application>
 
 </manifest>

@@ -3,6 +3,7 @@ package edu.skku.capstone.justpay;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -34,7 +35,12 @@ public class RoomListActivity extends AppCompatActivity
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+                View create_room = View.inflate(RoomListActivity.this,R.layout.dialog_create_room, null);
+
+                AlertDialog.Builder dialog = new AlertDialog.Builder(RoomListActivity.this);
+                dialog.setView(create_room);
+
+                dialog.show();
             }
         });
 
