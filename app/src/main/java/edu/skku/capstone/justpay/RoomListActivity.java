@@ -10,23 +10,77 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 
 public class RoomListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    ImageView mDrawerOpener;
+    Button search_btn;
+    Button add_btn;
+    Button close_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_list);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+
+        add_btn = (Button)findViewById(R.id.add_btn);
+        search_btn = (Button)findViewById(R.id.search_btn);
+
+        //방 생성 버튼
+        add_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
+
+        //검색 버튼
+        search_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        /*
+        Toolbar toolbar = findViewById(R.id.list_toolbar);
         setSupportActionBar(toolbar);
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
+        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
+
+
         toggle.syncState();
+
         navigationView.setNavigationItemSelectedListener(this);
+
+        mDrawerOpener = (ImageView)findViewById(R.id.imageView);
+        close_btn = (Button) findViewById(R.id.close_btn);
+
+        close_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        mDrawerOpener.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.closeDrawer(GravityCompat.START);
+                }else{
+                    drawer.openDrawer(GravityCompat.START);
+                }
+            }
+        });
+        */
     }
 
     @Override
