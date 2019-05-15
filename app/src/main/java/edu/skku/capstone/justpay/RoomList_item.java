@@ -1,5 +1,6 @@
 package edu.skku.capstone.justpay;
 
+
 public class RoomList_item {
     private String room_tag;
     private String room_name;

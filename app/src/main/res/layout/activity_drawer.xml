@@ -6,7 +6,7 @@
     android:layout_gravity="start"
     android:background="@android:color/background_light"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:padding="10dp">
 
     <Button
         android:id="@+id/close_btn"

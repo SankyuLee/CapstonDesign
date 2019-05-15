@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 public class RoomListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -70,7 +72,9 @@ public class RoomListActivity extends AppCompatActivity
         close_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                drawerLayout.closeDrawer(drawerView);
+                if (drawerLayout.isDrawerOpen(drawerView)) {
+                    drawerLayout.closeDrawer(drawerView);
+                }
             }
         });
 
@@ -83,15 +87,21 @@ public class RoomListActivity extends AppCompatActivity
             }
         });
 
-        //item
         ListView roomList;
         roomList = (ListView)findViewById(R.id.roomList);
-        
+
+        ArrayList<RoomList_item> list = new ArrayList<RoomList_item>();
+        RoomList_item item = new RoomList_item("#0202","종설프");
+        list.add(item);
+
+        RoomListAdapter adapter = new RoomListAdapter(this, list);
+        roomList.setAdapter(adapter);
     }
 
     DrawerLayout.DrawerListener myDrawerListener = new DrawerLayout.DrawerListener() {
         public void onDrawerClosed(View drawerView) {
         }
+
         public void onDrawerOpened(View drawerView) {
         }
 
@@ -99,20 +109,6 @@ public class RoomListActivity extends AppCompatActivity
         }
 
         public void onDrawerStateChanged(int newState) {
-            String state;
-            switch (newState) {
-                case DrawerLayout.STATE_IDLE:
-                    state = "STATE_IDLE";
-                    break;
-                case DrawerLayout.STATE_DRAGGING:
-                    state = "STATE_DRAGGING";
-                    break;
-                case DrawerLayout.STATE_SETTLING:
-                    state = "STATE_SETTLING";
-                    break;
-                default:
-                    state = "unknown!";
-            }
         }
     };
 
@@ -142,4 +138,5 @@ public class RoomListActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }
