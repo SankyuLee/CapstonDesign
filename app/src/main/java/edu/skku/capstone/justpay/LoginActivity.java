@@ -27,15 +27,13 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
 
-    public void onClick(View view) {
         TextView b = findViewById(R.id.link_signup);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(
-                        getApplicationContext(),SignupActivity.class);
+                        LoginActivity.this,SignupActivity.class);
                 startActivity(intent);
             }
         });
