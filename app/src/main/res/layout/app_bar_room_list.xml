@@ -16,48 +16,60 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_vertical"
             android:layout_margin="10dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
 
 
             <Button
                 android:id="@+id/open_btn"
-                android:layout_width="20dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/ic_iconfinder___profile_1904670" />
 
             <EditText
                 android:id="@+id/editText"
-                android:layout_width="262dp"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="8"
                 android:background="@drawable/box_round"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:paddingLeft="@dimen/edit_text_left_padding" />
+                android:paddingLeft="@dimen/edit_text_left_padding"
+                android:textColor="@android:color/black"
+                android:textColorLink="@android:color/transparent"
+                android:textCursorDrawable="@android:color/darker_gray" />
 
             <Button
                 android:id="@+id/search_btn"
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="24dp"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/ic_iconfinder___search_1904672" />
 
             <Button
                 android:id="@+id/add_btn"
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="24dp"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/ic_iconfinder___plus_1904677" />
         </LinearLayout>
