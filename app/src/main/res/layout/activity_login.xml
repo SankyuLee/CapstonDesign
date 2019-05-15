@@ -1,44 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/colorJustPay"
     android:fitsSystemWindows="true"
-    android:background="#06194e"
-    tools:context=".LoginActivity"
-    >
+    tools:context=".LoginActivity">
+
+    <ImageView
+        android:id="@+id/main_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="120dp"
+        android:layout_weight="1"
+        android:src="@drawable/logo"
+        app:layout_constrainedHeight="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:layout_width="418dp"
-        android:layout_height="734dp"
+        android:id="@+id/login_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_weight="1"
         android:orientation="vertical"
-        android:paddingLeft="24dp"
-        android:paddingTop="100dp"
-        android:paddingRight="24dp"
-        android:paddingBottom="0dp"
-        tools:ignore="MissingConstraints">
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/main_logo">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="114dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="24dp"
-            android:src="@drawable/logo" />
-
-
-        <!-- ID Label -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/id_editor"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/text_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="14dp"
-                android:layout_marginBottom="10dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="아이디"
                 android:textAlignment="center"
@@ -47,25 +53,33 @@
 
             <EditText
                 android:id="@+id/input_id"
-                android:layout_width="326dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="2"
+                android:background="@drawable/box_round"
                 android:inputType="textShortMessage"
                 android:paddingStart="@dimen/edit_text_left_padding"
-                android:textColor="#ffffff" />
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@android:color/black"
+                android:textColorLink="@android:color/transparent"
+                android:textCursorDrawable="@android:color/darker_gray" />
 
         </LinearLayout>
-        <!-- Password Label -->
+
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/pwd_editor"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/text_ps"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="비밀번호"
                 android:textAlignment="center"
@@ -74,86 +88,95 @@
 
             <EditText
                 android:id="@+id/input_ps"
-                android:layout_width="326dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:inputType="textPassword"
-                android:paddingLeft="@dimen/edit_text_left_padding"
-                android:textColor="#ffffff" />
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="2"
+                android:background="@drawable/box_round"
+                android:inputType="textShortMessage"
+                android:paddingStart="@dimen/edit_text_left_padding"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@android:color/black"
+                android:textColorLink="@android:color/transparent"
+                android:textCursorDrawable="@android:color/darker_gray" />
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/login_shortcut"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp">
 
             <CheckBox
                 android:id="@+id/option_id_store"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="80dp"
-                android:checked="false"
+                android:layout_weight="1"
                 android:text="아이디 저장"
-                android:textColor="#ffffff"
+                android:textColor="@color/colorBlurred"
                 android:textSize="@dimen/sub_text_size" />
 
             <CheckBox
                 android:id="@+id/option_auto_login"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="40dp"
-                android:checked="false"
+                android:layout_weight="1"
                 android:text="자동 로그인"
-                android:textColor="#ffffff"
+                android:textColor="@color/colorBlurred"
                 android:textSize="@dimen/sub_text_size" />
-
         </LinearLayout>
 
-        <android.support.v7.widget.AppCompatButton
+        <Button
             android:id="@+id/btn_login"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="50dp"
-            android:padding="12dp"
-            android:shadowColor="@color/cardview_dark_background"
-            android:text="로그인"
-            android:textAlignment="center"
-            android:textSize="@dimen/normal_text_size" />
-
-        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/link_find_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp"
-                android:layout_marginBottom="10dp"
-                android:clickable="true"
-                android:text="아이디/비밀번호 찾기"
-                android:textAlignment="center"
-                android:textColor="#ffffff"
-                android:textSize="@dimen/sub_text_size" />
-
-            <TextView
-                android:id="@+id/link_signup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:clickable="true"
-                android:onClick="onClick"
-                android:text="회원가입"
-                android:textAlignment="center"
-                android:textColor="#ffffff"
-                android:textSize="@dimen/sub_text_size" />
-        </LinearLayout>
-
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/box_round"
+            android:text="로그인"
+            android:textSize="@dimen/normal_text_size" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/sign_up_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="80dp"
+        android:paddingTop="10dp"
+        android:paddingRight="80dp"
+        android:paddingBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/link_find_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:text="아이디/비밀번호 찾기"
+            android:textAlignment="center"
+            android:textColor="@color/colorBlurred"
+            android:textSize="@dimen/sub_text_size" />
+
+        <TextView
+            android:id="@+id/link_signup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:text="회원가입"
+            android:textAlignment="center"
+            android:textColor="@color/colorBlurred"
+            android:textSize="@dimen/sub_text_size" />
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>
