@@ -22,44 +22,43 @@
             android:background="@color/colorJustPay"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center"
                 android:text="회원가입"
                 android:textColor="#ffffff"
-                android:textSize="40dp"
-                android:gravity="center"
-                /></android.support.v7.widget.Toolbar>
+                android:textSize="@dimen/title_text_size" /></android.support.v7.widget.Toolbar>
 
 
 
         <!-- ID Label -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:orientation="horizontal">
+            android:paddingRight="20dp">
 
             <TextView
 
                 android:id="@+id/text_email"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="이메일"
                 android:textAlignment="center"
-                android:textColor="#06194e"
+                android:textColor="@android:color/black"
                 android:textSize="@dimen/sub_text_size" />
 
             <EditText
                 android:id="@+id/input_email"
-                android:layout_width="326dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:paddingRight="30dp"
+                android:layout_weight="3"
                 android:inputType="textEmailAddress"
                 android:textSize="@dimen/sub_text_size" />
 
@@ -70,35 +69,37 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="end|right"
-            android:text="이메일을 입력해주세요"
+            android:paddingLeft="20dp"
             android:paddingRight="20dp"
+            android:text="이메일을 입력해주세요"
             android:textColor="#000000"
             android:textSize="@dimen/sub_text_size" />
 
         <!-- Password Label -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:orientation="horizontal">
+            android:paddingRight="20dp">
 
             <TextView
                 android:id="@+id/text_ps"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="비밀번호"
                 android:textAlignment="center"
-                android:textColor="#06194e"
+                android:textColor="@android:color/black"
                 android:textSize="@dimen/sub_text_size" />
 
             <EditText
                 android:id="@+id/input_ps"
-                android:layout_width="326dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="34dp"
+                android:layout_weight="3"
                 android:inputType="textPassword"
                 android:textSize="@dimen/sub_text_size" />
 
@@ -117,27 +118,30 @@
 
         <!-- Password Checking Label -->
         <LinearLayout
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
             <TextView
                 android:id="@+id/text_ps_check"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="비밀번호 확인"
                 android:textAlignment="center"
-                android:textColor="#06194e"
+                android:textColor="@android:color/black"
                 android:textSize="@dimen/sub_text_size" />
 
             <EditText
                 android:id="@+id/input_ps_check"
-                android:layout_width="326dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="3"
                 android:inputType="textPassword"
                 android:textSize="@dimen/sub_text_size" />
 
@@ -155,28 +159,29 @@
 
         <!--  Nickname Label -->
         <LinearLayout
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
             <TextView
                 android:id="@+id/text_nickname"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="닉네임"
                 android:textAlignment="center"
-                android:textColor="#06194e"
+                android:textColor="@android:color/black"
                 android:textSize="@dimen/sub_text_size" />
 
             <EditText
                 android:id="@+id/input_nickname"
-                android:layout_width="326dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="49dp"
+                android:layout_weight="3"
                 android:inputType="textShortMessage"
                 android:textSize="@dimen/sub_text_size" />
 
@@ -185,20 +190,24 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_marginTop="150dp">
+            android:layout_marginTop="150dp"
+            android:gravity="center">
 
             <Button
                 android:id="@+id/btn_signup_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="취소"
-                android:layout_marginRight="30dp"/>
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:text="취소" />
+
             <Button
                 android:id="@+id/btn_signup_confirm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="확인"/>
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:text="확인" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
