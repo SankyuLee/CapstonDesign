@@ -10,5 +10,6 @@
         android:layout_weight="1"
         android:background="@color/colorJustPay"
         android:text="@string/room_result_confirm"
-        android:textColor="@color/colorBlurred" />
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/normal_text_size" />
 </LinearLayout>

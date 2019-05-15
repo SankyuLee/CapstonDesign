@@ -1,8 +1,12 @@
 package edu.skku.capstone.justpay;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -12,6 +16,10 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -42,12 +50,42 @@ public class RoomListActivity extends AppCompatActivity
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View create_room = View.inflate(RoomListActivity.this,R.layout.dialog_create_room, null);
+                LayoutInflater inflater = getLayoutInflater();
+                View alertLayoutView = inflater.inflate(R.layout.dialog_create_room, null);
+                final EditText roomName = alertLayoutView.findViewById(R.id.roomNameEditText);
+                final EditText roomPW = alertLayoutView.findViewById(R.id.roomPWEditText);
+                final EditText eventName = alertLayoutView.findViewById(R.id.eventNameEditText);
+                final CheckBox checkBox = alertLayoutView.findViewById(R.id.roomCreateCheckBox);
 
-                AlertDialog.Builder dialog = new AlertDialog.Builder(RoomListActivity.this);
-                dialog.setView(create_room);
+                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        if (isChecked) {
+                            // 세부 항목 정산
+                        } else {
+                            // 세부 항목 정산 X
+                        }
+                    }
+                });
 
-                dialog.show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(RoomListActivity.this); // context 변경 (-Activity.this -> this)
+                builder.setTitle("방 생성하기");
+                builder.setView(alertLayoutView);
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // 방 생성 취소시 액션
+                    }
+                });
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent;
+                        intent = new Intent(RoomListActivity.this, RoomActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                builder.show();
             }
         });
 

@@ -37,7 +37,8 @@
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="이지훈"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/sub_text_size" />
 
     <TextView
         android:id="@+id/textView_email"
@@ -46,7 +47,8 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
         android:text="e_mail@naver.com"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/sub_text_size" />
 
     <View
         android:id="@+id/view"
