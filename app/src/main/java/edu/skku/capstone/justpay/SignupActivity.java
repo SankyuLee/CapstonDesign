@@ -29,8 +29,8 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 
         Toolbar tb = findViewById(R.id.signup_toolbar);
-        tb.setTitle("회원가입");
         setSupportActionBar(tb);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
 
 
 
