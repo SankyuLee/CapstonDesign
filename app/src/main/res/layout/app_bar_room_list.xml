@@ -20,14 +20,14 @@
             android:orientation="horizontal">
 
 
-            <ImageView
-                android:id="@+id/imageView"
+            <Button
+                android:id="@+id/open_btn"
                 android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:layout_marginRight="5dp"
-                android:src="@drawable/ic_iconfinder___profile_1904670" />
+                android:background="@drawable/ic_iconfinder___profile_1904670" />
 
             <EditText
                 android:id="@+id/editText"

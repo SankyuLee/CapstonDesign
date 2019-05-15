@@ -1,31 +1,23 @@
 package edu.skku.capstone.justpay;
 
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-
-import java.util.List;
 
 public class RoomListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    ImageView mDrawerOpener;
+    Button open_btn;
     Button search_btn;
     Button add_btn;
     Button close_btn;
@@ -35,8 +27,14 @@ public class RoomListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_list);
 
+        //final DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final View drawerView = (View)findViewById(R.id.drawer);
+
         add_btn = (Button)findViewById(R.id.add_btn);
         search_btn = (Button)findViewById(R.id.search_btn);
+        open_btn = (Button)findViewById(R.id.open_btn);
+        close_btn = (Button)findViewById(R.id.close_btn);
 
         //방 생성 버튼
         add_btn.setOnClickListener(new View.OnClickListener() {
@@ -58,48 +56,65 @@ public class RoomListActivity extends AppCompatActivity
 
             }
         });
-        /*
-        Toolbar toolbar = findViewById(R.id.list_toolbar);
-        setSupportActionBar(toolbar);
-
-        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
 
 
-        toggle.syncState();
-
-        navigationView.setNavigationItemSelectedListener(this);
-
-        mDrawerOpener = (ImageView)findViewById(R.id.imageView);
-        close_btn = (Button) findViewById(R.id.close_btn);
+        open_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!drawerLayout.isDrawerOpen(drawerView)) {
+                    drawerLayout.openDrawer(drawerView);
+                }
+            }
+        });
 
         close_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                drawerLayout.closeDrawer(drawerView);
             }
         });
-        mDrawerOpener.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(drawer.isDrawerOpen(GravityCompat.START)) {
-                    drawer.closeDrawer(GravityCompat.START);
-                }else{
-                    drawer.openDrawer(GravityCompat.START);
-                }
+
+        drawerLayout.setDrawerListener(myDrawerListener);
+        drawerView.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                // TODO Auto-generated method stub
+                return true;
             }
         });
-        */
 
         //item
         ListView roomList;
         roomList = (ListView)findViewById(R.id.roomList);
         
     }
+
+    DrawerLayout.DrawerListener myDrawerListener = new DrawerLayout.DrawerListener() {
+        public void onDrawerClosed(View drawerView) {
+        }
+        public void onDrawerOpened(View drawerView) {
+        }
+
+        public void onDrawerSlide(View drawerView, float slideOffset) {
+        }
+
+        public void onDrawerStateChanged(int newState) {
+            String state;
+            switch (newState) {
+                case DrawerLayout.STATE_IDLE:
+                    state = "STATE_IDLE";
+                    break;
+                case DrawerLayout.STATE_DRAGGING:
+                    state = "STATE_DRAGGING";
+                    break;
+                case DrawerLayout.STATE_SETTLING:
+                    state = "STATE_SETTLING";
+                    break;
+                default:
+                    state = "unknown!";
+            }
+        }
+    };
 
     @Override
     public void onBackPressed() {
@@ -109,28 +124,6 @@ public class RoomListActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.room_list, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
