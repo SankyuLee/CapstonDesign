@@ -76,7 +76,7 @@ public class CustomList extends BaseExpandableListAdapter {
 
         //그룹 펼쳐짐 여부에 따라 아이콘 변경
         if (getGroup(groupPosition).getName() == "오승민")
-            arrowIcon.setImageResource(R.drawable.green_circle_filled);
+            arrowIcon.setImageResource(R.drawable.check_mark);
         else
            arrowIcon.setImageResource(R.drawable.empty_background);
 
