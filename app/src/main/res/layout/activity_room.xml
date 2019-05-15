@@ -73,8 +73,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:scaleType="fitStart"
                 app:srcCompat="@drawable/ban_user_btn" />
 
@@ -84,8 +84,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:scaleType="fitStart"
                 app:srcCompat="@drawable/add_user_btn" />
 
@@ -95,8 +95,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:scaleType="fitStart"
                 app:srcCompat="@drawable/change_user_btn" />
 
@@ -391,8 +391,6 @@
         android:id="@+id/room_bottom_container"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_bar_size"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
