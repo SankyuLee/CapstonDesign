@@ -72,7 +72,7 @@ class SQLSender {
             ct.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
-            Log.e("Exception", "InterruptedException Exception occurred in SQLSender.java");
+            Log.e("Exception", "InterruptedException occurred in SQLSender.java");
         }
         return result;
     }
