@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
@@ -27,13 +28,12 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        /*assert actionBar != null;
-        actionBar.show();
-        actionBar.setTitle("회원가입");*/
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.actionbar_layout);
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#06194e")));
+
+        Toolbar tb = findViewById(R.id.signup_toolbar);
+        setSupportActionBar(tb);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+
 
         et_pw = findViewById(R.id.input_ps);
         et_pw_chk = findViewById(R.id.input_ps_check);
