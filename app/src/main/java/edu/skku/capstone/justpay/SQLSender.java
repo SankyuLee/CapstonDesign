@@ -21,11 +21,11 @@ import java.net.URL;
  * <p>활용 예시: 처음으로 가입한 사용자의 이름을 얻어 TextView에 적용
  * <pre>
  *     TextView firstUserName = (TextView)findViewById(R.id.firstUserName);
- *     String sql = "SELECT username from users where id=1";
+ *     String sql = "SELECT email from users where id=1";
  *     JSONObject sql_result = new SQLSender().sendSQL(sql);
  *     try {
  *         if (!sql_result.getBoolean("isError"))
- *             firstUserName.setText(sql_result.getJSONArray("result").getJSONObject(0).getString("username"));
+ *             firstUserName.setText(sql_result.getJSONArray("result").getJSONObject(0).getString("email"));
  *     } catch (JSONException e) {
  *         Log.e("Exception", "JSONException occurred in ExampleActivity.java");
  *         e.printStackTrace();
@@ -44,11 +44,11 @@ class SQLSender {
      * <p>활용 예시: 처음으로 가입한 사용자의 이름을 얻어 TextView에 적용
      * <pre>
      *     TextView firstUserName = (TextView)findViewById(R.id.firstUserName);
-     *     String sql = "SELECT username from users where id=1";
+     *     String sql = "SELECT email from users where id=1";
      *     JSONObject sql_result = new SQLSender().sendSQL(sql);
      *     try {
      *         if (!sql_result.getBoolean("isError"))
-     *             firstUserName.setText(sql_result.getJSONArray("result").getJSONObject(0).getString("username"));
+     *             firstUserName.setText(sql_result.getJSONArray("result").getJSONObject(0).getString("email"));
      *     } catch (JSONException e) {
      *         Log.e("Exception", "JSONException occurred in ExampleActivity.java");
      *         e.printStackTrace();
@@ -56,7 +56,7 @@ class SQLSender {
      * </pre>
      * @param sql 있는 그대로의 SQL문을 넣어주시면 됩니다.
      * <p>주의: 문자열을 따옴표로 감쌀 때는 작은 따옴표(')만 사용해야 합니다. Escape sequence를 이용하여 큰 따옴표(")를 넣는 것도 안 됩니다.
-     * <p>예시: "SELECT * from users where username='홍길동';"
+     * <p>예시: "SELECT * from users where email='sklee@skku.edu';"
      *
      * @return JSONObeject 형식의 결과값을 반환합니다. isError와 result를 key로 가지고 있습니다.
      * <p>isError - boolean 값(true or false)

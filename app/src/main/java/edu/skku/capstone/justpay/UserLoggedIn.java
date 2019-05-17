@@ -20,11 +20,10 @@ import java.net.URL;
 class UserLoggedIn {
     private static JSONObject result;
     private static int id;
-    private static String username;
-    private static String password;
     private static String email;
+    private static String password;
     private static String phone;
-    private static String name;
+    private static String nickname;
     private static boolean isLoggedIn = false;
 
     private UserLoggedIn() { }
@@ -40,12 +39,12 @@ class UserLoggedIn {
     /**
      * 로그인 화면의 필드에 입력한 아이디, 비밀번호를 웹 서버에 GET 방식으로 보내 검증합니다. 그리고 로그인 성공 여부를
      * 반환합니다.
-     * @param username 아이디를 의미합니다.
+     * @param email 아이디를 의미합니다.
      * @param password 비밀번호를 의미합니다.
      * @return 로그인 성공 여부를 boolean 값으로 반환합니다.
      */
-    static boolean LoginCheck(String username, String password) {
-        Thread ct = new ConnectionTask(username, password);
+    static boolean LoginCheck(String email, String password) {
+        Thread ct = new ConnectionTask(email, password);
         try {
             ct.start();
             ct.join();
@@ -57,11 +56,11 @@ class UserLoggedIn {
             if (result.getBoolean("loginSuccess")) {
                 isLoggedIn = true;
                 JSONObject user = result.getJSONObject("user");
-                UserLoggedIn.username = user.getString("username");
+                id = user.getInt("id");
+                UserLoggedIn.email = user.getString("email");
                 UserLoggedIn.password = user.getString("password");
-                email = user.getString("email");
                 phone = user.getString("phone");
-                name = user.getString("name");
+                nickname = user.getString("nickname");
             } else {
                 isLoggedIn = false;
             }
@@ -77,11 +76,11 @@ class UserLoggedIn {
      * 상위 클래스에 의해 메소드가 호출되고 직접 사용하실 수 없습니다.
      */
     private static class ConnectionTask extends Thread {
-        String username;
+        String email;
         String password;
 
-        private ConnectionTask(String username, String password) {
-            this.username = username;
+        private ConnectionTask(String email, String password) {
+            this.email = email;
             this.password = password;
         }
 
@@ -89,7 +88,7 @@ class UserLoggedIn {
         public void run() {
             HttpURLConnection con = null;
             try {
-                URL url = new URL("http://"+Constant.SERVER_IP+"/login?username="+username+"&password="+password);
+                URL url = new URL("http://"+Constant.SERVER_IP+"/login?email="+email+"&password="+password);
                 con = (HttpURLConnection)url.openConnection();
 
                 con.setRequestProperty("Accept-Charset", "UTF-8");
@@ -120,7 +119,7 @@ class UserLoggedIn {
     /**
      * 로그인한 사용자의 정보를 반환합니다. 따라서 로그인한 사용자의 정보를 다시 서버에 요청하실 필요 없이
      * SQL문을 수월하게 작성하실 수 있습니다.
-     * @return 사용자가 로그인한 상태라면 사용자의 고유번호, 아이디, 비밀번호, 이메일, 핸드폰번호, 이름을 JSONObeject로 반환합니다.
+     * @return 사용자가 로그인한 상태라면 사용자의 고유번호, 아이디, 비밀번호, 핸드폰번호, 닉네임을 JSONObeject로 반환합니다.
      * 사용자가 로그인하지 않았다면 null을 반환합니다. 따라서 NullPointerException에 대해 예외 처리를 해주셔야 합니다.
      */
     static JSONObject getUser() {
@@ -130,11 +129,10 @@ class UserLoggedIn {
             JSONObject user = null;
             try {
                 user = new JSONObject().put("id", id)
-                        .put("username", username)
-                        .put("password", password)
                         .put("email", email)
+                        .put("password", password)
                         .put("phone", phone)
-                        .put("name", name);
+                        .put("nickname", nickname);
             } catch (JSONException e) {
                 e.printStackTrace();
                 Log.e("Exception", "JSONException occurred in UserLoggedIn.java");
