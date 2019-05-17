@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -24,9 +23,9 @@ public class LoginActivity extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText username_et = findViewById(R.id.input_id);
+                EditText email_et = findViewById(R.id.input_id);
                 EditText password_et = findViewById(R.id.input_ps);
-                if (UserLoggedIn.LoginCheck(username_et.getText().toString(), password_et.getText().toString())) {
+                if (UserLoggedIn.LoginCheck(email_et.getText().toString(), password_et.getText().toString())) {
                     Toast.makeText(LoginActivity.this, "로그인에 성공하였습니다."+UserLoggedIn.getUser(), Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(LoginActivity.this, RoomListActivity.class);
                     startActivity(intent);

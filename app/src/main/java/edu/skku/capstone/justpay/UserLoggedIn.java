@@ -16,11 +16,10 @@ import java.net.URL;
 class UserLoggedIn {
     private static JSONObject result;
     private static int id;
-    private static String username;
-    private static String password;
     private static String email;
+    private static String password;
     private static String phone;
-    private static String name;
+    private static String nickname;
     private static boolean isLoggedIn = false;
 
     private UserLoggedIn() { }
@@ -29,8 +28,8 @@ class UserLoggedIn {
         return isLoggedIn;
     }
 
-    static boolean LoginCheck(String username, String password) {
-        Thread ct = new ConnectionTask(username, password);
+    static boolean LoginCheck(String email, String password) {
+        Thread ct = new ConnectionTask(email, password);
         try {
             ct.start();
             ct.join();
@@ -42,11 +41,11 @@ class UserLoggedIn {
             if (result.getBoolean("loginSuccess")) {
                 isLoggedIn = true;
                 JSONObject user = result.getJSONObject("user");
-                UserLoggedIn.username = user.getString("username");
+                id = user.getInt("id");
+                UserLoggedIn.email = user.getString("email");
                 UserLoggedIn.password = user.getString("password");
-                email = user.getString("email");
                 phone = user.getString("phone");
-                name = user.getString("name");
+                nickname = user.getString("nickname");
             } else {
                 isLoggedIn = false;
             }
@@ -58,11 +57,11 @@ class UserLoggedIn {
     }
 
     private static class ConnectionTask extends Thread {
-        String username;
+        String email;
         String password;
 
-        private ConnectionTask(String username, String password) {
-            this.username = username;
+        private ConnectionTask(String email, String password) {
+            this.email = email;
             this.password = password;
         }
 
@@ -70,7 +69,7 @@ class UserLoggedIn {
         public void run() {
             HttpURLConnection con = null;
             try {
-                URL url = new URL("http://"+Constant.SERVER_IP+"/login?username="+username+"&password="+password);
+                URL url = new URL("http://"+Constant.SERVER_IP+"/login?email="+email+"&password="+password);
                 con = (HttpURLConnection)url.openConnection();
 
                 con.setRequestProperty("Accept-Charset", "UTF-8");
@@ -102,11 +101,10 @@ class UserLoggedIn {
         JSONObject user = null;
         try {
              user = new JSONObject().put("id", id)
-                                   .put("username", username)
-                                   .put("password", password)
-                                   .put("email", email)
-                                   .put("phone", phone)
-                                   .put("name", name);
+                                    .put("email", email)
+                                    .put("password", password)
+                                    .put("phone", phone)
+                                    .put("nickname", nickname);
         } catch (JSONException e) {
             e.printStackTrace();
             Log.e("Exception", "JSONException occurred in UserLoggedIn.java");
