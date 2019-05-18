@@ -1,8 +1,6 @@
 package edu.skku.capstone.justpay;
 
-import android.app.ActionBar;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -127,12 +125,12 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View v){
                 //입력한 항목 모두 검증
 
-                String email = "a@b.c";
-                String pw = "password";
-                String nickname = "nickname";
+                String email = ((EditText) findViewById(R.id.input_email)).getText().toString();
+                String pw = et_pw.getText().toString();
+                String nickname = ((EditText) findViewById(R.id.input_nickname)).getText().toString();
 
-                JSONObject sql_result = new SQLSender().sendSQL("INSERT into users(email, password, phone, nickname) values("
-                +email+","+pw+","+"01011112222"+","+nickname+");");
+                JSONObject sql_result = new SQLSender().sendSQL("INSERT into users(email, password, phone, nickname) values('"
+                +email+"','"+pw+"','"+"01011112222"+"','"+nickname+"');");
                 try {
                     if (sql_result.getBoolean("isError")) {
                         if (sql_result.getJSONObject("result").getString("code").equals(Constant.ER_DUP_ENTRY)) {
@@ -140,11 +138,11 @@ public class SignupActivity extends AppCompatActivity {
                             EmailOutput.setTextColor(Color.RED);
                         } else {
                             // 알 수 없는 오류
-                            Toast.makeText(SignupActivity.this, "알 수 없는 오류가 발생하였습니다."+sql_result.getJSONObject("result"), Toast.LENGTH_LONG);
+                            Toast.makeText(SignupActivity.this, "알 수 없는 오류가 발생하였습니다."+sql_result.getJSONObject("result"), Toast.LENGTH_LONG).show();
                         }
                     } else {
                         // 회원가입 성공
-                        Toast.makeText(SignupActivity.this, "회원가입에 성공하였습니다. 다시 로그인해 주세요.", Toast.LENGTH_LONG);
+                        Toast.makeText(SignupActivity.this, "회원가입에 성공하였습니다. 다시 로그인해 주세요.", Toast.LENGTH_LONG).show();
                         finish();
                     }
                 } catch (JSONException e) {
