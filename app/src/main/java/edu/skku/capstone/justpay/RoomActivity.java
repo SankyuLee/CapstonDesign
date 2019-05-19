@@ -31,6 +31,7 @@ public class RoomActivity extends AppCompatActivity {
     private LinearLayout bottomContainer;
 
     private ImageButton banBtn, addBtn, changeBtn;
+    private ImageButton backBtn;
     private Button confirmBtn;
 
     @Override
@@ -44,6 +45,7 @@ public class RoomActivity extends AppCompatActivity {
         tabListView = findViewById(R.id.room_tab_list);
         chartItemListView = findViewById(R.id.chart_list_view);
         bottomContainer = findViewById(R.id.room_bottom_container);
+        backBtn = findViewById(R.id.go_back_btn);
 
         setTabs();
         setChartItems();
@@ -112,6 +114,13 @@ public class RoomActivity extends AppCompatActivity {
                     }
                 });
                 builder.show();
+            }
+        });
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish(); 
             }
         });
     }
