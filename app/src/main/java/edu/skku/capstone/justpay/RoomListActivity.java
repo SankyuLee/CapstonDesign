@@ -57,17 +57,6 @@ public class RoomListActivity extends AppCompatActivity
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-<<<<<<< HEAD
-                View create_room = View.inflate(RoomListActivity.this,R.layout.dialog_create_room, null);
-
-                AlertDialog.Builder dialog = new AlertDialog.Builder(RoomListActivity.this);
-                dialog.setView(create_room);
-
-                dialog.show();
-                dialog.setCancelable(false);
-
-
-=======
                 LayoutInflater inflater = getLayoutInflater();
                 View alertLayoutView = inflater.inflate(R.layout.dialog_create_room, null);
                 final EditText roomName = alertLayoutView.findViewById(R.id.roomNameEditText);
@@ -104,7 +93,6 @@ public class RoomListActivity extends AppCompatActivity
                     }
                 });
                 builder.show();
->>>>>>> develop
             }
         });
 
