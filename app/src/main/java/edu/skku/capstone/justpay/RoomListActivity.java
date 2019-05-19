@@ -36,6 +36,7 @@ public class RoomListActivity extends AppCompatActivity
     NavigationView personal_menu;
     DrawerLayout drawerLayout;
     View drawerView;
+    ListView roomList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,12 @@ public class RoomListActivity extends AppCompatActivity
         close_btn = (Button)findViewById(R.id.close_btn);
 
         personal_menu = (NavigationView)findViewById(R.id.personal_menu);
+        roomList = (ListView)findViewById(R.id.roomList);
+
+        final ArrayList<RoomList_item> list = new ArrayList<RoomList_item>();
+        final RoomListAdapter adapter = new RoomListAdapter(this, list);
+
+        roomList.setAdapter(adapter);
 
         //방 생성 다이얼로그
         add_btn.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +94,16 @@ public class RoomListActivity extends AppCompatActivity
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        //리스트에 항목 추가
+                        String roomName_s = roomName.getText().toString();
+                        String roomPW_s = roomPW.getText().toString();
+                        String eventName_s = eventName.getText().toString();
+                        int tag = 1000;
+
+                        RoomList_item item = new RoomList_item("#"+tag,roomName_s);
+                        list.add(item);
+                        adapter.notifyDataSetChanged();
+
                         Intent intent;
                         intent = new Intent(RoomListActivity.this, RoomActivity.class);
                         startActivity(intent);
@@ -131,16 +148,6 @@ public class RoomListActivity extends AppCompatActivity
                 return true;
             }
         });
-
-        ListView roomList;
-        roomList = (ListView)findViewById(R.id.roomList);
-
-        ArrayList<RoomList_item> list = new ArrayList<RoomList_item>();
-        RoomList_item item = new RoomList_item("#0202","종설프");
-        list.add(item);
-
-        RoomListAdapter adapter = new RoomListAdapter(this, list);
-        roomList.setAdapter(adapter);
     }
 
     DrawerLayout.DrawerListener myDrawerListener = new DrawerLayout.DrawerListener() {

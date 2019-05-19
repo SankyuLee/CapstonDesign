@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 EditText email_et = findViewById(R.id.input_id);
                 EditText password_et = findViewById(R.id.input_ps);
-
+/*
                 if (UserLoggedIn.LoginCheck(email_et.getText().toString(), password_et.getText().toString())) {
                     Toast.makeText(LoginActivity.this, "로그인에 성공하였습니다."+UserLoggedIn.getUser(), Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(LoginActivity.this, RoomListActivity.class);
@@ -34,6 +34,9 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(LoginActivity.this, "아이디 또는 비밀번호가 잘못되었습니다.", Toast.LENGTH_LONG).show();
                 }
+*/
+                Intent intent = new Intent(LoginActivity.this, RoomListActivity.class);
+                startActivity(intent);
             }
         });
 
