@@ -36,4 +36,6 @@
 
     <string name="menu_modify">개인정보 수정</string>
     <string name="menu_logout">로그아웃</string>
+
+    <string name="delete_room">방을 나가시겠습니까?</string>
 </resources>

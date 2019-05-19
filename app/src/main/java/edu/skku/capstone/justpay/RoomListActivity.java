@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -53,6 +54,8 @@ public class RoomListActivity extends AppCompatActivity
         close_btn = (Button)findViewById(R.id.close_btn);
 
         personal_menu = (NavigationView)findViewById(R.id.personal_menu);
+        personal_menu.setNavigationItemSelectedListener(this);
+
         roomList = (ListView)findViewById(R.id.roomList);
 
         final ArrayList<RoomList_item> list = new ArrayList<RoomList_item>();
@@ -85,6 +88,7 @@ public class RoomListActivity extends AppCompatActivity
                 AlertDialog.Builder builder = new AlertDialog.Builder(RoomListActivity.this); // context 변경 (-Activity.this -> this)
                 builder.setTitle("방 생성하기");
                 builder.setView(alertLayoutView);
+                builder.setCancelable(false); // 바깥 클릭해도 안꺼지게
                 builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -110,6 +114,35 @@ public class RoomListActivity extends AppCompatActivity
                     }
                 });
                 builder.show();
+            }
+        });
+
+        //방 삭제
+        roomList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                LayoutInflater inflater = getLayoutInflater();
+                View alertLayoutView = inflater.inflate(R.layout.dialog_delete_room, null);
+                AlertDialog.Builder builder = new AlertDialog.Builder(RoomListActivity.this); // context 변경 (-Activity.this -> this)
+
+                builder.setView(alertLayoutView);
+                builder.setCancelable(false);
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                      list.remove(position);
+                      adapter.notifyDataSetChanged();
+                    }
+                });
+                builder.show();
+
+                return true;
             }
         });
 
@@ -183,9 +216,11 @@ public class RoomListActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_modify) {
-            Toast.makeText(RoomListActivity.this, "touched", Toast.LENGTH_LONG);
+            Toast.makeText(this, "touched", Toast.LENGTH_LONG).show();
         } else if (id == R.id.nav_logout) {
-
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
