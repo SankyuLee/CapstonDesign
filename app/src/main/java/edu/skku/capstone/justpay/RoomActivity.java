@@ -14,23 +14,35 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class RoomActivity extends AppCompatActivity {
+public class RoomActivity extends AppCompatActivity{
+
+    private TextView RoomName, RoomID;
+    private ImageButton banBtn, addBtn, changeBtn;
+
+    private RecyclerView tabListView;
+    private RoomTabAdapter tabAdapter;
+
+    private ImageView receiptImg;
+    private ImageButton prevReceiptBtn, nextReceiptBtn;
+
+    private TextView roomStatus1, roomStatus2, roomStatus3;
 
     private ListView chartItemListView;
-    private RecyclerView tabListView;
-
-    private RoomTabAdapter tabAdapter;
     private RoomChartItemAdapter chartItemAdapter;
 
-    private LinearLayout bottomContainer;
+    private Button prevStatusBtn, nextStatusBtn;
 
-    private ImageButton banBtn, addBtn, changeBtn;
+    private TextView typingStatus;
+
+    private LinearLayout bottomContainer;
     private Button confirmBtn;
 
     @Override
@@ -52,9 +64,9 @@ public class RoomActivity extends AppCompatActivity {
         banBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final CharSequence[] items = {"Member1", "Member2", "Member3", "Member4"};  // DB연동 필요
+                final CharSequence[] items = {"Member1", "Member2", "Member3", "Member4"};
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);  // context 변경 (-Activity.this -> this)
+                AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
                 builder.setTitle("멤버 추방");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int pos) {
@@ -68,9 +80,9 @@ public class RoomActivity extends AppCompatActivity {
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final CharSequence[] items = {"Member1", "Member2", "Member3", "Member4"};  // DB연동 필요
+                final CharSequence[] items = {"Member1", "Member2", "Member3", "Member4"};
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);  // context 변경 (-Activity.this -> this)
+                AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
                 builder.setTitle("멤버 추가");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int pos) {
@@ -84,9 +96,9 @@ public class RoomActivity extends AppCompatActivity {
         changeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final CharSequence[] items = {"Member1", "Member2", "Member3", "Member4"};  // DB연동 필요
+                final CharSequence[] items = {"Member1", "Member2", "Member3", "Member4"};
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);  // context 변경 (-Activity.this -> this)
+                AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
                 builder.setTitle("입력멤버 변경");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int pos) {
@@ -102,7 +114,7 @@ public class RoomActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final CharSequence[] items = {"사용자별 결과 확인", "항목별 결과 확인"};
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);  // context 변경 (-Activity.this -> this)
+                AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
                 builder.setTitle("결과 확인");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int pos) {  // pos 0: 사용자별 결과 확인, pos 1: 항목별 결과 확인
@@ -121,23 +133,28 @@ public class RoomActivity extends AppCompatActivity {
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         tabListView.setLayoutManager(layoutManager);
 
-        ArrayList<String> tabList = new ArrayList<>();
-        tabList.add("05/09 커피");
-        tabList.add("05/08 점심");
+        ArrayList<RoomTabItem> tabList = new ArrayList<>();
+        tabList.add(new RoomTabItem("05/09 커피"));
+        tabList.add(new RoomTabItem("05/08 점심"));
 
-        tabAdapter = new RoomTabAdapter(this, tabList, onClickTab);
+        tabAdapter = new RoomTabAdapter(tabList, new RoomTabAdapter.TabOnClickListener() {
+            @Override
+            public void onTabClicked(int position) {
+                /* Change Tab */
+                Toast.makeText(getApplicationContext(), position + "Clicked", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onTabDeleteBtnClicked(int position) {
+                /* Remove Tab */
+                tabAdapter.removeItem(position);
+            }
+        });
         tabListView.setAdapter(tabAdapter);
 
         RoomTabDecoration tabDecoration = new RoomTabDecoration();
         tabListView.addItemDecoration(tabDecoration);
     }
-
-    private View.OnClickListener onClickTab = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            String str = (String) v.getTag();
-        }
-    };
 
     private void setChartItems() {
         ArrayList<RoomChartItem> chartItemList = new ArrayList<>();
@@ -145,7 +162,7 @@ public class RoomActivity extends AppCompatActivity {
         chartItemList.add(new RoomChartItem("쿠키", new Integer(5400), new Integer(3)));
         chartItemList.add(new RoomChartItem("설탕", new Integer(5400), new Integer(3)));
 
-        RoomChartItemAdapter chartItemAdapter = new RoomChartItemAdapter(chartItemList);
+        chartItemAdapter = new RoomChartItemAdapter(chartItemList);
         chartItemListView.setAdapter(chartItemAdapter);
     }
 
