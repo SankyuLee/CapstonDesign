@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -24,21 +25,27 @@ public class RoomListActivity extends AppCompatActivity
     Button add_btn;
     Button close_btn;
 
+    NavigationView personal_menu;
+    DrawerLayout drawerLayout;
+    View drawerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_list);
 
         //final DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        final View drawerView = (View)findViewById(R.id.drawer);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerView = (View)findViewById(R.id.drawer);
 
         add_btn = (Button)findViewById(R.id.add_btn);
         search_btn = (Button)findViewById(R.id.search_btn);
         open_btn = (Button)findViewById(R.id.open_btn);
         close_btn = (Button)findViewById(R.id.close_btn);
 
-        //방 생성 버튼
+        personal_menu = (NavigationView)findViewById(R.id.personal_menu);
+
+        //방 생성 다이얼로그
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,6 +55,9 @@ public class RoomListActivity extends AppCompatActivity
                 dialog.setView(create_room);
 
                 dialog.show();
+                dialog.setCancelable(false);
+
+
             }
         });
 
@@ -122,6 +132,8 @@ public class RoomListActivity extends AppCompatActivity
         }
     }
 
+
+    // TODO: 2019-05-19 navigation view 없애고 그냥 linear layout으로 바꿔서 메뉴 만들기
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -129,13 +141,12 @@ public class RoomListActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_modify) {
-            // Handle the camera action
+            Toast.makeText(RoomListActivity.this, "touched", Toast.LENGTH_LONG);
         } else if (id == R.id.nav_logout) {
 
         }
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
