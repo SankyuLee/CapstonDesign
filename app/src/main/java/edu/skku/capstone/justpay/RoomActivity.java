@@ -46,7 +46,7 @@ public class RoomActivity extends AppCompatActivity{
     private EditText itemNameEdit, itemCostEdit, itemCountEdit;
     private ImageButton addItemBtn;
     private Button confirmBtn;
-    
+
     private EventStatus eventStatus;
     private enum EventStatus { MAKE_LIST,  PERSONAL_CHECK, CONFIRM_RESULT }
 
@@ -214,6 +214,23 @@ public class RoomActivity extends AppCompatActivity{
             itemCostEdit = findViewById(R.id.item_cost_edit);
             itemCountEdit = findViewById(R.id.item_count_edit);
             addItemBtn = findViewById(R.id.add_item_btn);
+
+            addItemBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (itemNameEdit.getText().toString().length() *
+                            itemCostEdit.getText().toString().length() *
+                            itemCountEdit.getText().toString().length() != 0) {
+                        RoomChartItem roomChartItem = new RoomChartItem(
+                                itemNameEdit.getText().toString(),
+                                Integer.parseInt(itemCostEdit.getText().toString()),
+                                Integer.parseInt(itemCountEdit.getText().toString())
+                        );
+                        chartItemAdapter.addItem(roomChartItem);
+                    }
+                }
+            });
+
         } else {
             bottomInflater.inflate(R.layout.room_bottom_confirm, bottomContainer, true);
             confirmBtn = findViewById(R.id.room_result_confirm_btn);

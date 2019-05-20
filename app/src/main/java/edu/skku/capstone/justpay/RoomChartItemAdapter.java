@@ -1,7 +1,6 @@
 package edu.skku.capstone.justpay;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,8 +74,8 @@ public class RoomChartItemAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void addItem(int position, RoomChartItem chartItem) {
-        chartItemList.add(position, chartItem);
+    public void addItem(RoomChartItem chartItem) {
+        chartItemList.add(chartItem);
         notifyDataSetChanged();
     }
 }
