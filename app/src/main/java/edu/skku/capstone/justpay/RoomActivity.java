@@ -123,6 +123,32 @@ public class RoomActivity extends AppCompatActivity{
                 builder.show();
             }
         });
+
+        prevStatusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (eventStatus == EventStatus.PERSONAL_CHECK) {
+                    setStatus(EventStatus.MAKE_LIST);
+                    setBottomContainer();
+                } else if (eventStatus == EventStatus.CONFIRM_RESULT) {
+                    setStatus(EventStatus.PERSONAL_CHECK);
+                    setBottomContainer();
+                }
+            }
+        });
+
+        nextStatusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (eventStatus == EventStatus.MAKE_LIST) {
+                    setStatus(EventStatus.PERSONAL_CHECK);
+                    setBottomContainer();
+                } else if (eventStatus == EventStatus.PERSONAL_CHECK) {
+                    setStatus(EventStatus.CONFIRM_RESULT);
+                    setBottomContainer();
+                }
+            }
+        });
     }
 
     private void initRoom(String title, String id, String eventName) {
@@ -147,13 +173,11 @@ public class RoomActivity extends AppCompatActivity{
         tabAdapter = new RoomTabAdapter(tabList, new RoomTabAdapter.TabOnClickListener() {
             @Override
             public void onTabClicked(int position) {
-                /* Change Tab */
                 setTab(tabList.get(position).getTabTitle());
             }
 
             @Override
             public void onTabDeleteBtnClicked(int position) {
-                /* Remove Tab */
                 tabAdapter.removeItem(position);
             }
         });
@@ -175,19 +199,13 @@ public class RoomActivity extends AppCompatActivity{
         // Set event status
         switch (eventStatusInt) {
             case 0:
-                eventStatus = EventStatus.MAKE_LIST;
-                eventStatus1.setTextColor(getResources().getColor(R.color.colorJustPay));
-                eventStatus1.setTypeface(eventStatus1.getTypeface(), Typeface.BOLD);
+                setStatus(EventStatus.MAKE_LIST);
                 break;
             case 1:
-                eventStatus = EventStatus.PERSONAL_CHECK;
-                eventStatus2.setTextColor(getResources().getColor(R.color.colorJustPay));
-                eventStatus2.setTypeface(eventStatus1.getTypeface(), Typeface.BOLD);
+                setStatus(EventStatus.PERSONAL_CHECK);
                 break;
             case 2:
-                eventStatus = EventStatus.CONFIRM_RESULT;
-                eventStatus3.setTextColor(getResources().getColor(R.color.colorJustPay));
-                eventStatus3.setTypeface(eventStatus1.getTypeface(), Typeface.BOLD);
+                setStatus(EventStatus.CONFIRM_RESULT);
                 break;
         }
 
@@ -195,7 +213,6 @@ public class RoomActivity extends AppCompatActivity{
         chartItemAdapter = new RoomChartItemAdapter(itemList, new RoomChartItemAdapter.ChartItemOnClickListener() {
             @Override
             public void onChartItemDeleteBtnClick(int position) {
-                /* Remove item */
                 chartItemAdapter.removeItem(position);
             }
         });
@@ -252,6 +269,44 @@ public class RoomActivity extends AppCompatActivity{
                     builder.show();
                 }
             });
+        }
+    }
+
+    private void setStatus(EventStatus eventStatus) {
+        switch (eventStatus) {
+            case MAKE_LIST:
+                this.eventStatus = EventStatus.MAKE_LIST;
+                eventStatus1.setTextColor(getResources().getColor(R.color.colorJustPay));
+                eventStatus1.setTypeface(eventStatus1.getTypeface(), Typeface.BOLD);
+                eventStatus2.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+                eventStatus2.setTypeface(eventStatus1.getTypeface(), Typeface.NORMAL);
+                eventStatus3.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+                eventStatus3.setTypeface(eventStatus1.getTypeface(), Typeface.NORMAL);
+                prevStatusBtn.setVisibility(View.GONE);
+                nextStatusBtn.setVisibility(View.VISIBLE);
+                break;
+            case PERSONAL_CHECK:
+                this.eventStatus = EventStatus.PERSONAL_CHECK;
+                eventStatus1.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+                eventStatus1.setTypeface(eventStatus1.getTypeface(), Typeface.NORMAL);
+                eventStatus2.setTextColor(getResources().getColor(R.color.colorJustPay));
+                eventStatus2.setTypeface(eventStatus1.getTypeface(), Typeface.BOLD);
+                eventStatus3.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+                eventStatus3.setTypeface(eventStatus1.getTypeface(), Typeface.NORMAL);
+                prevStatusBtn.setVisibility(View.VISIBLE);
+                nextStatusBtn.setVisibility(View.VISIBLE);
+                break;
+            case CONFIRM_RESULT:
+                this.eventStatus = EventStatus.CONFIRM_RESULT;
+                eventStatus1.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+                eventStatus1.setTypeface(eventStatus1.getTypeface(), Typeface.NORMAL);
+                eventStatus2.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+                eventStatus2.setTypeface(eventStatus1.getTypeface(), Typeface.NORMAL);
+                eventStatus3.setTextColor(getResources().getColor(R.color.colorJustPay));
+                eventStatus3.setTypeface(eventStatus1.getTypeface(), Typeface.BOLD);
+                prevStatusBtn.setVisibility(View.VISIBLE);
+                nextStatusBtn.setVisibility(View.GONE);
+                break;
         }
     }
 }
