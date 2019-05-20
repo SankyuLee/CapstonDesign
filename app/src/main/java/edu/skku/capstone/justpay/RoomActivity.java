@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
@@ -36,7 +37,6 @@ import java.util.ArrayList;
 /*
     TODO : Change chart item when event status is changed
     TODO : Support tab creation and ellipsis
-    TODO : Support zoom function for receipt image
 
     TODO : Implement event data saving when event is changed
  */
@@ -52,6 +52,7 @@ public class RoomActivity extends AppCompatActivity{
     private ImageView receiptImg;
     private ImageButton addReceiptBtn, prevReceiptBtn, nextReceiptBtn;
     private TextView addReceiptText, receiptStatus;
+    private PhotoViewAttacher receiptAttacher;
 
     private TextView eventStatus1, eventStatus2, eventStatus3;
 
@@ -460,6 +461,9 @@ public class RoomActivity extends AppCompatActivity{
             Bitmap imgBm = BitmapFactory.
                     decodeFile(receiptList.get(curReceiptIndex).getAbsolutePath(), options);
             receiptImg.setImageBitmap(imgBm);
+            receiptAttacher = new PhotoViewAttacher(receiptImg);
+            receiptAttacher.setMaximumScale(10);
+            receiptAttacher.update();
             receiptStatus.setText(new Integer(curReceiptIndex + 1).toString() + " / " +
                     new Integer(receiptList.size()).toString());
         } else {
