@@ -169,6 +169,7 @@
                 android:layout_marginBottom="8dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toTopOf="@+id/receipt_status"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -176,11 +177,12 @@
                 app:srcCompat="@drawable/add_btn" />
 
             <TextView
-                android:id="@+id/receipt_add_btn"
+                android:id="@+id/add_receipt_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/receipt_add"
                 android:textColor="@color/colorBlurred"
+                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/add_receipt_btn" />
