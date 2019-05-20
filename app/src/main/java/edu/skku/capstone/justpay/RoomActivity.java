@@ -225,7 +225,10 @@ public class RoomActivity extends AppCompatActivity{
     private void setBottomContainer() {
         LayoutInflater bottomInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        if (eventStatus == eventStatus.MAKE_LIST) {
+        if (eventStatus == EventStatus.MAKE_LIST) {
+            LinearLayout bottomContainer = findViewById(R.id.room_bottom_container);
+            bottomContainer.removeAllViews();
+
             bottomInflater.inflate(R.layout.room_bottom_insertion, bottomContainer, true);
             itemNameEdit = findViewById(R.id.item_name_edit);
             itemCostEdit = findViewById(R.id.item_cost_edit);
@@ -252,8 +255,14 @@ public class RoomActivity extends AppCompatActivity{
             });
 
         } else {
+            LinearLayout bottomContainer = findViewById(R.id.room_bottom_container);
+            bottomContainer.removeAllViews();
+
             bottomInflater.inflate(R.layout.room_bottom_confirm, bottomContainer, true);
             confirmBtn = findViewById(R.id.room_result_confirm_btn);
+            if (eventStatus == EventStatus.PERSONAL_CHECK) {
+                confirmBtn.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+            }
 
             confirmBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -285,8 +294,8 @@ public class RoomActivity extends AppCompatActivity{
                 eventStatus2.setTypeface(eventStatus1.getTypeface(), Typeface.NORMAL);
                 eventStatus3.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
                 eventStatus3.setTypeface(eventStatus1.getTypeface(), Typeface.NORMAL);
-                prevStatusBtn.setVisibility(View.GONE);
-                nextStatusBtn.setVisibility(View.VISIBLE);
+                prevStatusBtn.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+                nextStatusBtn.setBackgroundColor(getResources().getColor(R.color.colorJustPay));
                 break;
             case PERSONAL_CHECK:
                 this.eventStatus = EventStatus.PERSONAL_CHECK;
@@ -296,8 +305,8 @@ public class RoomActivity extends AppCompatActivity{
                 eventStatus2.setTypeface(eventStatus1.getTypeface(), Typeface.BOLD);
                 eventStatus3.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
                 eventStatus3.setTypeface(eventStatus1.getTypeface(), Typeface.NORMAL);
-                prevStatusBtn.setVisibility(View.VISIBLE);
-                nextStatusBtn.setVisibility(View.VISIBLE);
+                prevStatusBtn.setBackgroundColor(getResources().getColor(R.color.colorJustPay));
+                nextStatusBtn.setBackgroundColor(getResources().getColor(R.color.colorJustPay));
                 break;
             case CONFIRM_RESULT:
                 this.eventStatus = EventStatus.CONFIRM_RESULT;
@@ -307,8 +316,8 @@ public class RoomActivity extends AppCompatActivity{
                 eventStatus2.setTypeface(eventStatus1.getTypeface(), Typeface.NORMAL);
                 eventStatus3.setTextColor(getResources().getColor(R.color.colorJustPay));
                 eventStatus3.setTypeface(eventStatus1.getTypeface(), Typeface.BOLD);
-                prevStatusBtn.setVisibility(View.VISIBLE);
-                nextStatusBtn.setVisibility(View.GONE);
+                prevStatusBtn.setBackgroundColor(getResources().getColor(R.color.colorJustPay));
+                nextStatusBtn.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
                 break;
         }
     }
