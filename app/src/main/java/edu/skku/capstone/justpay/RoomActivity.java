@@ -239,13 +239,19 @@ public class RoomActivity extends AppCompatActivity{
             addItemBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int inputCount;
                     if (itemNameEdit.getText().toString().length() *
-                            itemCostEdit.getText().toString().length() *
-                            itemCountEdit.getText().toString().length() != 0) {
+                            itemCostEdit.getText().toString().length() != 0) {
+                        // handle null case
+                        if (itemCountEdit.getText().toString().length() == 0) {
+                            inputCount = 0;
+                        } else {
+                            inputCount = Integer.parseInt(itemCountEdit.getText().toString());
+                        }
                         RoomChartItem roomChartItem = new RoomChartItem(
                                 itemNameEdit.getText().toString(),
                                 Integer.parseInt(itemCostEdit.getText().toString()),
-                                Integer.parseInt(itemCountEdit.getText().toString())
+                                inputCount
                         );
                         chartItemAdapter.addItem(roomChartItem);
                         itemNameEdit.setText(null);

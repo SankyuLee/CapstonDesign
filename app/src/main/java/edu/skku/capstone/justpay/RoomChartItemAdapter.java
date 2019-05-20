@@ -52,6 +52,10 @@ public class RoomChartItemAdapter extends BaseAdapter {
         }
 
         RoomChartItem chartItem = chartItemList.get(position);
+        TextView itemNameText = convertView.findViewById(R.id.item_category1_text1);
+        TextView itemCostText = convertView.findViewById(R.id.item_category1_text2);
+        TextView itemCountText = convertView.findViewById(R.id.item_category1_text3);
+
         if (chartItem.getItemCount() != 0) {
             LinearLayout checkBox = convertView.findViewById(R.id.item_check_box_container);
             LinearLayout.LayoutParams checkBoxParams = (LinearLayout.LayoutParams) checkBox.getLayoutParams();
@@ -62,6 +66,8 @@ public class RoomChartItemAdapter extends BaseAdapter {
             LinearLayout.LayoutParams containerParams = (LinearLayout.LayoutParams) container.getLayoutParams();
             containerParams.weight = 2;
             container.setLayoutParams(containerParams);
+            itemCountText.setVisibility(View.VISIBLE);
+            itemCountText.setText(chartItem.getItemCount().toString());
         } else {
             LinearLayout checkBox = convertView.findViewById(R.id.item_check_box_container);
             LinearLayout.LayoutParams checkBoxParams = (LinearLayout.LayoutParams) checkBox.getLayoutParams();
@@ -72,15 +78,11 @@ public class RoomChartItemAdapter extends BaseAdapter {
             LinearLayout.LayoutParams containerParams = (LinearLayout.LayoutParams) container.getLayoutParams();
             containerParams.weight = 0;
             container.setLayoutParams(containerParams);
+            itemCountText.setVisibility(View.INVISIBLE);
         }
-
-        TextView itemNameText = convertView.findViewById(R.id.item_category1_text1);
-        TextView itemCostText = convertView.findViewById(R.id.item_category1_text2);
-        TextView itemCountText = convertView.findViewById(R.id.item_category1_text3);
 
         itemNameText.setText(chartItem.getItemName());
         itemCostText.setText(chartItem.getItemCost().toString());
-        itemCountText.setText(chartItem.getItemCount().toString());
 
         ImageButton delButton = convertView.findViewById(R.id.delete_chart_item_btn);
         delButton.setOnClickListener(new View.OnClickListener() {
