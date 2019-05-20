@@ -33,6 +33,14 @@ import com.gun0912.tedpermission.TedPermission;
 import java.io.File;
 import java.util.ArrayList;
 
+/*
+    TODO : Change chart item when event status is changed
+    TODO : Support tab creation and ellipsis
+    TODO : Support zoom function for receipt image
+
+    TODO : Implement event data saving when event is changed
+ */
+
 public class RoomActivity extends AppCompatActivity{
 
     private TextView roomTitle, roomID;
