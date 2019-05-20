@@ -244,6 +244,9 @@ public class RoomActivity extends AppCompatActivity{
                                 Integer.parseInt(itemCountEdit.getText().toString())
                         );
                         chartItemAdapter.addItem(roomChartItem);
+                        itemNameEdit.setText(null);
+                        itemCostEdit.setText(null);
+                        itemCountEdit.setText(null);
                     }
                 }
             });
