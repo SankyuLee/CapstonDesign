@@ -123,7 +123,7 @@ public class RoomListActivity extends AppCompatActivity
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 LayoutInflater inflater = getLayoutInflater();
                 View alertLayoutView = inflater.inflate(R.layout.dialog_delete_room, null);
-                AlertDialog.Builder builder = new AlertDialog.Builder(RoomListActivity.this); // context 변경 (-Activity.this -> this)
+                AlertDialog.Builder builder = new AlertDialog.Builder(RoomListActivity.this);
 
                 builder.setView(alertLayoutView);
                 builder.setCancelable(false);
@@ -207,8 +207,6 @@ public class RoomListActivity extends AppCompatActivity
         }
     }
 
-
-    // TODO: 2019-05-19 navigation view 없애고 그냥 linear layout으로 바꿔서 메뉴 만들기
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
