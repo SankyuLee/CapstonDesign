@@ -195,6 +195,7 @@ public class RoomActivity extends AppCompatActivity{
         itemList.add(new RoomChartItem("커피", new Integer(3000), new Integer(2)));
         itemList.add(new RoomChartItem("쿠키", new Integer(5400), new Integer(3)));
         itemList.add(new RoomChartItem("설탕", new Integer(5400), new Integer(3)));
+        itemList.add(new RoomChartItem("공기", new Integer(100), new Integer(0)));
 
         // Set event status
         switch (eventStatusInt) {
