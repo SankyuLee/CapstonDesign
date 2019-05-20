@@ -1,19 +1,27 @@
 package edu.skku.capstone.justpay;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 public class RoomChartItemAdapter extends BaseAdapter {
-    private ArrayList<RoomChartItem> chartItemList = new ArrayList<>();
+    private ArrayList<RoomChartItem> chartItemList;
+    private ChartItemOnClickListener chartItemOnClickListener;
 
-    public RoomChartItemAdapter(ArrayList<RoomChartItem> chartItemList) {
+    public RoomChartItemAdapter(ArrayList<RoomChartItem> chartItemList, ChartItemOnClickListener chartItemOnClickListener) {
         this.chartItemList = chartItemList;
+        this.chartItemOnClickListener = chartItemOnClickListener;
+    }
+
+    public interface ChartItemOnClickListener {
+        void onChartItemDeleteBtnClick(int position);
     }
 
     @Override
@@ -51,14 +59,24 @@ public class RoomChartItemAdapter extends BaseAdapter {
         itemCostText.setText(chartItem.getItemCost().toString());
         itemCountText.setText(chartItem.getItemCount().toString());
 
+        ImageButton delButton = convertView.findViewById(R.id.delete_chart_item_btn);
+        delButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chartItemOnClickListener.onChartItemDeleteBtnClick(pos);
+            }
+        });
+
         return convertView;
     }
 
-    public void addItem(String name, Integer cost, Integer count) {
-        RoomChartItem item = new RoomChartItem(name, cost, count);
+    public void removeItem(int position) {
+        chartItemList.remove(position);
+        notifyDataSetChanged();
+    }
 
-        item.setItemName(name);
-        item.setItemCost(cost);
-        item.setItemCount(count);
+    public void addItem(int position, RoomChartItem chartItem) {
+        chartItemList.add(position, chartItem);
+        notifyDataSetChanged();
     }
 }

@@ -46,7 +46,7 @@ public class RoomActivity extends AppCompatActivity{
     private EditText itemNameEdit, itemCostEdit, itemCountEdit;
     private ImageButton addItemBtn;
     private Button confirmBtn;
-
+    
     private EventStatus eventStatus;
     private enum EventStatus { MAKE_LIST,  PERSONAL_CHECK, CONFIRM_RESULT }
 
@@ -192,7 +192,13 @@ public class RoomActivity extends AppCompatActivity{
         }
 
         // Set item chart
-        chartItemAdapter = new RoomChartItemAdapter(itemList);
+        chartItemAdapter = new RoomChartItemAdapter(itemList, new RoomChartItemAdapter.ChartItemOnClickListener() {
+            @Override
+            public void onChartItemDeleteBtnClick(int position) {
+                /* Remove item */
+                chartItemAdapter.removeItem(position);
+            }
+        });
         chartItemListView.setAdapter(chartItemAdapter);
 
         // Set bottom container
