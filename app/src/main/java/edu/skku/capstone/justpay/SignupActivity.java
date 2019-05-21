@@ -1,21 +1,20 @@
 package edu.skku.capstone.justpay;
 
-import android.app.ActionBar;
-import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class SignupActivity extends AppCompatActivity {
@@ -124,7 +123,31 @@ public class SignupActivity extends AppCompatActivity {
         Button btn2 = (Button)findViewById(R.id.btn_signup_confirm);
         btn2.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
-                finish();
+                //입력한 항목 모두 검증
+
+                String email = ((EditText) findViewById(R.id.input_email)).getText().toString();
+                String pw = et_pw.getText().toString();
+                String nickname = ((EditText) findViewById(R.id.input_nickname)).getText().toString();
+
+                JSONObject sql_result = new SQLSender().sendSQL("INSERT into users(email, password, phone, nickname) values('"
+                +email+"','"+pw+"','"+"01011112222"+"','"+nickname+"');");
+                try {
+                    if (sql_result.getBoolean("isError")) {
+                        if (sql_result.getJSONObject("result").getString("code").equals(Constant.ER_DUP_ENTRY)) {
+                            EmailOutput.setText("이메일이 중복됩니다.");
+                            EmailOutput.setTextColor(Color.RED);
+                        } else {
+                            // 알 수 없는 오류
+                            Toast.makeText(SignupActivity.this, "알 수 없는 오류가 발생하였습니다."+sql_result.getJSONObject("result"), Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        // 회원가입 성공
+                        Toast.makeText(SignupActivity.this, "회원가입에 성공하였습니다. 다시 로그인해 주세요.", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
