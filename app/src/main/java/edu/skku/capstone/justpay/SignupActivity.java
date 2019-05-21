@@ -128,9 +128,10 @@ public class SignupActivity extends AppCompatActivity {
                 String email = ((EditText) findViewById(R.id.input_email)).getText().toString();
                 String pw = et_pw.getText().toString();
                 String nickname = ((EditText) findViewById(R.id.input_nickname)).getText().toString();
+                String phone = ((EditText) findViewById(R.id.input_phone)).getText().toString();
 
                 JSONObject sql_result = new SQLSender().sendSQL("INSERT into users(email, password, phone, nickname) values('"
-                +email+"','"+pw+"','"+"01011112222"+"','"+nickname+"');");
+                +email+"','"+pw+"','"+phone+"','"+nickname+"');");
                 try {
                     if (sql_result.getBoolean("isError")) {
                         if (sql_result.getJSONObject("result").getString("code").equals(Constant.ER_DUP_ENTRY)) {
