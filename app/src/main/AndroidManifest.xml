@@ -26,9 +26,7 @@
         </activity>
         <activity android:name=".RoomActivity"></activity>
         <activity android:name=".ResultActivity1"></activity>
-        <activity android:name=".ResultActivity2">
-
-        </activity>
+        <activity android:name=".ResultActivity2"></activity>
         <activity android:name=".DialogTestActivity"></activity>
         <activity android:name=".SignupActivity">
             <intent-filter>

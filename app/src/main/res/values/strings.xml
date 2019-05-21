@@ -38,4 +38,7 @@
     <string name="menu_logout">로그아웃</string>
 
     <string name="delete_room">방을 나가시겠습니까?</string>
+    <string name="new_room">새로운 채팅</string>
+    <string name="create_room">방 생성</string>
+    <string name="search_room">방 검색</string>
 </resources>

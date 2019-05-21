@@ -1,26 +1,28 @@
 package edu.skku.capstone.justpay;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.Layout;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -33,6 +35,9 @@ public class RoomListActivity extends AppCompatActivity
     Button search_btn;
     Button add_btn;
     Button close_btn;
+    FloatingActionButton room_fab;
+    FloatingActionButton room_search_fab;
+    FloatingActionButton room_add_fab;
 
     NavigationView personal_menu;
     DrawerLayout drawerLayout;
@@ -44,7 +49,6 @@ public class RoomListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_list);
 
-        //final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerView = (View)findViewById(R.id.drawer);
 
@@ -52,6 +56,9 @@ public class RoomListActivity extends AppCompatActivity
         search_btn = (Button)findViewById(R.id.search_btn);
         open_btn = (Button)findViewById(R.id.open_btn);
         close_btn = (Button)findViewById(R.id.close_btn);
+        room_fab = (FloatingActionButton)findViewById(R.id.fab_room);
+        room_search_fab = (FloatingActionButton)findViewById(R.id.fab_room_search);
+        room_add_fab = (FloatingActionButton)findViewById(R.id.fab_room_add);
 
         personal_menu = (NavigationView)findViewById(R.id.personal_menu);
         personal_menu.setNavigationItemSelectedListener(this);
@@ -63,6 +70,35 @@ public class RoomListActivity extends AppCompatActivity
 
         roomList.setAdapter(adapter);
 
+        room_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+
+            }
+        });
+
+
+        /*
+        add_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater inflater = getLayoutInflater();
+                View view = inflater.inflate(R.layout.activity_chat_drawer,null);
+
+                Dialog dialog = new Dialog(RoomListActivity.this);
+                dialog.setContentView(view);
+                dialog.setCancelable(true);
+                dialog.getWindow().setGravity(Gravity.TOP);
+
+                WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+                params.width = ActionBar.LayoutParams.MATCH_PARENT;
+                dialog.getWindow().setAttributes(params);
+
+                dialog.show();
+            }
+        });
+*/
         //방 생성 다이얼로그
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +162,7 @@ public class RoomListActivity extends AppCompatActivity
                 AlertDialog.Builder builder = new AlertDialog.Builder(RoomListActivity.this);
 
                 builder.setView(alertLayoutView);
-                builder.setCancelable(false);
+                builder.setCancelable(true);
                 builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -207,7 +243,6 @@ public class RoomListActivity extends AppCompatActivity
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.

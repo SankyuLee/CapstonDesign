@@ -1,82 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RoomListActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/list_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/tob_bar_size"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:background="@color/colorJustPay"
         android:gravity="center_vertical"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="10dp"
+            android:layout_height="@dimen/tob_bar_size"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
-
+            android:padding="10dp">
 
             <Button
                 android:id="@+id/open_btn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginBottom="5dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_weight="1"
                 android:background="@drawable/ic_iconfinder___profile_1904670" />
 
             <EditText
                 android:id="@+id/editText"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_weight="8"
                 android:background="@drawable/box_round"
                 android:ems="10"
                 android:hint="방 이름을 입력해주세요"
                 android:inputType="textPersonName"
                 android:paddingLeft="@dimen/edit_text_left_padding"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 android:textColor="@android:color/black"
                 android:textColorLink="@android:color/transparent"
                 android:textCursorDrawable="@android:color/darker_gray" />
 
             <Button
                 android:id="@+id/search_btn"
-                android:layout_width="0dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginBottom="10dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/ic_iconfinder___search_1904672" />
 
             <Button
                 android:id="@+id/add_btn"
-                android:layout_width="0dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_weight="1"
                 android:background="@drawable/ic_iconfinder___plus_1904677" />
         </LinearLayout>
 
+
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_room_list" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:clickable="true"
+        app:backgroundTint="#93B3E9"
+        app:elevation="10dp"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="end|bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:maxImageSize="40dp"
+        app:srcCompat="@drawable/ic_chat" />
 
-</android.support.design.widget.CoordinatorLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_room_search"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="15dp"
+        android:clickable="true"
+        app:backgroundTint="#D5C9C9"
+        app:layout_constraintBottom_toTopOf="@+id/fab_room"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="35dp"
+        app:srcCompat="@drawable/ic_iconfinder_search" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_room_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="15dp"
+        android:clickable="true"
+        app:backgroundTint="#D5C9C9"
+        app:layout_constraintBottom_toTopOf="@+id/fab_room_search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="40dp"
+        app:srcCompat="@drawable/ic_room_add" />
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_room_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/list_toolbar" />
+
+</android.support.constraint.ConstraintLayout>
