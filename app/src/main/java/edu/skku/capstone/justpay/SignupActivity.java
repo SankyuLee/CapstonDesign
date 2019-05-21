@@ -16,11 +16,15 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
     EditText et_pw, et_pw_chk;
     TextView s_em, s_pw, s_pw_chk;
+
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +55,13 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 String text = et_pw.getText().toString();
-                if(text==null || text.length() <8 || text.length() > 16){
-                    s_pw.setText("비밀번호 형식을 지켜주세요");
-                    s_pw.setTextColor(Color.RED);
-                }
-                else{
+                if(isValidPassword(text)) {
                     s_pw.setText("올바른 비밀번호 형식입니다");
                     s_pw.setTextColor(Color.BLACK);
+                }
+                else{
+                    s_pw.setText("올바르지 못한 비밀번호 형식입니다");
+                    s_pw.setTextColor(Color.RED);
                 }
             }
         });
@@ -132,6 +136,7 @@ public class SignupActivity extends AppCompatActivity {
 
                 JSONObject sql_result = new SQLSender().sendSQL("INSERT into users(email, password, phone, nickname) values('"
                 +email+"','"+pw+"','"+phone+"','"+nickname+"');");
+
                 try {
                     if (sql_result.getBoolean("isError")) {
                         if (sql_result.getJSONObject("result").getString("code").equals(Constant.ER_DUP_ENTRY)) {
@@ -151,6 +156,18 @@ public class SignupActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+    public boolean isValidPassword(final String password) {
+
+        Pattern pattern;
+        Matcher matcher;
+
+        final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+!`~*=])(?=\\S+$).{8,16}$";
+
+        pattern = Pattern.compile(PASSWORD_PATTERN);
+        matcher = pattern.matcher(password);
+        return matcher.matches();
+
     }
 
 }
