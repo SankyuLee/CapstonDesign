@@ -9,9 +9,12 @@ import android.support.constraint.ConstraintSet;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
 import android.text.Layout;
+import android.text.TextWatcher;
 import android.transition.AutoTransition;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -36,6 +39,8 @@ import java.util.ArrayList;
 public class RoomListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    EditText search_editText;
+
     Button open_btn;
     Button search_btn;
     Button add_btn;
@@ -57,6 +62,7 @@ public class RoomListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_list);
 
+        search_editText = (EditText)findViewById(R.id.search_editText);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerView = (View)findViewById(R.id.drawer);
 
@@ -77,6 +83,7 @@ public class RoomListActivity extends AppCompatActivity
         final ArrayList<RoomList_item> list = new ArrayList<RoomList_item>();
         final RoomListAdapter adapter = new RoomListAdapter(this, list);
 
+        roomList.setTextFilterEnabled(true);
         roomList.setAdapter(adapter);
 
         final ConstraintSet constraintSet = new ConstraintSet();
@@ -164,6 +171,7 @@ public class RoomListActivity extends AppCompatActivity
             }
         });
 
+        //전체 방 검색 버튼
         room_search_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -200,6 +208,24 @@ public class RoomListActivity extends AppCompatActivity
             }
         });
 
+        search_editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String searchText = s.toString();
+                ((RoomListAdapter)roomList.getAdapter()).getFilter().filter(searchText);
+            }
+        });
+
         //검색 버튼
         search_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,7 +234,7 @@ public class RoomListActivity extends AppCompatActivity
             }
         });
 
-
+        //drawer 여는 버튼
         open_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,6 +244,7 @@ public class RoomListActivity extends AppCompatActivity
             }
         });
 
+        //drawer 닫는 버튼
         close_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -236,7 +263,6 @@ public class RoomListActivity extends AppCompatActivity
             }
         });
     }
-
 
     DrawerLayout.DrawerListener myDrawerListener = new DrawerLayout.DrawerListener() {
         public void onDrawerClosed(View drawerView) {

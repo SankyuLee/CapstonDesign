@@ -34,7 +34,7 @@
                 android:background="@drawable/ic_iconfinder___profile_1904670" />
 
             <EditText
-                android:id="@+id/editText"
+                android:id="@+id/search_editText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
