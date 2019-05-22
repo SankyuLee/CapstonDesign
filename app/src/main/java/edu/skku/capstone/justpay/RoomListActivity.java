@@ -110,29 +110,8 @@ public class RoomListActivity extends AppCompatActivity
             }
         });
 
-
-        /*
-        add_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LayoutInflater inflater = getLayoutInflater();
-                View view = inflater.inflate(R.layout.activity_chat_drawer,null);
-
-                Dialog dialog = new Dialog(RoomListActivity.this);
-                dialog.setContentView(view);
-                dialog.setCancelable(true);
-                dialog.getWindow().setGravity(Gravity.TOP);
-
-                WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-                params.width = ActionBar.LayoutParams.MATCH_PARENT;
-                dialog.getWindow().setAttributes(params);
-
-                dialog.show();
-            }
-        });
-*/
-        //방 생성 다이얼로그
-        add_btn.setOnClickListener(new View.OnClickListener() {
+        //방 생성 버튼
+        room_add_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LayoutInflater inflater = getLayoutInflater();
@@ -182,6 +161,13 @@ public class RoomListActivity extends AppCompatActivity
                     }
                 });
                 builder.show();
+            }
+        });
+
+        room_search_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
