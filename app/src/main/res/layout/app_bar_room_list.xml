@@ -84,8 +84,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
-        app:maxImageSize="40dp"
-        app:srcCompat="@drawable/ic_chat" />
+        app:maxImageSize="35dp"
+        app:srcCompat="@drawable/ic_room" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_room_search"
@@ -93,11 +93,11 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:clickable="true"
-        app:backgroundTint="#D5C9C9"
+        app:backgroundTint="#F1C296"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="35dp"
-        app:srcCompat="@drawable/ic_iconfinder_search" />
+        app:srcCompat="@drawable/ic_room_search" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_room_add"
@@ -105,10 +105,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:clickable="true"
-        app:backgroundTint="#D5C9C9"
+        app:backgroundTint="#F5DF91"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="40dp"
+        app:maxImageSize="35dp"
         app:srcCompat="@drawable/ic_room_add" />
 
     <include
