@@ -1,26 +1,36 @@
 package edu.skku.capstone.justpay;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.Layout;
+import android.text.TextWatcher;
+import android.transition.AutoTransition;
+import android.transition.TransitionManager;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -29,22 +39,30 @@ import java.util.ArrayList;
 public class RoomListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    EditText search_editText;
+
     Button open_btn;
     Button search_btn;
     Button add_btn;
     Button close_btn;
+    FloatingActionButton room_fab;
+    FloatingActionButton room_search_fab;
+    FloatingActionButton room_add_fab;
 
     NavigationView personal_menu;
     DrawerLayout drawerLayout;
     View drawerView;
     ListView roomList;
+    ConstraintLayout room_list_layout;
+
+    private boolean isMenuCollapsed = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_list);
 
-        //final DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        search_editText = (EditText)findViewById(R.id.search_editText);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerView = (View)findViewById(R.id.drawer);
 
@@ -52,19 +70,55 @@ public class RoomListActivity extends AppCompatActivity
         search_btn = (Button)findViewById(R.id.search_btn);
         open_btn = (Button)findViewById(R.id.open_btn);
         close_btn = (Button)findViewById(R.id.close_btn);
+        room_fab = (FloatingActionButton)findViewById(R.id.fab_room);
+        room_search_fab = (FloatingActionButton)findViewById(R.id.fab_room_search);
+        room_add_fab = (FloatingActionButton)findViewById(R.id.fab_room_add);
 
         personal_menu = (NavigationView)findViewById(R.id.personal_menu);
         personal_menu.setNavigationItemSelectedListener(this);
 
         roomList = (ListView)findViewById(R.id.roomList);
+        room_list_layout = (ConstraintLayout)findViewById(R.id.room_list_layout);
 
         final ArrayList<RoomList_item> list = new ArrayList<RoomList_item>();
         final RoomListAdapter adapter = new RoomListAdapter(this, list);
 
+        roomList.setTextFilterEnabled(true);
         roomList.setAdapter(adapter);
 
-        //방 생성 다이얼로그
-        add_btn.setOnClickListener(new View.OnClickListener() {
+        final ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(room_list_layout);
+        constraintSet.connect(room_search_fab.getId(), ConstraintSet.BOTTOM, room_fab.getId(), ConstraintSet.BOTTOM);
+        constraintSet.connect(room_add_fab.getId(), ConstraintSet.BOTTOM, room_fab.getId(), ConstraintSet.BOTTOM);
+
+
+        room_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isMenuCollapsed) {
+                    constraintSet.connect(room_search_fab.getId(), ConstraintSet.BOTTOM, room_fab.getId(), ConstraintSet.TOP);
+                    constraintSet.connect(room_add_fab.getId(), ConstraintSet.BOTTOM, room_search_fab.getId(), ConstraintSet.TOP);
+                    constraintSet.setMargin(room_search_fab.getId(),ConstraintSet.BOTTOM,40);
+                    constraintSet.setMargin(room_add_fab.getId(),ConstraintSet.BOTTOM,40);
+                } else {
+                    constraintSet.connect(room_search_fab.getId(), ConstraintSet.BOTTOM, room_fab.getId(), ConstraintSet.BOTTOM);
+                    constraintSet.connect(room_add_fab.getId(), ConstraintSet.BOTTOM, room_fab.getId(), ConstraintSet.BOTTOM);
+                    constraintSet.setMargin(room_search_fab.getId(),ConstraintSet.BOTTOM,0);
+                    constraintSet.setMargin(room_add_fab.getId(),ConstraintSet.BOTTOM,0);
+                }
+                AutoTransition transition = new AutoTransition();
+                transition.setDuration(300);
+                transition.setInterpolator(new AccelerateDecelerateInterpolator());
+
+                TransitionManager.beginDelayedTransition(room_list_layout, transition);
+                constraintSet.applyTo(room_list_layout);
+
+                isMenuCollapsed = !isMenuCollapsed;
+            }
+        });
+
+        //방 생성 버튼
+        room_add_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LayoutInflater inflater = getLayoutInflater();
@@ -117,6 +171,14 @@ public class RoomListActivity extends AppCompatActivity
             }
         });
 
+        //전체 방 검색 버튼
+        room_search_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         //방 삭제
         roomList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -126,7 +188,7 @@ public class RoomListActivity extends AppCompatActivity
                 AlertDialog.Builder builder = new AlertDialog.Builder(RoomListActivity.this);
 
                 builder.setView(alertLayoutView);
-                builder.setCancelable(false);
+                builder.setCancelable(true);
                 builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -146,6 +208,24 @@ public class RoomListActivity extends AppCompatActivity
             }
         });
 
+        search_editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String searchText = s.toString();
+                ((RoomListAdapter)roomList.getAdapter()).getFilter().filter(searchText);
+            }
+        });
+
         //검색 버튼
         search_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,7 +234,7 @@ public class RoomListActivity extends AppCompatActivity
             }
         });
 
-
+        //drawer 여는 버튼
         open_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -164,6 +244,7 @@ public class RoomListActivity extends AppCompatActivity
             }
         });
 
+        //drawer 닫는 버튼
         close_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -207,7 +288,6 @@ public class RoomListActivity extends AppCompatActivity
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
