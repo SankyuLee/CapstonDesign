@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
-    EditText et_pw, et_pw_chk, et_ph;
+    EditText et_pw, et_pw_chk, et_ph, et_nn;
     TextView s_em, s_pw, s_pw_chk;
 
     int bit1 = 1;
@@ -39,12 +39,9 @@ public class SignupActivity extends AppCompatActivity {
         setSupportActionBar(tb);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-
+        et_nn = findViewById(R.id.input_nickname);
         et_ph = findViewById(R.id.input_phone);
         et_ph.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
-
-
-
         et_pw = findViewById(R.id.input_ps);
         et_pw_chk = findViewById(R.id.input_ps_check);
 
@@ -143,7 +140,7 @@ public class SignupActivity extends AppCompatActivity {
         btn2.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
                 //입력한 항목 모두 검증
-                if (bit1 == 0 && bit2 == 0 && bit3 ==0) {
+                if (bit1 == 0 && bit2 == 0 && bit3 ==0 && !et_nn.getText().toString().matches("")) {
                     String email = ((EditText) findViewById(R.id.input_email)).getText().toString();
                     String pw = et_pw.getText().toString();
                     String nickname = ((EditText) findViewById(R.id.input_nickname)).getText().toString();
