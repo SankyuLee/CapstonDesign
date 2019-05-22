@@ -103,8 +103,8 @@ public class CustomList extends BaseExpandableListAdapter {
 
 
         name.setText(getChild(groupPosition, childPosition).getName());
-        pay.setText(String.valueOf(getChild(groupPosition, childPosition).getPay()));
-        number.setText(String.valueOf(getChild(groupPosition, childPosition).getNumber()));
+        pay.setText(String.valueOf(getChild(groupPosition, childPosition).getPay()) + " X " + String.valueOf(getChild(groupPosition, childPosition).getNumber()));
+        number.setText(String.valueOf(getChild(groupPosition, childPosition).getNumber()*getChild(groupPosition, childPosition).getPay()));
 
 
 

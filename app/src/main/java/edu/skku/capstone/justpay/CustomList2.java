@@ -79,8 +79,8 @@ public class CustomList2 extends BaseExpandableListAdapter {
 
         //리스트 아이템의 내용 설정
         name.setText(getGroup(groupPosition).getName());
-        pay.setText(String.valueOf(getGroup(groupPosition).getPay()));
-        number.setText(String.valueOf(getGroup(groupPosition).getNumber()));
+        pay.setText(String.valueOf(getGroup(groupPosition).getPay()) + "X" + String.valueOf(getGroup(groupPosition).getNumber()));
+        number.setText(String.valueOf(getGroup(groupPosition).getNumber()*getGroup(groupPosition).getPay()));
         //
         return v;
     }
@@ -101,8 +101,8 @@ public class CustomList2 extends BaseExpandableListAdapter {
 
 
         name.setText(getChild(groupPosition, childPosition).getName());
-        pay.setText(String.valueOf(getChild(groupPosition, childPosition).getPay()));
-        number.setText(String.valueOf(getChild(groupPosition, childPosition).getNumber()));
+        pay.setText(String.valueOf(getChild(groupPosition, childPosition).getPay()) + "X" + String.valueOf(getChild(groupPosition, childPosition).getNumber()));
+        number.setText(String.valueOf(getChild(groupPosition, childPosition).getNumber() * getChild(groupPosition, childPosition).getPay()));
 
         return v;
     }

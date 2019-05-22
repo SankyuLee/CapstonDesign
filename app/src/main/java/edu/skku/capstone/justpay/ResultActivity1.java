@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.graphics.drawable.ColorDrawable;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,11 +23,19 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ResultActivity1 extends AppCompatActivity {
 
     Button shareBtn;
-
+    String test;
+    int roomId;//현재 방 번호
+    int userId;
+    String userName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,21 +45,59 @@ public class ResultActivity1 extends AppCompatActivity {
         final CustomList customadapter;
         customadapter = new CustomList() ;
 
-        // 리스트뷰 참조 및 Adapter달기
         ExpandableListView listview = (ExpandableListView)findViewById(R.id.listView);
         customadapter.personlists = new ArrayList<> ();
 
         ArrayList<ArrayList<personal_item>> itemlists = new ArrayList<>() ;
+        customadapter.itemlists = itemlists;
+        roomId = 1;
+        // Get data from Database
+         String sql = "SELECT userId from roomLists";
+         JSONObject userLists = new SQLSender().sendSQL(sql); //방의 유저목록 휙득
+          try {
+              if (!userLists.getBoolean("isError")) {
+                  for(int i = 0;i < userLists.getJSONArray("result").length();i++)
+                  {
+                      userId = userLists.getJSONArray("result").getJSONObject(i).getInt("userId");
+
+                      JSONObject usertemp = new SQLSender().sendSQL("SELECT nickname from users where id ="+userId); //유저 이름 알아내기
+                      userName = usertemp.getJSONArray("result").getJSONObject(0).getString("nickname");
+                      int totalPay = 0; // 유저의 전체 금액
+                      int billId;
+                      JSONObject billLists = new SQLSender().sendSQL("SELECT id from bills where roomId="+String.valueOf(roomId)); //현재 bill;
+                      billId = billLists.getJSONArray("result").getJSONObject(0).getInt("id"); // 해당 event의 아이디
+                      JSONObject itemLists = new SQLSender().sendSQL("SELECT * from checkLists where userId=" + String.valueOf(userId)); //유저의 아이템 목록 휙득
+                      for(int j = 0;j < itemLists.getJSONArray("result").length();j++) {
+                          JSONObject billtemp = new SQLSender().sendSQL("SELECT * from items where id="+itemLists.getJSONArray("result").getJSONObject(j).getInt("itemId")); //item의 bill;
+                          int itemBillId = billtemp.getJSONArray("result").getJSONObject(j).getInt("billId");
+                          if(itemBillId == billId) {
+                              customadapter.itemlists.add(new ArrayList<personal_item>());
+                              String itemName = billtemp.getJSONArray("result").getJSONObject(j).getString("itemname");
+                              int itempay = billtemp.getJSONArray("result").getJSONObject(j).getInt("price");
+                              int itemnum = billtemp.getJSONArray("result").getJSONObject(j).getInt("quantity");
+                              totalPay = totalPay + itempay * itemnum;
+                              customadapter.addItem(0,new personal_item(itemName,itempay,itemnum));
+
+                              customadapter.personlists.add(new resultlist_item(userName,totalPay));
+                          }
+                      }
+
+                  }
+
+              }
+          } catch (JSONException e) {
+              Log.e("Exception", "JSONException occurred in ExampleActivity.java");
+              e.printStackTrace();
+          }
 
         //create Data
-        customadapter.addPerson(new resultlist_item("김사무엘",1000));
+        /*customadapter.addPerson(new resultlist_item(test,1000));
         customadapter.personlists.add(new resultlist_item("오승민",3000));
         customadapter.personlists.add(new resultlist_item("이상규",2000));
         customadapter.personlists.add(new resultlist_item("이지훈",7000));
         customadapter.personlists.add(new resultlist_item("이창훈",8000));
         customadapter.personlists.add(new resultlist_item("조현진",3000));
-        customadapter.itemlists = itemlists;
-        customadapter.itemlists.add(new ArrayList<personal_item>());
+
         customadapter.itemlists.add(new ArrayList<personal_item>());
         customadapter.itemlists.add(new ArrayList<personal_item>());
         customadapter.itemlists.add(new ArrayList<personal_item>());
@@ -62,7 +109,7 @@ public class ResultActivity1 extends AppCompatActivity {
         customadapter.addItem(2,new personal_item("프라프치노",1000,1));
         customadapter.addItem(3,new personal_item("고구마튀김",1000,1));
         customadapter.addItem(4,new personal_item("짬뽕라떼",1000,1));
-        customadapter.addItem(5,new personal_item("군고구라떼",1000,1));
+        customadapter.addItem(5,new personal_item("군고구라떼",1000,1));*/
         listview.setAdapter(customadapter);
 
         Button buttonNoAsc = (Button) findViewById(R.id.orderbutton) ;
