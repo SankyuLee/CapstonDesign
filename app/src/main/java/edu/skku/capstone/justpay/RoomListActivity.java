@@ -4,10 +4,14 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Layout;
+import android.transition.AutoTransition;
+import android.transition.TransitionManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -43,6 +48,9 @@ public class RoomListActivity extends AppCompatActivity
     DrawerLayout drawerLayout;
     View drawerView;
     ListView roomList;
+    ConstraintLayout room_list_layout;
+
+    private boolean isMenuCollapsed = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,17 +72,41 @@ public class RoomListActivity extends AppCompatActivity
         personal_menu.setNavigationItemSelectedListener(this);
 
         roomList = (ListView)findViewById(R.id.roomList);
+        room_list_layout = (ConstraintLayout)findViewById(R.id.room_list_layout);
 
         final ArrayList<RoomList_item> list = new ArrayList<RoomList_item>();
         final RoomListAdapter adapter = new RoomListAdapter(this, list);
 
         roomList.setAdapter(adapter);
 
+        final ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(room_list_layout);
+        constraintSet.connect(room_search_fab.getId(), ConstraintSet.BOTTOM, room_fab.getId(), ConstraintSet.BOTTOM);
+        constraintSet.connect(room_add_fab.getId(), ConstraintSet.BOTTOM, room_fab.getId(), ConstraintSet.BOTTOM);
+
+
         room_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+                if (isMenuCollapsed) {
+                    constraintSet.connect(room_search_fab.getId(), ConstraintSet.BOTTOM, room_fab.getId(), ConstraintSet.TOP);
+                    constraintSet.connect(room_add_fab.getId(), ConstraintSet.BOTTOM, room_search_fab.getId(), ConstraintSet.TOP);
+                    constraintSet.setMargin(room_search_fab.getId(),ConstraintSet.BOTTOM,40);
+                    constraintSet.setMargin(room_add_fab.getId(),ConstraintSet.BOTTOM,40);
+                } else {
+                    constraintSet.connect(room_search_fab.getId(), ConstraintSet.BOTTOM, room_fab.getId(), ConstraintSet.BOTTOM);
+                    constraintSet.connect(room_add_fab.getId(), ConstraintSet.BOTTOM, room_fab.getId(), ConstraintSet.BOTTOM);
+                    constraintSet.setMargin(room_search_fab.getId(),ConstraintSet.BOTTOM,0);
+                    constraintSet.setMargin(room_add_fab.getId(),ConstraintSet.BOTTOM,0);
+                }
+                AutoTransition transition = new AutoTransition();
+                transition.setDuration(300);
+                transition.setInterpolator(new AccelerateDecelerateInterpolator());
 
+                TransitionManager.beginDelayedTransition(room_list_layout, transition);
+                constraintSet.applyTo(room_list_layout);
+
+                isMenuCollapsed = !isMenuCollapsed;
             }
         });
 
@@ -218,6 +250,7 @@ public class RoomListActivity extends AppCompatActivity
             }
         });
     }
+
 
     DrawerLayout.DrawerListener myDrawerListener = new DrawerLayout.DrawerListener() {
         public void onDrawerClosed(View drawerView) {
