@@ -33,21 +33,38 @@ import com.gun0912.tedpermission.TedPermission;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /*
     TODO : Change chart item when event status is changed
     TODO : Support tab creation and ellipsis
-
-    TODO : Implement event data saving when event is changed
  */
 
 public class RoomActivity extends AppCompatActivity{
 
-    private TextView roomTitle, roomID;
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // Database 에서 관리 해야하는 변수들
+    //
+    private String roomName;                            // 방의 이름
+    private Integer roomId;                             // 방의 고유 아이디
+    private ArrayList<Member> roomMembers;              // 방에 참여하고 있는 멤버 아이디 목록
+    // 현재 이벤트
+    // 현재 이벤트의 제목, 관리인, 이벤트의 상태, 등록된 영수증 목록, 등록된 항목 목록 포함
+    private Event curEvent;
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    private int curReceiptIndex; // 사용자가 보고 있는 영수증 인덱스
+    private int curJoinMemberNum; // 입력에 참여하고 있는 인원 수
+
+    // 앨범에서 사진을 요청하는 Flag
+    private static final int PICK_FROM_ALBUM = 1;
+
+    // Layout components
+    private TextView roomNameView, roomIdView;
     private ImageButton banBtn, addBtn, changeBtn;
 
     private RecyclerView tabListView;
-    private RoomTabAdapter tabAdapter;
+    private EventAdapter eventAdapter;
 
     private ImageView receiptImg;
     private ImageButton addReceiptBtn, prevReceiptBtn, nextReceiptBtn;
@@ -67,22 +84,42 @@ public class RoomActivity extends AppCompatActivity{
     private ImageButton addItemBtn;
     private Button confirmBtn;
 
-    private EventStatus eventStatus;
-    private enum EventStatus { MAKE_LIST,  PERSONAL_CHECK, CONFIRM_RESULT }
-
-    private ArrayList<File> receiptList;
-    private Integer curReceiptIndex;
-    private static final int PICK_FROM_ALBUM = 1;
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // Test Data
+    //
+    private ArrayList<Member> members = new ArrayList<>(
+            Arrays.asList(
+                    new Member(0, "이지훈",
+                            "ulla4571@g.skku.edu", "01032104571"),
+                    new Member(1, "조현진",
+                            "guswh11@skku.edu", "01000000000"),
+                    new Member(2, "오승민",
+                            "xxxx@gmail.com", "01000000000")));
+    private ArrayList<RoomChartItem> items = new ArrayList<>(
+            Arrays.asList(
+                    new RoomChartItem("커피", new Integer(3000), new Integer(2)),
+                    new RoomChartItem("쿠키", new Integer(5400), new Integer(3)),
+                    new RoomChartItem("설탕", new Integer(5400), new Integer(3)),
+                    new RoomChartItem("공기", new Integer(100), new Integer(0))));
+    private ArrayList<Event> events = new ArrayList<>(
+            Arrays.asList(
+                    new Event(0, "05/07", members.get(0),
+                            new ArrayList<File>(), items, Event.MAKE_LIST),
+                    new Event(0, "05/08", members.get(0),
+                            new ArrayList<File>(), items, Event.PERSONAL_CHECK)));
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
 
+        // 앨범에서 사진을 불러오기위한 권한 요청
         getPermission();
 
-        roomID = findViewById(R.id.room_id);
-        roomTitle = findViewById(R.id.room_id);
+        // 레이아웃 초기화
+        roomIdView = findViewById(R.id.room_id);
+        roomNameView = findViewById(R.id.room_id);
         banBtn = findViewById(R.id.ban_user_btn);
         addBtn = findViewById(R.id.add_user_btn);
         changeBtn = findViewById(R.id.change_user_btn);
@@ -101,8 +138,7 @@ public class RoomActivity extends AppCompatActivity{
         nextStatusBtn = findViewById(R.id.next_status_btn);
         typingStatus = findViewById(R.id.room_typing_status);
 
-        // Make Room with title, id, focused event name and room status
-        initRoom("5지조", "1234", "05/09 커피");
+        initRoom();
 
         banBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,8 +210,8 @@ public class RoomActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 curReceiptIndex++;
-                if (curReceiptIndex > receiptList.size()) {
-                    curReceiptIndex = receiptList.size();
+                if (curReceiptIndex > curEvent.getReceiptList().size()) {
+                    curReceiptIndex = curEvent.getReceiptList().size();
                 }
                 setReceiptImg();
             }
@@ -184,11 +220,11 @@ public class RoomActivity extends AppCompatActivity{
         prevStatusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (eventStatus == EventStatus.PERSONAL_CHECK) {
-                    setStatus(EventStatus.MAKE_LIST);
+                if (curEvent.getEventStatus() == Event.PERSONAL_CHECK) {
+                    setEventStatus(Event.MAKE_LIST);
                     setBottomContainer();
-                } else if (eventStatus == EventStatus.CONFIRM_RESULT) {
-                    setStatus(EventStatus.PERSONAL_CHECK);
+                } else if (curEvent.getEventStatus() == Event.CONFIRM_RESULT) {
+                    setEventStatus(Event.PERSONAL_CHECK);
                     setBottomContainer();
                 }
             }
@@ -197,17 +233,18 @@ public class RoomActivity extends AppCompatActivity{
         nextStatusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (eventStatus == EventStatus.MAKE_LIST) {
-                    setStatus(EventStatus.PERSONAL_CHECK);
+                if (curEvent.getEventStatus() == Event.MAKE_LIST) {
+                    setEventStatus(Event.PERSONAL_CHECK);
                     setBottomContainer();
-                } else if (eventStatus == EventStatus.PERSONAL_CHECK) {
-                    setStatus(EventStatus.CONFIRM_RESULT);
+                } else if (curEvent.getEventStatus() == Event.PERSONAL_CHECK) {
+                    setEventStatus(Event.CONFIRM_RESULT);
                     setBottomContainer();
                 }
             }
         });
     }
 
+    // 갤러리에서 사진을 가지고 왔을 때의 행동 규정
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == PICK_FROM_ALBUM && data != null) {
@@ -223,87 +260,67 @@ public class RoomActivity extends AppCompatActivity{
                 int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                 cursor.moveToFirst();
 
-                receiptList.add(new File(cursor.getString(column_index)));
+                curEvent.getReceiptList().add(new File(cursor.getString(column_index)));
             } finally {
                 if (cursor != null) {
                     cursor.close();
                 }
             }
         }
-        curReceiptIndex = receiptList.size() - 1;
+        curReceiptIndex = curEvent.getReceiptList().size() - 1;
         setReceiptImg();
     }
 
-    private void initRoom(String title, String id, String eventName) {
-        // Set room's title and id
-        roomTitle.setText(title);
-        roomID.setText(id);
+    private void initRoom() {
+        // 방 정보 설정
+        roomName = "5지조";
+        roomId = 1234;
+        roomMembers = members;
 
-        // Init tabs and focusing target event
-        initTabs();
-        setTab(eventName);
+        // 레이아웃에 방 정보 적용
+        roomNameView.setText(roomName);
+        roomIdView.setText("#"+roomId.toString());
+
+        // 방 내부에 이벤트 목록 생성 및 기본 이벤트 설정
+        initEvents();
+        setEvent(events.get(0));
     }
 
-    private void initTabs() {
+    private void initEvents() {
         LinearLayoutManager layoutManager =
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         tabListView.setLayoutManager(layoutManager);
 
-        final ArrayList<RoomTabItem> tabList = new ArrayList<>();
-        tabList.add(new RoomTabItem("05/09 커피"));
-        tabList.add(new RoomTabItem("05/08 점심"));
-
-        tabAdapter = new RoomTabAdapter(tabList, new RoomTabAdapter.TabOnClickListener() {
+        eventAdapter = new EventAdapter(events, new EventAdapter.TabOnClickListener() {
             @Override
             public void onTabClicked(int position) {
-                setTab(tabList.get(position).getTabTitle());
+                setEvent(events.get(position));
             }
 
             @Override
             public void onTabDeleteBtnClicked(int position) {
-                tabAdapter.removeItem(position);
+                eventAdapter.removeItem(position);
             }
         });
-        tabListView.setAdapter(tabAdapter);
+        tabListView.setAdapter(eventAdapter);
 
         RoomTabDecoration tabDecoration = new RoomTabDecoration();
         tabListView.addItemDecoration(tabDecoration);
     }
 
-    private void setTab(String eventName) {
-        Toast.makeText(getApplicationContext(), "Open " + eventName, Toast.LENGTH_SHORT).show();
-        // Get event info from db
-        receiptList = new ArrayList<>(); // Receipt
-        int eventStatusInt = 0; // Status
-        ArrayList<RoomChartItem> itemList = new ArrayList<>(); // Item List
-        itemList.add(new RoomChartItem("커피", new Integer(3000), new Integer(2)));
-        itemList.add(new RoomChartItem("쿠키", new Integer(5400), new Integer(3)));
-        itemList.add(new RoomChartItem("설탕", new Integer(5400), new Integer(3)));
-        itemList.add(new RoomChartItem("공기", new Integer(100), new Integer(0)));
+    private void setEvent(Event event) {
+        // 이벤트 정보 설정
+        curEvent = event;
 
-        // Set receipt images
-        if (receiptList.size() > 0) {
-            curReceiptIndex = receiptList.size() - 1;
-        } else {
-            curReceiptIndex = 0;
-        }
+        // 영수증 불러오기
+        curReceiptIndex = 0;
         setReceiptImg();
 
-        // Set event status
-        switch (eventStatusInt) {
-            case 0:
-                setStatus(EventStatus.MAKE_LIST);
-                break;
-            case 1:
-                setStatus(EventStatus.PERSONAL_CHECK);
-                break;
-            case 2:
-                setStatus(EventStatus.CONFIRM_RESULT);
-                break;
-        }
+        // 이벤트 상태에 따른 레이아웃 설정
+        setEventStatus(curEvent.getEventStatus());
 
-        // Set item chart
-        chartItemAdapter = new RoomChartItemAdapter(itemList, new RoomChartItemAdapter.ChartItemOnClickListener() {
+        // 아이템 항목 적용
+        chartItemAdapter = new RoomChartItemAdapter(curEvent.getChartItems(), new RoomChartItemAdapter.ChartItemOnClickListener() {
             @Override
             public void onChartItemDeleteBtnClick(int position) {
                 chartItemAdapter.removeItem(position);
@@ -311,14 +328,14 @@ public class RoomActivity extends AppCompatActivity{
         });
         chartItemListView.setAdapter(chartItemAdapter);
 
-        // Set bottom container
+        // 하단바 설정
         setBottomContainer();
     }
 
     private void setBottomContainer() {
         LayoutInflater bottomInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        if (eventStatus == EventStatus.MAKE_LIST) {
+        if (curEvent.getEventStatus() == Event.MAKE_LIST) {
             LinearLayout bottomContainer = findViewById(R.id.room_bottom_container);
             bottomContainer.removeAllViews();
 
@@ -359,8 +376,11 @@ public class RoomActivity extends AppCompatActivity{
 
             bottomInflater.inflate(R.layout.room_bottom_confirm, bottomContainer, true);
             confirmBtn = findViewById(R.id.room_result_confirm_btn);
-            if (eventStatus == EventStatus.PERSONAL_CHECK) {
+
+            confirmBtn.setEnabled(true);
+            if (curEvent.getEventStatus() == Event.PERSONAL_CHECK) {
                 confirmBtn.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+                confirmBtn.setEnabled(false);
             }
 
             confirmBtn.setOnClickListener(new View.OnClickListener() {
@@ -383,10 +403,10 @@ public class RoomActivity extends AppCompatActivity{
         }
     }
 
-    private void setStatus(EventStatus eventStatus) {
+    private void setEventStatus(int eventStatus) {
         switch (eventStatus) {
-            case MAKE_LIST:
-                this.eventStatus = EventStatus.MAKE_LIST;
+            case Event.MAKE_LIST:
+                curEvent.setEventStatus(Event.MAKE_LIST);
                 eventStatus1.setTextColor(getResources().getColor(R.color.colorJustPay));
                 eventStatus1.setTypeface(eventStatus1.getTypeface(), Typeface.BOLD);
                 eventStatus2.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
@@ -396,8 +416,8 @@ public class RoomActivity extends AppCompatActivity{
                 prevStatusBtn.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
                 nextStatusBtn.setBackgroundColor(getResources().getColor(R.color.colorJustPay));
                 break;
-            case PERSONAL_CHECK:
-                this.eventStatus = EventStatus.PERSONAL_CHECK;
+            case Event.PERSONAL_CHECK:
+                curEvent.setEventStatus(Event.PERSONAL_CHECK);
                 eventStatus1.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
                 eventStatus1.setTypeface(eventStatus1.getTypeface(), Typeface.NORMAL);
                 eventStatus2.setTextColor(getResources().getColor(R.color.colorJustPay));
@@ -407,8 +427,8 @@ public class RoomActivity extends AppCompatActivity{
                 prevStatusBtn.setBackgroundColor(getResources().getColor(R.color.colorJustPay));
                 nextStatusBtn.setBackgroundColor(getResources().getColor(R.color.colorJustPay));
                 break;
-            case CONFIRM_RESULT:
-                this.eventStatus = EventStatus.CONFIRM_RESULT;
+            case Event.CONFIRM_RESULT:
+                curEvent.setEventStatus(Event.CONFIRM_RESULT);
                 eventStatus1.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
                 eventStatus1.setTypeface(eventStatus1.getTypeface(), Typeface.NORMAL);
                 eventStatus2.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
@@ -453,24 +473,24 @@ public class RoomActivity extends AppCompatActivity{
     }
 
     private void setReceiptImg() {
-        if (curReceiptIndex >= 0 && curReceiptIndex < receiptList.size()) {
+        if (curReceiptIndex >= 0 && curReceiptIndex < curEvent.getReceiptList().size()) {
             receiptImg.setVisibility(View.VISIBLE);
             addReceiptBtn.setVisibility(View.INVISIBLE);
             addReceiptText.setVisibility(View.INVISIBLE);
             BitmapFactory.Options options = new BitmapFactory.Options();
             Bitmap imgBm = BitmapFactory.
-                    decodeFile(receiptList.get(curReceiptIndex).getAbsolutePath(), options);
+                    decodeFile(curEvent.getReceiptList().get(curReceiptIndex).getAbsolutePath(), options);
             receiptImg.setImageBitmap(imgBm);
             receiptAttacher = new PhotoViewAttacher(receiptImg);
             receiptAttacher.setMaximumScale(10);
             receiptAttacher.update();
             receiptStatus.setText(new Integer(curReceiptIndex + 1).toString() + " / " +
-                    new Integer(receiptList.size()).toString());
+                    new Integer(curEvent.getReceiptList().size()).toString());
         } else {
             addReceiptBtn.setVisibility(View.VISIBLE);
             addReceiptText.setVisibility(View.VISIBLE);
             receiptImg.setVisibility(View.INVISIBLE);
-            receiptStatus.setText("+ / " + new Integer(receiptList.size()).toString());
+            receiptStatus.setText("+ / " + new Integer(curEvent.getReceiptList().size()).toString());
         }
     }
 }

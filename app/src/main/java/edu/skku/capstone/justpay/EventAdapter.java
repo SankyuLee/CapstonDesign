@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class RoomTabAdapter extends RecyclerView.Adapter<RoomTabAdapter.ViewHolder> {
-    private ArrayList<RoomTabItem> tabList;
+public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
+    private ArrayList<Event> tabList;
     private TabOnClickListener tabOnClickListener;
 
-    public RoomTabAdapter(ArrayList<RoomTabItem> tabList, TabOnClickListener tabOnClickListener) {
+    public EventAdapter(ArrayList<Event> tabList, TabOnClickListener tabOnClickListener) {
         this.tabList = tabList;
         this.tabOnClickListener = tabOnClickListener;
     }
@@ -26,16 +26,16 @@ public class RoomTabAdapter extends RecyclerView.Adapter<RoomTabAdapter.ViewHold
 
     @NonNull
     @Override
-    public RoomTabAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public EventAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.item_tab, viewGroup, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RoomTabAdapter.ViewHolder viewHolder, int position) {
-        RoomTabItem tabItem = tabList.get(position);
-        viewHolder.textView.setText(tabItem.getTabTitle());
+    public void onBindViewHolder(@NonNull EventAdapter.ViewHolder viewHolder, int position) {
+        Event tabItem = tabList.get(position);
+        viewHolder.textView.setText(tabItem.getEventTitle());
 
         final int pos = position;
         viewHolder.textView.setOnClickListener(new View.OnClickListener() {
@@ -77,7 +77,7 @@ public class RoomTabAdapter extends RecyclerView.Adapter<RoomTabAdapter.ViewHold
         notifyItemRangeChanged(position, tabList.size());
     }
 
-    public void addItem(int position, RoomTabItem tabItem) {
+    public void addItem(int position, Event tabItem) {
         tabList.add(position, tabItem);
         notifyItemInserted(position);
         notifyItemRangeChanged(position, tabList.size());
