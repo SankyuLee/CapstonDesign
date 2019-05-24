@@ -47,7 +47,7 @@ public class RoomActivity extends AppCompatActivity{
     //
     private String roomName;                            // 방의 이름
     private Integer roomId;                             // 방의 고유 아이디
-    private ArrayList<Member> roomMembers;              // 방에 참여하고 있는 멤버 아이디 목록
+    private ArrayList<Member> roomMembers;              // 방에 참여하고 있는 멤버 목록
     // 현재 이벤트
     // 현재 이벤트의 제목, 관리인, 이벤트의 상태, 등록된 영수증 목록, 등록된 항목 목록 포함
     private Event curEvent;
@@ -95,7 +95,13 @@ public class RoomActivity extends AppCompatActivity{
                             "guswh11@skku.edu", "01000000000"),
                     new Member(2, "오승민",
                             "xxxx@gmail.com", "01000000000")));
-    private ArrayList<RoomChartItem> items = new ArrayList<>(
+    private ArrayList<RoomChartItem> items1 = new ArrayList<>(
+            Arrays.asList(
+                    new RoomChartItem("커피", new Integer(3000), new Integer(2)),
+                    new RoomChartItem("쿠키", new Integer(5400), new Integer(3)),
+                    new RoomChartItem("설탕", new Integer(5400), new Integer(3)),
+                    new RoomChartItem("공기", new Integer(100), new Integer(0))));
+    private ArrayList<RoomChartItem> items2 = new ArrayList<>(
             Arrays.asList(
                     new RoomChartItem("커피", new Integer(3000), new Integer(2)),
                     new RoomChartItem("쿠키", new Integer(5400), new Integer(3)),
@@ -104,9 +110,9 @@ public class RoomActivity extends AppCompatActivity{
     private ArrayList<Event> events = new ArrayList<>(
             Arrays.asList(
                     new Event(0, "05/07", members.get(0),
-                            new ArrayList<File>(), items, Event.MAKE_LIST),
+                            new ArrayList<File>(), items1, Event.MAKE_LIST),
                     new Event(0, "05/08", members.get(0),
-                            new ArrayList<File>(), items, Event.PERSONAL_CHECK)));
+                            new ArrayList<File>(), items2, Event.PERSONAL_CHECK)));
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
