@@ -34,6 +34,7 @@ import com.gun0912.tedpermission.TedPermission;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 /*
     TODO : Change chart item when event status is changed
@@ -97,22 +98,34 @@ public class RoomActivity extends AppCompatActivity{
                             "xxxx@gmail.com", "01000000000")));
     private ArrayList<RoomChartItem> items1 = new ArrayList<>(
             Arrays.asList(
-                    new RoomChartItem("커피", new Integer(3000), new Integer(2)),
-                    new RoomChartItem("쿠키", new Integer(5400), new Integer(3)),
-                    new RoomChartItem("설탕", new Integer(5400), new Integer(3)),
-                    new RoomChartItem("공기", new Integer(100), new Integer(0))));
+                    new RoomChartItem(0, "커피", new Integer(3000), new Integer(2)),
+                    new RoomChartItem(1, "쿠키", new Integer(5400), new Integer(3)),
+                    new RoomChartItem(2, "설탕", new Integer(5400), new Integer(3)),
+                    new RoomChartItem(0, "커피", new Integer(3000), new Integer(2)),
+                    new RoomChartItem(1, "쿠키", new Integer(5400), new Integer(3)),
+                    new RoomChartItem(2, "설탕", new Integer(5400), new Integer(3)),
+                    new RoomChartItem(0, "커피", new Integer(3000), new Integer(2)),
+                    new RoomChartItem(1, "쿠키", new Integer(5400), new Integer(3)),
+                    new RoomChartItem(2, "설탕", new Integer(5400), new Integer(3)),
+                    new RoomChartItem(0, "커피", new Integer(3000), new Integer(2)),
+                    new RoomChartItem(1, "쿠키", new Integer(5400), new Integer(3)),
+                    new RoomChartItem(2, "설탕", new Integer(5400), new Integer(3)),
+                    new RoomChartItem(0, "커피", new Integer(3000), new Integer(2)),
+                    new RoomChartItem(1, "쿠키", new Integer(5400), new Integer(3)),
+                    new RoomChartItem(2, "설탕", new Integer(5400), new Integer(3)),
+                    new RoomChartItem(3, "공기", new Integer(100), new Integer(0))));
     private ArrayList<RoomChartItem> items2 = new ArrayList<>(
             Arrays.asList(
-                    new RoomChartItem("커피", new Integer(3000), new Integer(2)),
-                    new RoomChartItem("쿠키", new Integer(5400), new Integer(3)),
-                    new RoomChartItem("설탕", new Integer(5400), new Integer(3)),
-                    new RoomChartItem("공기", new Integer(100), new Integer(0))));
+                    new RoomChartItem(0, "커피", new Integer(3000), new Integer(2)),
+                    new RoomChartItem(1, "쿠키", new Integer(5400), new Integer(3)),
+                    new RoomChartItem(2, "설탕", new Integer(5400), new Integer(3)),
+                    new RoomChartItem(3, "공기", new Integer(100), new Integer(0))));
     private ArrayList<Event> events = new ArrayList<>(
             Arrays.asList(
-                    new Event(0, "05/07", members.get(0),
-                            new ArrayList<File>(), items1, Event.MAKE_LIST),
-                    new Event(0, "05/08", members.get(0),
-                            new ArrayList<File>(), items2, Event.PERSONAL_CHECK)));
+                    new Event(0, "05/07", members.get(0), null,
+                            new ArrayList<File>(), items1, new HashMap<Integer, Integer>(), Event.MAKE_LIST),
+                    new Event(0, "05/08", members.get(0),  null,
+                            new ArrayList<File>(), items2, new HashMap<Integer, Integer>(), Event.PERSONAL_CHECK)));
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
@@ -239,12 +252,15 @@ public class RoomActivity extends AppCompatActivity{
         nextStatusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (curEvent.getEventStatus() == Event.MAKE_LIST) {
                     setEventStatus(Event.PERSONAL_CHECK);
                     setBottomContainer();
                 } else if (curEvent.getEventStatus() == Event.PERSONAL_CHECK) {
-                    setEventStatus(Event.CONFIRM_RESULT);
-                    setBottomContainer();
+                    if (saveResult()) {
+                        setEventStatus(Event.CONFIRM_RESULT);
+                        setBottomContainer();
+                    }
                 }
             }
         });
@@ -364,6 +380,8 @@ public class RoomActivity extends AppCompatActivity{
                             inputCount = Integer.parseInt(itemCountEdit.getText().toString());
                         }
                         RoomChartItem roomChartItem = new RoomChartItem(
+                                // 항목 id 결정 필요
+                                curEvent.getChartItems().size(),
                                 itemNameEdit.getText().toString(),
                                 Integer.parseInt(itemCostEdit.getText().toString()),
                                 inputCount
@@ -497,6 +515,15 @@ public class RoomActivity extends AppCompatActivity{
             addReceiptText.setVisibility(View.VISIBLE);
             receiptImg.setVisibility(View.INVISIBLE);
             receiptStatus.setText("+ / " + new Integer(curEvent.getReceiptList().size()).toString());
+        }
+    }
+
+    private Boolean saveResult() {
+        if (!chartItemAdapter.getResult(this).first) {
+            curEvent.setChartResult(chartItemAdapter.getResult(this).second);
+            return true;
+        } else {
+            return false;
         }
     }
 }

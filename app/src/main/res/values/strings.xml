@@ -4,6 +4,8 @@
     <string name="room_name">5지조</string>
     <string name="room_id">#1234</string>
 
+    <string name="manager_selection">결제자 선택</string>
+
     <string name="receipt_add">영수증 추가하기</string>
     <string name="receipt_status">3 / 5</string>
 
@@ -26,6 +28,7 @@
 
     <string name="room_status_prev">이전 단계로</string>
     <string name="room_status_next">다음 단계로</string>
+    <string name="room_item_alert">" 수량 오류"</string>
 
     <string name="room_typing_status">2명이 작업중 ⋯ 이지훈, 오승민</string>
 
