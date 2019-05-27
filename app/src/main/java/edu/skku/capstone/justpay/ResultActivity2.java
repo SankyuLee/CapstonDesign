@@ -5,9 +5,13 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +20,11 @@ import java.util.Comparator;
 public class ResultActivity2 extends AppCompatActivity {
 
     Button shareBtn;
+    int roomId;//현재 방 번호
+    int userId;
+    int itemId;
+    String userName;
+    String itemName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +38,41 @@ public class ResultActivity2 extends AppCompatActivity {
         // 리스트뷰 참조 및 Adapter달기
         ExpandableListView listview = (ExpandableListView)findViewById(R.id.listView);
         customadapter.itemlists = new ArrayList<> ();
-
+        roomId = 1;
         ArrayList<ArrayList<items_person>> personlistbyitem = new ArrayList<>() ;
+        customadapter.personlists = personlistbyitem;
+        String sql = "SELECT id from bills where roomId = "+roomId;
+        JSONObject billLists = new SQLSender().sendSQL(sql); //일단 방에 해당하는 bill의 아이디 휙득
+        try {
+            int billId = billLists.getJSONArray("result").getJSONObject(0).getInt("billId");
+            sql = "SELECT * from items where billId = " + billId;
+            JSONObject itemLists = new SQLSender().sendSQL(sql);
+            if (!itemLists.getBoolean("isError")) {
+                for(int i = 0;i < itemLists.getJSONArray("result").length();i++)
+                {
+                    itemId = itemLists.getJSONArray("result").getJSONObject(i).getInt("id");
 
+                    JSONObject itemtemp = new SQLSender().sendSQL("SELECT nickname from users where id ="+itemId); //아이템 이름 알아내기
+                    itemName = itemtemp.getJSONArray("result").getJSONObject(i).getString("itemname");
+                    customadapter.addItem(new personal_item(itemName,itemtemp.getJSONArray("result").getJSONObject(i).getInt("price"),itemtemp.getJSONArray("result").getJSONObject(i).getInt("quantity")));
+                    JSONObject userLists = new SQLSender().sendSQL("SELECT * from checkLists where itemId=" + String.valueOf(itemId)); //아이템 유저 목록 휙득
+                    for(int j = 0;j < userLists.getJSONArray("result").length();j++) {
+                        JSONObject usertemp = new SQLSender().sendSQL("SELECT * from users where id="+userLists.getJSONArray("result").getJSONObject(j).getInt("userId")); //user;
+                            customadapter.personlists.add(new ArrayList<items_person>());
+                            String userName = usertemp.getJSONArray("result").getJSONObject(j).getString("username");
+                            int itempay = usertemp.getJSONArray("result").getJSONObject(j).getInt("price");
+                            int itemnum = userLists.getJSONArray("result").getJSONObject(j).getInt("quantity");
+                            customadapter.addPerson(i, new items_person(userName,itempay,itemnum));
+
+                    }
+                }
+
+            }
+        } catch (JSONException e) {
+            Log.e("Exception", "JSONException occurred in ExampleActivity.java");
+            e.printStackTrace();
+        }
+/*
         //create Data
         customadapter.addItem(new personal_item("아메리카노",1000,1));
         customadapter.addItem(new personal_item("프라프치노",2000,1));
@@ -53,7 +94,8 @@ public class ResultActivity2 extends AppCompatActivity {
         customadapter.addPerson(3,new items_person("김사무엘",5000,1));
         customadapter.addPerson(4,new items_person("이지훈",15000,3));
         customadapter.addPerson(5,new items_person("조현진",1500,1));
-        customadapter.addPerson(5,new items_person("이지훈",1500,1));
+        customadapter.addPerson(5,neew items_prson("이지훈",1500,1));
+*/
         listview.setAdapter(customadapter);
 
         Button buttonNoAsc = (Button) findViewById(R.id.orderbutton) ;
