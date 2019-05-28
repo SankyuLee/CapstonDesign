@@ -4,6 +4,8 @@
     <string name="room_name">5지조</string>
     <string name="room_id">#1234</string>
 
+    <string name="manager_selection">결제자 선택</string>
+
     <string name="receipt_add">영수증 추가하기</string>
     <string name="receipt_status">3 / 5</string>
 
@@ -12,6 +14,8 @@
     <string name="room_status3">"개인별 항목 체크"</string>
     <string name="room_status4">"결과 확인"</string>
     <string name="room_status_arrow">">"</string>
+    <string name="photo_permission1">[설정] > [권한] 에서 권한을 허용할 수 있습니다.</string>
+    <string name="photo_permission2">사진 및 파일을 저장하기 위하여 접근 권한이 필요합니다.</string>
 
     <string name="chart_category1">항목 명</string>
     <string name="chart_category2">총 금액</string>
@@ -24,6 +28,7 @@
 
     <string name="room_status_prev">이전 단계로</string>
     <string name="room_status_next">다음 단계로</string>
+    <string name="room_item_alert">" 수량 오류"</string>
 
     <string name="room_typing_status">2명이 작업중 ⋯ 이지훈, 오승민</string>
 
