@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -95,18 +96,6 @@ public class RoomActivity extends AppCompatActivity{
                             "xxxx@gmail.com", "01000000000")));
     private ArrayList<RoomChartItem> items1 = new ArrayList<>(
             Arrays.asList(
-                    new RoomChartItem(0, "커피", new Integer(3000), new Integer(2)),
-                    new RoomChartItem(1, "쿠키", new Integer(5400), new Integer(3)),
-                    new RoomChartItem(2, "설탕", new Integer(5400), new Integer(3)),
-                    new RoomChartItem(0, "커피", new Integer(3000), new Integer(2)),
-                    new RoomChartItem(1, "쿠키", new Integer(5400), new Integer(3)),
-                    new RoomChartItem(2, "설탕", new Integer(5400), new Integer(3)),
-                    new RoomChartItem(0, "커피", new Integer(3000), new Integer(2)),
-                    new RoomChartItem(1, "쿠키", new Integer(5400), new Integer(3)),
-                    new RoomChartItem(2, "설탕", new Integer(5400), new Integer(3)),
-                    new RoomChartItem(0, "커피", new Integer(3000), new Integer(2)),
-                    new RoomChartItem(1, "쿠키", new Integer(5400), new Integer(3)),
-                    new RoomChartItem(2, "설탕", new Integer(5400), new Integer(3)),
                     new RoomChartItem(0, "커피", new Integer(3000), new Integer(2)),
                     new RoomChartItem(1, "쿠키", new Integer(5400), new Integer(3)),
                     new RoomChartItem(2, "설탕", new Integer(5400), new Integer(3)),
@@ -250,7 +239,6 @@ public class RoomActivity extends AppCompatActivity{
         nextStatusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (curEvent.getEventStatus() == Event.MAKE_LIST) {
                     setEventStatus(Event.PERSONAL_CHECK);
                     setBottomContainer();
@@ -260,6 +248,7 @@ public class RoomActivity extends AppCompatActivity{
                         setBottomContainer();
                     }
                 }
+                logCurEvent();
             }
         });
 
@@ -300,8 +289,9 @@ public class RoomActivity extends AppCompatActivity{
 
     private void initRoom() {
         // 방 정보 설정
-        roomName = "5지조";
         roomId = 1234;
+        roomName = "5지조";
+        roomPwd = "1234";
         roomMembers = members;
 
         // 레이아웃에 방 정보 적용
@@ -396,6 +386,7 @@ public class RoomActivity extends AppCompatActivity{
                         itemCostEdit.setText(null);
                         itemCountEdit.setText(null);
                     }
+                    logCurEvent();
                 }
             });
 
@@ -415,6 +406,10 @@ public class RoomActivity extends AppCompatActivity{
             confirmBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // 결제자 선택
+                    curEvent.setEventPayer(members.get(0));
+                    logCurEvent();
+
                     final CharSequence[] items = {"사용자별 결과 확인", "항목별 결과 확인"};
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
@@ -530,5 +525,21 @@ public class RoomActivity extends AppCompatActivity{
         } else {
             return false;
         }
+    }
+
+    // Event 값 확인 용
+    private void logCurEvent() {
+        Log.d("event", curEvent.getEventId().toString());
+        Log.d("event", curEvent.getEventTitle());
+        Log.d("event", curEvent.getEventManager().getMemberName());
+        if (curEvent.getEventPayer() != null) {
+            Log.d("event", curEvent.getEventPayer().getMemberName());
+        }
+        for (int i = 0; i < curEvent.getChartItems().size(); i++) {
+            Log.d("event", curEvent.getChartItems().get(i).getItemName());
+        }
+        Log.d("event", curEvent.getChartResult().keySet().toString());
+        Log.d("event", curEvent.getChartResult().values().toString());
+        Log.d("event", new Integer(curEvent.getEventStatus()).toString());
     }
 }
