@@ -14,55 +14,57 @@ import android.widget.Toast;
 
 
 public class LoginActivity extends AppCompatActivity {
-
-    Button btn_login;
+    private boolean saveLoginData;
+    private String str_id;
+    private String str_ps;
+    private CheckBox checkBox;
+    private SharedPreferences appData;
+    private Button btn_login;
+    private EditText etid;
+    private EditText etps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        EditText etid = findViewById(R.id.input_id);
-        EditText etps = findViewById(R.id.input_pw);
-        CheckBox idSave = findViewById(R.id.option_id_store);
-        CheckBox autolog = findViewById(R.id.option_auto_login);
+        appData = getSharedPreferences("appData",MODE_PRIVATE);
+        saveLoginData = appData.getBoolean("SAVE_LOGIN_DATA",false);
+        str_id = appData.getString("id","");
+        str_ps = appData.getString("ps","");
 
-        etid.requestFocus();
+        checkBox = findViewById(R.id.option_auto_login);
+        etid = findViewById(R.id.input_id);
+        etps = findViewById(R.id.input_pw);
 
-        SharedPreferences pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
-        String id = pref.getString("id_save","");
-        String pw = pref.getString("pw_save","");
-        Boolean chk_id = pref.getBoolean("chk_id",false);
-        Boolean chk_auto = pref.getBoolean("chk_auto",false);
+        //etid.requestFocus();
 
-        if (chk_id == true) {
-            etid.setText(id);
-            idSave.setChecked(chk_id);
-        }
-        if (chk_auto == true) {
-            etid.setText(id);
-            etps.setText(pw);
-            autolog.setChecked(chk_auto);
-        }
+       if (saveLoginData) {
+           etid.setText(str_id);
+           etps.setText(str_ps);
+           checkBox.setChecked(saveLoginData);
+       }
+
 
         btn_login = findViewById(R.id.btn_login);
 
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText email_et = findViewById(R.id.input_id);
-                EditText password_et = findViewById(R.id.input_pw);
-/*
-                if (UserLoggedIn.LoginCheck(email_et.getText().toString(), password_et.getText().toString())) {
+                SharedPreferences.Editor editor  = appData.edit();
+
+                editor.putBoolean("SAVE_LOGIN_DATA",checkBox.isChecked());
+                editor.putString("id",etid.getText().toString().trim());
+                editor.putString("ps",etps.getText().toString().trim());
+                editor.commit();
+
+                if (UserLoggedIn.LoginCheck(etid.getText().toString(), etps.getText().toString())) {
                     Toast.makeText(LoginActivity.this, "로그인에 성공하였습니다."+UserLoggedIn.getUser(), Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(LoginActivity.this, RoomListActivity.class);
                     startActivity(intent);
                 } else {
                     Toast.makeText(LoginActivity.this, "아이디 또는 비밀번호가 잘못되었습니다.", Toast.LENGTH_LONG).show();
                 }
-*/
-                Intent intent = new Intent(LoginActivity.this, RoomListActivity.class);
-                startActivity(intent);
             }
         });
 
@@ -75,6 +77,4 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }

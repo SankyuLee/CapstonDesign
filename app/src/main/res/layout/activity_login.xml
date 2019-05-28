@@ -107,20 +107,14 @@
 
         <LinearLayout
             android:id="@+id/login_shortcut"
+            android:paddingTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:paddingLeft="40dp"
+            android:paddingLeft="220dp"
             android:paddingRight="40dp">
 
-            <CheckBox
-                android:id="@+id/option_id_store"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="아이디 저장"
-                android:textColor="@color/colorBlurred"
-                android:textSize="@dimen/sub_text_size" />
+
 
             <CheckBox
                 android:id="@+id/option_auto_login"
