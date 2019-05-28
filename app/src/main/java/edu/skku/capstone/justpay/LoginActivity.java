@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 
 public class LoginActivity extends AppCompatActivity {
     private boolean saveLoginData;
@@ -65,6 +67,15 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(LoginActivity.this, "아이디 또는 비밀번호가 잘못되었습니다.", Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+
+        TextView link_find = findViewById(R.id.link_find_id);
+        link_find.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, FindInfo.class);
+                startActivity(intent);
             }
         });
 

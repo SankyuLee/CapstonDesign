@@ -159,6 +159,7 @@
             android:clickable="true"
             android:text="아이디/비밀번호 찾기"
             android:textAlignment="center"
+            android:linksClickable="true"
             android:textColor="@color/colorBlurred"
             android:textSize="@dimen/sub_text_size" />
 
