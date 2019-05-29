@@ -32,7 +32,12 @@ import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -44,8 +49,8 @@ public class RoomActivity extends AppCompatActivity{
     //
     private Integer roomId;                             // 방의 고유 아이디
     private String roomName;                            // 방의 이름
-    private String roomPwd;                             // 방의 비밀번호
     private ArrayList<Member> roomMembers;              // 방에 참여하고 있는 멤버 목록
+    private ArrayList<Event> roomEvents;                // 방에 존재하는 이벤트 목록
     // 현재 이벤트
     // 현재 이벤트의 제목, 관리인, 이벤트의 상태, 등록된 영수증 목록, 등록된 항목 목록 포함
     private Event curEvent;
@@ -83,6 +88,8 @@ public class RoomActivity extends AppCompatActivity{
     private ImageButton addItemBtn;
     private Button confirmBtn;
 
+    private Intent intent;
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // Test Data
     //
@@ -119,12 +126,16 @@ public class RoomActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
 
+        // 이전 액티비티로부터 데이터 수신
+        // room id, event id
+        intent = getIntent();
+
         // 앨범에서 사진을 불러오기위한 권한 요청
         getPermission();
 
         // 레이아웃 초기화
         roomIdView = findViewById(R.id.room_id);
-        roomNameView = findViewById(R.id.room_id);
+        roomNameView = findViewById(R.id.room_name);
         backBtn = findViewById(R.id.go_back_btn);
         banBtn = findViewById(R.id.ban_user_btn);
         addBtn = findViewById(R.id.add_user_btn);
@@ -288,11 +299,45 @@ public class RoomActivity extends AppCompatActivity{
     }
 
     private void initRoom() {
-        // 방 정보 설정
-        roomId = 1234;
-        roomName = "5지조";
-        roomPwd = "1234";
-        roomMembers = members;
+        // 방 아이디 설정
+        // roomId = intent.getExtras().getInt("roomId");
+        roomId = 1;
+
+        // 방 이름 불러오기
+        JSONObject sqlName = new SQLSender().
+                sendSQL("SELECT roomname FROM rooms WHERE id="+roomId);
+        try {
+            if (!sqlName.getBoolean("isError"))
+                roomName = sqlName.
+                        getJSONArray("result").getJSONObject(0).getString("roomname");
+        } catch (JSONException e) {
+                Log.e("Exception", "JSONException occurred in setting room name");
+                e.printStackTrace();
+        }
+
+        // 방 멤버 불러오기
+        roomMembers = new ArrayList<>();
+        JSONObject sqlMember = new SQLSender().
+                sendSQL("SELECT * FROM users " +
+                        "LEFT JOIN roomLists ON users.id = roomLists.userId " +
+                        "WHERE roomId="+roomId);
+        try {
+            if (!sqlMember.getBoolean("isError")) {
+                JSONArray memberResult = sqlMember.getJSONArray("result");
+                for (int i = 0; i < memberResult.length(); i++) {
+                    JSONObject member = memberResult.getJSONObject(i);
+                    roomMembers.add(new Member(
+                            member.getInt("id"),
+                            member.getString("nickname"),
+                            member.getString("email"),
+                            member.getString("phone")
+                    ));
+                }
+            }
+        } catch (JSONException e) {
+            Log.e("Exception", "JSONException occurred in setting room members");
+            e.printStackTrace();
+        }
 
         // 레이아웃에 방 정보 적용
         roomNameView.setText(roomName);
@@ -300,18 +345,44 @@ public class RoomActivity extends AppCompatActivity{
 
         // 방 내부에 이벤트 목록 생성 및 기본 이벤트 설정
         initEvents();
-        setEvent(events.get(0));
+        setEvent(roomEvents.get(0));
     }
 
     private void initEvents() {
+        // 방 내부 이벤트 목록 설정
+        roomEvents = new ArrayList<>();
+        JSONObject sqlEvents = new SQLSender().
+                sendSQL("SELECT * FROM events WHERE roomId="+roomId);
+        try {
+            if (!sqlEvents.getBoolean("isError")) {
+                JSONArray eventResult = sqlEvents.getJSONArray("result");
+                for (int i = 0; i < eventResult.length(); i++) {
+                    JSONObject event = eventResult.getJSONObject(i);
+                    roomEvents.add(new Event(
+                            event.getInt("id"),
+                            event.getString("eventname"),
+                            roomMembers.get(findMemberIndex(event.getInt("managerId"))),
+                            roomMembers.get(findMemberIndex(event.getInt("payerId"))),
+                            new ArrayList<File>(),
+                            new ArrayList<RoomChartItem>(),
+                            new HashMap<Integer, Integer>(),
+                            event.getInt("step")
+                    ));
+                }
+            }
+        } catch (JSONException e) {
+            Log.e("Exception", "JSONException occurred in setting room events");
+            e.printStackTrace();
+        }
+
         LinearLayoutManager layoutManager =
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         tabListView.setLayoutManager(layoutManager);
 
-        eventAdapter = new EventAdapter(events, new EventAdapter.TabOnClickListener() {
+        eventAdapter = new EventAdapter(roomEvents, new EventAdapter.TabOnClickListener() {
             @Override
             public void onTabClicked(int position) {
-                setEvent(events.get(position));
+                setEvent(roomEvents.get(position));
             }
 
             @Override
@@ -527,7 +598,17 @@ public class RoomActivity extends AppCompatActivity{
         }
     }
 
-    // Event 값 확인 용
+    // Member 목록에서 id를 검색해 member 목록 인덱스 반환
+    private Integer findMemberIndex(Integer memberId) {
+        for (int i = 0; i < roomMembers.size(); i++) {
+            if (roomMembers.get(i).getMemberId() == memberId) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    // Event 값 확인
     private void logCurEvent() {
         Log.d("event", curEvent.getEventId().toString());
         Log.d("event", curEvent.getEventTitle());
