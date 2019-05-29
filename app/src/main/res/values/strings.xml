@@ -12,6 +12,8 @@
     <string name="room_status3">"개인별 항목 체크"</string>
     <string name="room_status4">"결과 확인"</string>
     <string name="room_status_arrow">">"</string>
+    <string name="photo_permission1">[설정] > [권한] 에서 권한을 허용할 수 있습니다.</string>
+    <string name="photo_permission2">사진 및 파일을 저장하기 위하여 접근 권한이 필요합니다.</string>
 
     <string name="chart_category1">항목 명</string>
     <string name="chart_category2">총 금액</string>

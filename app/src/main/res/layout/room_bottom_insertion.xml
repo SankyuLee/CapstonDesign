@@ -10,7 +10,7 @@
     android:paddingBottom="5dp">
 
     <EditText
-        android:id="@+id/bottom_insertion_category1"
+        android:id="@+id/item_name_edit"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_margin="5dp"
@@ -19,10 +19,12 @@
         android:ems="10"
         android:hint="@string/chart_category1"
         android:inputType="textPersonName"
-        android:paddingLeft="5dp" />
+        android:paddingLeft="5dp"
+        android:textColorLink="@android:color/transparent"
+        android:textCursorDrawable="@android:color/darker_gray"/>
 
     <EditText
-        android:id="@+id/bottom_insertion_category2"
+        android:id="@+id/item_cost_edit"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_margin="5dp"
@@ -32,10 +34,12 @@
         android:hint="@string/chart_category2"
         android:inputType="number"
         android:paddingLeft="5dp"
-        android:textSize="@dimen/normal_text_size" />
+        android:textSize="@dimen/normal_text_size"
+        android:textColorLink="@android:color/transparent"
+        android:textCursorDrawable="@android:color/darker_gray"/>
 
     <EditText
-        android:id="@+id/bottom_insertion_category3"
+        android:id="@+id/item_count_edit"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_margin="5dp"
@@ -44,7 +48,9 @@
         android:ems="10"
         android:hint="@string/chart_category3"
         android:inputType="number"
-        android:paddingLeft="5dp" />
+        android:paddingLeft="5dp"
+        android:textColorLink="@android:color/transparent"
+        android:textCursorDrawable="@android:color/darker_gray"/>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="wrap_content"
@@ -52,7 +58,7 @@
         android:layout_margin="5dp">
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/add_item_btn"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:background="@android:color/transparent"

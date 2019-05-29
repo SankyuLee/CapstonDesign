@@ -2,11 +2,26 @@ package edu.skku.capstone.justpay;
 
 
 import android.content.DialogInterface;
+
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.graphics.drawable.ColorDrawable;
-
+import com.kakao.auth.KakaoSDK;
+import com.kakao.auth.Session;
+import com.kakao.kakaolink.v2.KakaoLinkResponse;
+import com.kakao.message.template.ButtonObject;
+import com.kakao.message.template.ContentObject;
+import com.kakao.message.template.FeedTemplate;
+import com.kakao.message.template.LinkObject;
+import com.kakao.message.template.SocialObject;
+import com.kakao.network.ErrorResult;
+import com.kakao.network.callback.ResponseCallback;
+import com.kakao.util.exception.KakaoException;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,10 +35,22 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.kakao.kakaolink.v2.KakaoLinkService;
+
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+
 import android.widget.TextView;
+
+import com.kakao.util.KakaoParameterException;
+import com.kakao.util.helper.log.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,11 +63,11 @@ public class ResultActivity1 extends AppCompatActivity {
     int roomId;//현재 방 번호
     int userId;
     String userName;
+    int triger;//다이얼로그 컨트롤
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
-
         //ListView listview ;
         final CustomList customadapter;
         customadapter = new CustomList() ;
@@ -51,6 +78,7 @@ public class ResultActivity1 extends AppCompatActivity {
         ArrayList<ArrayList<personal_item>> itemlists = new ArrayList<>() ;
         customadapter.itemlists = itemlists;
         roomId = 1;
+
         // Get data from Database
          String sql = "SELECT userId from roomLists";
          JSONObject userLists = new SQLSender().sendSQL(sql); //방의 유저목록 휙득
@@ -165,6 +193,7 @@ public class ResultActivity1 extends AppCompatActivity {
         });*/
 
         shareBtn = findViewById(R.id.button);
+
         shareBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,12 +203,49 @@ public class ResultActivity1 extends AppCompatActivity {
                 builder.setTitle("공유하기");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int pos) {  // pos 0: 카카오톡, pos 1: 엑셀, pos 2: URL
+                        if(pos == 0)
+                        {
 
+                            FeedTemplate params = FeedTemplate
+                                    .newBuilder(ContentObject.newBuilder("정산결과",
+                                            "",
+                                            LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
+                                                    .setMobileWebUrl("https://developers.kakao.com").build())
+                                            .setDescrption("오승민님께 100000을 전송해 주세요!!\n1002553176166우리은행")
+                                            .build())
+                                    .setSocial(SocialObject.newBuilder().setLikeCount(10).setCommentCount(20)
+                                            .setSharedCount(30).setViewCount(40).build())
+                                    .addButton(new ButtonObject("웹에서 보기", LinkObject.newBuilder().setWebUrl("'https://developers.kakao.com").setMobileWebUrl("'https://developers.kakao.com").build()))
+                                    .addButton(new ButtonObject("앱에서 보기", LinkObject.newBuilder()
+                                            .setWebUrl("'https://developers.kakao.com")
+                                            .setMobileWebUrl("'https://developers.kakao.com")
+                                            .setAndroidExecutionParams("key1=value1")
+                                            .setIosExecutionParams("key1=value1")
+                                            .build()))
+                                    .build();
+
+                            Map<String, String> serverCallbackArgs = new HashMap<String, String>();
+                            serverCallbackArgs.put("user_id", "${current_user_id}");
+                            serverCallbackArgs.put("product_id", "${shared_product_id}");
+
+                            KakaoLinkService.getInstance().sendDefault(ResultActivity1.this, params, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
+                                @Override
+                                public void onFailure(ErrorResult errorResult) {
+                                    Logger.e(errorResult.toString());
+                                }
+
+                                @Override
+                                public void onSuccess(KakaoLinkResponse result) {
+                                    // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
+                                }
+                            });
+                        }
                     }
                 });
                 builder.show();
             }
         });
+
     }
 
 }

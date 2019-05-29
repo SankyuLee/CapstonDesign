@@ -155,7 +155,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
+                android:scaleType="matrix"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -169,6 +169,7 @@
                 android:layout_marginBottom="8dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toTopOf="@+id/receipt_status"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -176,11 +177,12 @@
                 app:srcCompat="@drawable/add_btn" />
 
             <TextView
-                android:id="@+id/receipt_add_btn"
+                android:id="@+id/add_receipt_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/receipt_add"
                 android:textColor="@color/colorBlurred"
+                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/add_receipt_btn" />
@@ -230,7 +232,7 @@
             android:paddingRight="40dp">
 
             <TextView
-                android:id="@+id/room_status1"
+                android:id="@+id/event_status1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -246,7 +248,7 @@
                 android:text="@string/room_status_arrow" />
 
             <TextView
-                android:id="@+id/room_status2"
+                android:id="@+id/event_status2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -262,7 +264,7 @@
                 android:text="@string/room_status_arrow" />
 
             <TextView
-                android:id="@+id/room_status3"
+                android:id="@+id/event_status3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -356,7 +358,7 @@
                 android:paddingRight="1dp">
 
                 <Button
-                    android:id="@+id/button"
+                    android:id="@+id/prev_status_btn"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -365,7 +367,7 @@
                     android:textColor="@android:color/white" />
 
                 <Button
-                    android:id="@+id/button2"
+                    android:id="@+id/next_status_btn"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
