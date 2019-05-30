@@ -133,6 +133,11 @@ public class RoomChartItemAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void removeAll() {
+        chartItemList.clear();
+        notifyDataSetChanged();
+    }
+
     public void addItem(RoomChartItem chartItem) {
         chartItemList.add(chartItem);
         notifyDataSetChanged();

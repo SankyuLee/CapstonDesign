@@ -42,8 +42,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+// 영수증 DB 연결
+// 상태별 chart layout 변경
+// 버튼 기능 추가
+
 public class RoomActivity extends AppCompatActivity{
 
+    private Integer userId;
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // Database 에서 관리 해야하는 변수들
     //
@@ -88,8 +93,6 @@ public class RoomActivity extends AppCompatActivity{
     private ImageButton addItemBtn;
     private Button confirmBtn;
 
-    private Intent intent;
-
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // Test Data
     //
@@ -125,10 +128,6 @@ public class RoomActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
-
-        // 이전 액티비티로부터 데이터 수신
-        // room id, event id
-        intent = getIntent();
 
         // 앨범에서 사진을 불러오기위한 권한 요청
         getPermission();
@@ -299,6 +298,16 @@ public class RoomActivity extends AppCompatActivity{
     }
 
     private void initRoom() {
+        Intent intent = getIntent();
+        // 사용자 아이디 설정
+//        try {
+//            userId = UserLoggedIn.getUser().getInt("id");
+//        } catch (JSONException e) {
+//            Log.e("Exception", "JSONException occurred in setting user");
+//            e.printStackTrace();
+//        }
+        userId = 1;
+
         // 방 아이디 설정
         // roomId = intent.getExtras().getInt("roomId");
         roomId = 1;
@@ -344,8 +353,10 @@ public class RoomActivity extends AppCompatActivity{
         roomIdView.setText("#"+roomId.toString());
 
         // 방 내부에 이벤트 목록 생성 및 기본 이벤트 설정
+        // Integer initEventId = intent.getExtras().getInt("eventId");
+        Integer initEventId = 1;
         initEvents();
-        setEvent(roomEvents.get(0));
+        setEvent(initEventId);
     }
 
     private void initEvents() {
@@ -382,7 +393,7 @@ public class RoomActivity extends AppCompatActivity{
         eventAdapter = new EventAdapter(roomEvents, new EventAdapter.TabOnClickListener() {
             @Override
             public void onTabClicked(int position) {
-                setEvent(roomEvents.get(position));
+                setEvent(roomEvents.get(position).getEventId());
             }
 
             @Override
@@ -396,18 +407,38 @@ public class RoomActivity extends AppCompatActivity{
         tabListView.addItemDecoration(tabDecoration);
     }
 
-    private void setEvent(Event event) {
+    private void setEvent(Integer eventId) {
         // 이벤트 정보 설정
-        curEvent = event;
+        for (int i = 0; i < roomEvents.size(); i++) {
+            if (roomEvents.get(i).getEventId() == eventId) {
+                curEvent = roomEvents.get(i);
+            }
+        }
 
         // 영수증 불러오기
+        // 영수증 아이디 목록 불러오기
+        ArrayList<Integer> billIds = new ArrayList<>();
+        JSONObject sqlBillIds = new SQLSender().
+                sendSQL("SELECT id FROM bills WHERE eventId="+curEvent.getEventId());
+        try {
+            if (!sqlBillIds.getBoolean("isError")) {
+                JSONArray billIdResult = sqlBillIds.getJSONArray("result");
+                for (int i = 0; i < billIdResult.length(); i++) {
+                    JSONObject billId = billIdResult.getJSONObject(i);
+                    billIds.add(billId.getInt("id"));
+                }
+            }
+        } catch (JSONException e) {
+            Log.e("Exception", "JSONException occurred in getting bill ids");
+            e.printStackTrace();
+        }
         curReceiptIndex = 0;
         setReceiptImg();
 
-        // 이벤트 상태에 따른 레이아웃 설정
+        // 현재 이벤트 상태에 따른 레이아웃 설정
         setEventStatus(curEvent.getEventStatus());
 
-        // 아이템 항목 적용
+        // 아이템 어댑터 적용
         chartItemAdapter = new RoomChartItemAdapter(curEvent.getChartItems(), new RoomChartItemAdapter.ChartItemOnClickListener() {
             @Override
             public void onChartItemDeleteBtnClick(int position) {
@@ -416,10 +447,59 @@ public class RoomActivity extends AppCompatActivity{
         });
         chartItemListView.setAdapter(chartItemAdapter);
 
+        // 아이템 항목 불러오기
+        chartItemAdapter.removeAll();
+        for (int i = 0; i < billIds.size(); i++) {
+            JSONObject sqlItems = new SQLSender().
+                    sendSQL("SELECT * FROM items WHERE billId="+billIds.get(i));
+            try {
+                if (!sqlItems.getBoolean("isError")) {
+                    JSONArray itemResult = sqlItems.getJSONArray("result");
+                    for (int j = 0; j < itemResult.length(); j++) {
+                        JSONObject item = itemResult.getJSONObject(j);
+                        chartItemAdapter.addItem(new RoomChartItem(
+                                item.getInt("id"),
+                                item.getString("itemname"),
+                                item.getInt("price"),
+                                item.getInt("quantity")
+                        ));
+                    }
+                }
+            } catch (JSONException e) {
+                Log.e("Exception", "JSONException occurred in getting items");
+                e.printStackTrace();
+            }
+        }
+
+        // 아이템 항목별 사용 내역 불러오기
+        if (curEvent.getEventStatus() == Event.CONFIRM_RESULT) {
+            for (int i = 0; i < chartItemAdapter.getCount(); i++) {
+                JSONObject sqlCheck = new SQLSender().
+                        sendSQL("SELECT * FROM checkLists WHERE userId=" + userId +
+                                "AND itemId=" + chartItemAdapter.getItem(i).getItemId());
+                try {
+                    if (!sqlCheck.getBoolean("isError")) {
+                        JSONArray checkResult = sqlCheck.getJSONArray("result");
+                        for (int j = 0; j < checkResult.length(); j++) {
+                            JSONObject checkItem = checkResult.getJSONObject(j);
+                            curEvent.getChartResult().
+                                    put(chartItemAdapter.getItem(i).getItemId(), checkItem.getInt("quantity"));
+                        }
+                    }
+                } catch (JSONException e) {
+                    Log.e("Exception", "JSONException occurred in getting check list");
+                    e.printStackTrace();
+                }
+            }
+            // 사용 내역 설정
+            applyResult();
+        }
+
         // 하단바 설정
         setBottomContainer();
     }
 
+    // 하단바 설정
     private void setBottomContainer() {
         LayoutInflater bottomInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -489,6 +569,8 @@ public class RoomActivity extends AppCompatActivity{
                         public void onClick(DialogInterface dialog, int pos) {  // pos 0: 사용자별 결과 확인, pos 1: 항목별 결과 확인
                             Intent intent;
                             intent = new Intent(RoomActivity.this, ResultActivity1.class);
+                            intent.putExtra("roomId", roomId);
+                            intent.putExtra("eventId", curEvent.getEventId());
                             startActivity(intent);
                         }
                     });
@@ -498,6 +580,7 @@ public class RoomActivity extends AppCompatActivity{
         }
     }
 
+    // 이벤트 상태에 따른 레이아웃 설정
     private void setEventStatus(int eventStatus) {
         switch (eventStatus) {
             case Event.MAKE_LIST:
@@ -567,6 +650,7 @@ public class RoomActivity extends AppCompatActivity{
         startActivityForResult(intent, PICK_FROM_ALBUM);
     }
 
+    // 영수증 레이아웃 설정
     private void setReceiptImg() {
         if (curReceiptIndex >= 0 && curReceiptIndex < curEvent.getReceiptList().size()) {
             receiptImg.setVisibility(View.VISIBLE);
@@ -589,12 +673,21 @@ public class RoomActivity extends AppCompatActivity{
         }
     }
 
+    // 사용자가 입력한 사용 내역 저장
     private Boolean saveResult() {
         if (!chartItemAdapter.getResult(this).first) {
             curEvent.setChartResult(chartItemAdapter.getResult(this).second);
             return true;
         } else {
             return false;
+        }
+    }
+
+    // 사용 내역 적용
+    private void applyResult() {
+        for (int i = 0; i < chartItemAdapter.getCount(); i++) {
+            chartItemAdapter.getItem(i).
+                    setItemResult(curEvent.getChartResult().get(chartItemAdapter.getItem(i).getItemId()));
         }
     }
 
