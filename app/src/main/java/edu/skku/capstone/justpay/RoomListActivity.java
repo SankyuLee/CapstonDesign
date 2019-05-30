@@ -32,7 +32,11 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -53,12 +57,21 @@ public class RoomListActivity extends AppCompatActivity
     ListView roomList;
     ConstraintLayout room_list_layout;
 
+    TextView textView_name;
+    TextView textView_email;
+
+    private static int user_id;
+    private static String user_email;
+    private static String user_nickname;
+
     private boolean isMenuCollapsed = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_list);
+
+        setUser();
 
         search_editText = (EditText)findViewById(R.id.search_editText);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -75,6 +88,12 @@ public class RoomListActivity extends AppCompatActivity
 
         roomList = (ListView)findViewById(R.id.roomList);
         room_list_layout = (ConstraintLayout)findViewById(R.id.room_list_layout);
+
+        textView_name = (TextView)findViewById(R.id.textView_name);
+        textView_email = (TextView)findViewById(R.id.textView_email);
+
+        textView_name.setText(user_nickname);
+        textView_email.setText(user_email);
 
         final ArrayList<RoomList_item> list = new ArrayList<RoomList_item>();
         final RoomListAdapter adapter = new RoomListAdapter(this, list);
@@ -148,15 +167,30 @@ public class RoomListActivity extends AppCompatActivity
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //리스트에 항목 추가
                         String roomName_s = roomName.getText().toString();
                         String roomPW_s = roomPW.getText().toString();
                         String eventName_s = eventName.getText().toString();
-                        int tag = 1000;
+                        int room_tag;
 
-                        RoomList_item item = new RoomList_item("#"+tag,roomName_s);
-                        list.add(item);
-                        adapter.notifyDataSetChanged();
+                        //DB에 항목 추가
+                        JSONObject sql_result = new SQLSender().sendSQL("INSERT into rooms(roomname, password) values" +
+                                "('"+roomName_s+"','"+roomPW_s+"');");
+
+                        try{
+                            if(!sql_result.getBoolean("isError")) {
+                                room_tag = sql_result.getJSONObject("result").getInt("insertId");
+
+                                //리스트에 항목 추가
+                                RoomList_item item = new RoomList_item("#" + room_tag, roomName_s);
+                                list.add(item);
+                                adapter.notifyDataSetChanged();
+
+                                JSONObject sql_roomList = new SQLSender().sendSQL("INSERT into roomLists(userId, roomId) values" +
+                                        "('"+user_id+"','"+room_tag+"');");
+                            }
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
 
                         Intent intent;
                         intent = new Intent(RoomListActivity.this, RoomActivity.class);
@@ -282,7 +316,7 @@ public class RoomListActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_modify) {
-            Toast.makeText(this, "touched", Toast.LENGTH_LONG).show();
+
         } else if (id == R.id.nav_logout) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
@@ -291,6 +325,21 @@ public class RoomListActivity extends AppCompatActivity
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void setUser(){
+        JSONObject user_info = null;
+        try{
+            user_info = UserLoggedIn.getUser();
+
+            user_id = user_info.getInt("id");
+            user_email = user_info.getString("email");
+            user_nickname = user_info.getString("nickname");
+
+
+        }catch(NullPointerException | JSONException e){
+            e.printStackTrace();
+        }
     }
 
 }
