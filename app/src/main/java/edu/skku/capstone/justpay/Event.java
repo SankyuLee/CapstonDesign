@@ -21,6 +21,8 @@ public class Event {
     public static final int CONFIRM_RESULT = 2;
 
     public Event(Integer eventId, String eventTitle) {
+        this.eventId = eventId;
+        this.eventTitle = eventTitle;
         this.eventManager = null;
         this.eventPayer = null;
         this.receiptList = new ArrayList<>();

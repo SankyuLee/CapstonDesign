@@ -93,37 +93,6 @@ public class RoomActivity extends AppCompatActivity{
     private ImageButton addItemBtn;
     private Button confirmBtn;
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    // Test Data
-    //
-    private ArrayList<Member> members = new ArrayList<>(
-            Arrays.asList(
-                    new Member(0, "이지훈",
-                            "ulla4571@g.skku.edu", "01032104571"),
-                    new Member(1, "조현진",
-                            "guswh11@skku.edu", "01000000000"),
-                    new Member(2, "오승민",
-                            "xxxx@gmail.com", "01000000000")));
-    private ArrayList<RoomChartItem> items1 = new ArrayList<>(
-            Arrays.asList(
-                    new RoomChartItem(0, "커피", new Integer(3000), new Integer(2)),
-                    new RoomChartItem(1, "쿠키", new Integer(5400), new Integer(3)),
-                    new RoomChartItem(2, "설탕", new Integer(5400), new Integer(3)),
-                    new RoomChartItem(3, "공기", new Integer(100), new Integer(0))));
-    private ArrayList<RoomChartItem> items2 = new ArrayList<>(
-            Arrays.asList(
-                    new RoomChartItem(0, "커피", new Integer(3000), new Integer(2)),
-                    new RoomChartItem(1, "쿠키", new Integer(5400), new Integer(3)),
-                    new RoomChartItem(2, "설탕", new Integer(5400), new Integer(3)),
-                    new RoomChartItem(3, "공기", new Integer(100), new Integer(0))));
-    private ArrayList<Event> events = new ArrayList<>(
-            Arrays.asList(
-                    new Event(0, "05/07", members.get(0), null,
-                            new ArrayList<File>(), items1, new HashMap<Integer, Integer>(), Event.MAKE_LIST),
-                    new Event(0, "05/08", members.get(0),  null,
-                            new ArrayList<File>(), items2, new HashMap<Integer, Integer>(), Event.PERSONAL_CHECK)));
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,13 +128,26 @@ public class RoomActivity extends AppCompatActivity{
         banBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final CharSequence[] items = {"Member1", "Member2", "Member3", "Member4"};
+                final ArrayList<String> memberNames = new ArrayList<>();
+                final ArrayList<Integer> memberIds = new ArrayList<>();
+                for (int i = 0; i < roomMembers.size(); i++) {
+                    if (roomMembers.get(i).getMemberId() != userId) {
+                        memberNames.add(roomMembers.get(i).getMemberName());
+                        memberIds.add(roomMembers.get(i).getMemberId());
+                    }
+                }
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
                 builder.setTitle("멤버 추방");
-                builder.setItems(items, new DialogInterface.OnClickListener() {
+                builder.setItems(memberNames.toArray(new CharSequence[memberNames.size()]), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int pos) {
-                        //멤버 추방시 액션
+                        // 방에서 멤버 추방
+                        roomMembers.remove(findMemberIndex(memberIds.get(pos)));
+
+                        // 추방된 멤버 DB에 반영
+                        JSONObject sqlBanMember = new SQLSender().
+                                sendSQL("DELETE FROM roomLists WHERE roomId=" + roomId +
+                                        " AND userId=" + memberIds.get(pos));
                     }
                 });
                 builder.show();
@@ -175,13 +157,63 @@ public class RoomActivity extends AppCompatActivity{
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final CharSequence[] items = {"Member1", "Member2", "Member3", "Member4"};
+                // 멤버 불러오기
+                final ArrayList<String> memberNames = new ArrayList<>();
+                final ArrayList<Integer> memberIds = new ArrayList<>();
+                JSONObject sqlMember = new SQLSender().
+                        sendSQL("SELECT * FROM users");
+                try {
+                    if (!sqlMember.getBoolean("isError")) {
+                        JSONArray memberResult = sqlMember.getJSONArray("result");
+                        for (int i = 0; i < memberResult.length(); i++) {
+                            Boolean isIn = false;
+                            JSONObject member = memberResult.getJSONObject(i);
+                            for (int j = 0; j < roomMembers.size(); j++) {
+                                if (roomMembers.get(j).getMemberId() == member.getInt("id")) {
+                                    isIn = true;
+                                    break;
+                                }
+                            }
+                            if (!isIn) {
+                                memberNames.add(member.getString("nickname"));
+                                memberIds.add(member.getInt("id"));
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    Log.e("Exception", "JSONException occurred in setting room members");
+                    e.printStackTrace();
+                }
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
                 builder.setTitle("멤버 추가");
-                builder.setItems(items, new DialogInterface.OnClickListener() {
+                builder.setItems(memberNames.toArray(new CharSequence[memberNames.size()]), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int pos) {
-                        //멤버 추가시 액션
+                        // 새로운 멤버 추가
+                        JSONObject sqlNewMember = new SQLSender().
+                                sendSQL("SELECT * FROM users WHERE id="+memberIds.get(pos));
+                        try {
+                            if (!sqlNewMember.getBoolean("isError")) {
+                                JSONArray newMemberResult = sqlNewMember.getJSONArray("result");
+                                for (int i = 0; i < newMemberResult.length(); i++) {
+                                    JSONObject newMember = newMemberResult.getJSONObject(i);
+                                    roomMembers.add(new Member(
+                                            newMember.getInt("id"),
+                                            newMember.getString("nickname"),
+                                            newMember.getString("email"),
+                                            newMember.getString("phone")
+                                    ));
+                                }
+                            }
+                        } catch (JSONException e) {
+                            Log.e("Exception", "JSONException occurred in setting room members");
+                            e.printStackTrace();
+                        }
+
+//                        // 새로운 멤버 DB에 반영
+//                        JSONObject sqlInsertMember = new SQLSender().
+//                                sendSQL("INSERT INTO roomLists (userId, roomId) VALUES (" +
+//                                        memberIds.get(pos) + ", " + roomId + ")");
                     }
                 });
                 builder.show();
@@ -191,13 +223,20 @@ public class RoomActivity extends AppCompatActivity{
         changeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final CharSequence[] items = {"Member1", "Member2", "Member3", "Member4"};
+                final ArrayList<String> memberNames = new ArrayList<>();
+                final ArrayList<Integer> memberIds = new ArrayList<>();
+                for (int i = 0; i < roomMembers.size(); i++) {
+                    if (roomMembers.get(i).getMemberId() != userId) {
+                        memberNames.add(roomMembers.get(i).getMemberName());
+                        memberIds.add(roomMembers.get(i).getMemberId());
+                    }
+                }
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
                 builder.setTitle("입력멤버 변경");
-                builder.setItems(items, new DialogInterface.OnClickListener() {
+                builder.setItems(memberNames.toArray(new CharSequence[memberNames.size()]), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int pos) {
-                        //입력멤버 변경시 액션
+                        userId = memberIds.get(pos);
                     }
                 });
                 builder.show();
@@ -383,6 +422,9 @@ public class RoomActivity extends AppCompatActivity{
         } catch (JSONException e) {
             Log.e("Exception", "JSONException occurred in setting room events");
             e.printStackTrace();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            Log.e("Exception", "Exception occurred in getting manager or payer");
+            e.printStackTrace();
         }
 
         LinearLayoutManager layoutManager =
@@ -556,7 +598,7 @@ public class RoomActivity extends AppCompatActivity{
                 @Override
                 public void onClick(View v) {
                     // 결제자 선택
-                    curEvent.setEventPayer(members.get(0));
+                    curEvent.setEventPayer(roomMembers.get(0));
 
                     final CharSequence[] items = {"사용자별 결과 확인", "항목별 결과 확인"};
 
@@ -692,13 +734,13 @@ public class RoomActivity extends AppCompatActivity{
     }
 
     // Member 목록에서 id를 검색해 member 목록 인덱스 반환
-    private Integer findMemberIndex(Integer memberId) {
+    private int findMemberIndex(Integer memberId) {
         for (int i = 0; i < roomMembers.size(); i++) {
             if (roomMembers.get(i).getMemberId() == memberId) {
                 return i;
             }
         }
-        return -1;
+        return 0;
     }
 
     // Event 값 확인
