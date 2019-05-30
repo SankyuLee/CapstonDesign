@@ -42,8 +42,6 @@ public class RoomListActivity extends AppCompatActivity
     EditText search_editText;
 
     Button open_btn;
-    Button search_btn;
-    Button add_btn;
     Button close_btn;
     FloatingActionButton room_fab;
     FloatingActionButton room_search_fab;
@@ -66,8 +64,6 @@ public class RoomListActivity extends AppCompatActivity
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerView = (View)findViewById(R.id.drawer);
 
-        add_btn = (Button)findViewById(R.id.add_btn);
-        search_btn = (Button)findViewById(R.id.search_btn);
         open_btn = (Button)findViewById(R.id.open_btn);
         close_btn = (Button)findViewById(R.id.close_btn);
         room_fab = (FloatingActionButton)findViewById(R.id.fab_room);
@@ -223,14 +219,6 @@ public class RoomListActivity extends AppCompatActivity
             public void afterTextChanged(Editable s) {
                 String searchText = s.toString();
                 ((RoomListAdapter)roomList.getAdapter()).getFilter().filter(searchText);
-            }
-        });
-
-        //검색 버튼
-        search_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });
 

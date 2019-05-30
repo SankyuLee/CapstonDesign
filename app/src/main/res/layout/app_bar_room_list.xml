@@ -10,7 +10,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/list_toolbar"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/tob_bar_size"
         android:background="@color/colorJustPay"
         android:gravity="center_vertical"
         android:theme="@style/AppTheme.AppBarOverlay"
@@ -19,52 +19,64 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/tob_bar_size"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
+            android:layout_height="match_parent"
             android:padding="10dp">
 
             <Button
                 android:id="@+id/open_btn"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_weight="1"
-                android:background="@drawable/ic_iconfinder___profile_1904670" />
-
-            <EditText
-                android:id="@+id/search_editText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/box_round"
-                android:ems="10"
-                android:hint="방 이름을 입력해주세요"
-                android:inputType="textPersonName"
-                android:paddingLeft="@dimen/edit_text_left_padding"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textColor="@android:color/black"
-                android:textColorLink="@android:color/transparent"
-                android:textCursorDrawable="@android:color/darker_gray" />
+                android:layout_weight="1"
+                android:background="@drawable/ic_iconfinder___profile_1904670"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <Button
-                android:id="@+id/search_btn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/ic_iconfinder___search_1904672" />
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/roundedge"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/open_btn"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <Button
-                android:id="@+id/add_btn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_weight="1"
-                android:background="@drawable/ic_iconfinder___plus_1904677" />
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    app:srcCompat="@drawable/ic_iconfinder___search_1904672" />
+
+                <EditText
+                    android:id="@+id/search_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:background="@android:color/transparent"
+                    android:ems="10"
+                    android:hint="방 이름을 입력해주세요"
+                    android:inputType="textPersonName"
+                    android:paddingLeft="@dimen/edit_text_left_padding"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:textColor="@android:color/black"
+                    android:textColorLink="@android:color/transparent"
+                    android:textCursorDrawable="@android:color/darker_gray"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+        </android.support.constraint.ConstraintLayout>
 
 
     </android.support.design.widget.AppBarLayout>
@@ -84,7 +96,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
-        app:maxImageSize="35dp"
+        app:maxImageSize="33dp"
         app:srcCompat="@drawable/ic_room" />
 
     <android.support.design.widget.FloatingActionButton
@@ -108,7 +120,7 @@
         app:backgroundTint="#F5DF91"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="35dp"
+        app:maxImageSize="33dp"
         app:srcCompat="@drawable/ic_room_add" />
 
     <include
