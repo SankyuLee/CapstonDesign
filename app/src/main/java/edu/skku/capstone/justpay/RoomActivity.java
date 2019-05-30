@@ -258,7 +258,6 @@ public class RoomActivity extends AppCompatActivity{
                         setBottomContainer();
                     }
                 }
-                logCurEvent();
             }
         });
 
@@ -435,9 +434,6 @@ public class RoomActivity extends AppCompatActivity{
         curReceiptIndex = 0;
         setReceiptImg();
 
-        // 현재 이벤트 상태에 따른 레이아웃 설정
-        setEventStatus(curEvent.getEventStatus());
-
         // 아이템 어댑터 적용
         chartItemAdapter = new RoomChartItemAdapter(curEvent.getChartItems(), new RoomChartItemAdapter.ChartItemOnClickListener() {
             @Override
@@ -470,6 +466,9 @@ public class RoomActivity extends AppCompatActivity{
                 e.printStackTrace();
             }
         }
+
+        // 현재 이벤트 상태에 따른 레이아웃 설정
+        setEventStatus(curEvent.getEventStatus());
 
         // 아이템 항목별 사용 내역 불러오기
         if (curEvent.getEventStatus() == Event.CONFIRM_RESULT) {
@@ -527,7 +526,7 @@ public class RoomActivity extends AppCompatActivity{
                         }
                         RoomChartItem roomChartItem = new RoomChartItem(
                                 // 항목 id 결정 필요
-                                curEvent.getChartItems().size(),
+                                curEvent.getChartItems().size()+3,
                                 itemNameEdit.getText().toString(),
                                 Integer.parseInt(itemCostEdit.getText().toString()),
                                 inputCount
@@ -537,7 +536,6 @@ public class RoomActivity extends AppCompatActivity{
                         itemCostEdit.setText(null);
                         itemCountEdit.setText(null);
                     }
-                    logCurEvent();
                 }
             });
 
@@ -559,7 +557,6 @@ public class RoomActivity extends AppCompatActivity{
                 public void onClick(View v) {
                     // 결제자 선택
                     curEvent.setEventPayer(members.get(0));
-                    logCurEvent();
 
                     final CharSequence[] items = {"사용자별 결과 확인", "항목별 결과 확인"};
 
@@ -585,6 +582,7 @@ public class RoomActivity extends AppCompatActivity{
         switch (eventStatus) {
             case Event.MAKE_LIST:
                 curEvent.setEventStatus(Event.MAKE_LIST);
+                chartItemAdapter.setEventStatus(Event.MAKE_LIST);
                 eventStatus1.setTextColor(getResources().getColor(R.color.colorJustPay));
                 eventStatus1.setTypeface(eventStatus1.getTypeface(), Typeface.BOLD);
                 eventStatus2.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
@@ -596,6 +594,7 @@ public class RoomActivity extends AppCompatActivity{
                 break;
             case Event.PERSONAL_CHECK:
                 curEvent.setEventStatus(Event.PERSONAL_CHECK);
+                chartItemAdapter.setEventStatus(Event.PERSONAL_CHECK);
                 eventStatus1.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
                 eventStatus1.setTypeface(eventStatus1.getTypeface(), Typeface.NORMAL);
                 eventStatus2.setTextColor(getResources().getColor(R.color.colorJustPay));
@@ -607,6 +606,7 @@ public class RoomActivity extends AppCompatActivity{
                 break;
             case Event.CONFIRM_RESULT:
                 curEvent.setEventStatus(Event.CONFIRM_RESULT);
+                chartItemAdapter.setEventStatus(Event.CONFIRM_RESULT);
                 eventStatus1.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
                 eventStatus1.setTypeface(eventStatus1.getTypeface(), Typeface.NORMAL);
                 eventStatus2.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
