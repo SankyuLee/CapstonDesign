@@ -152,8 +152,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="end"
-            android:text="입력한 비밀번호와 일치합니다"
-            android:textColor="#000000"
+            android:text="입력한 비밀번호와 일치하지 않습니다"
+            android:textColor="#ff0000"
             android:paddingRight="20dp"
             android:textSize="@dimen/sub_text_size" />
 

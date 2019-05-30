@@ -3,21 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tab_container"
-    android:layout_width="match_parent"
+    android:layout_width="100dp"
     android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
     android:background="@drawable/box_angular"
     android:paddingLeft="5dp"
     android:paddingRight="5dp">
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/tab_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="left|center_vertical"
         android:maxLength="8"
         android:maxLines="1"
         android:textSize="@dimen/sub_text_size"
-        app:layout_constraintStart_toStartOf="parent"></TextView>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tab_delete_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></TextView>
 
     <ImageButton
         android:id="@+id/tab_delete_btn"

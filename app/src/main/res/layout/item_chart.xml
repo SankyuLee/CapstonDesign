@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="@dimen/room_chart_item_height">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="match_parent"
         android:layout_weight="1">
 
         <ImageButton
@@ -26,34 +26,65 @@
     <TextView
         android:id="@+id/item_category1_text1"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="match_parent"
         android:layout_weight="2.5"
         android:gravity="center_vertical"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
         android:text="@string/item_chart_category1"
         android:textSize="@dimen/sub_text_size" />
 
     <TextView
         android:id="@+id/item_category1_text2"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="match_parent"
         android:layout_weight="2"
         android:gravity="center_vertical"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
         android:text="@string/item_chart_category2"
         android:textSize="@dimen/sub_text_size" />
 
     <TextView
         android:id="@+id/item_category1_text3"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="match_parent"
         android:layout_weight="2"
         android:gravity="center_vertical"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
         android:text="@string/item_chart_category3"
         android:textSize="@dimen/sub_text_size" />
 
-    <CheckBox
-        android:id="@+id/checkBox"
+    <LinearLayout
+        android:id="@+id/item_check_box_container"
         android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_weight="2" />
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:orientation="horizontal"
+        android:paddingLeft="4dp">
+
+        <CheckBox
+            android:id="@+id/item_check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/item_count_check_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/item_count_check"
+            android:layout_width="@dimen/room_chart_item_edit_width"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="number"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
 
 </LinearLayout>

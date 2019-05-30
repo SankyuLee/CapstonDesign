@@ -60,7 +60,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_weight="2"
                 android:background="@drawable/box_round"
-                android:inputType="textShortMessage"
+                android:inputType="textEmailAddress"
                 android:paddingStart="@dimen/edit_text_left_padding"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
@@ -107,20 +107,14 @@
 
         <LinearLayout
             android:id="@+id/login_shortcut"
+            android:paddingTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:paddingLeft="40dp"
+            android:paddingLeft="220dp"
             android:paddingRight="40dp">
 
-            <CheckBox
-                android:id="@+id/option_id_store"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="아이디 저장"
-                android:textColor="@color/colorBlurred"
-                android:textSize="@dimen/sub_text_size" />
+
 
             <CheckBox
                 android:id="@+id/option_auto_login"
@@ -136,7 +130,7 @@
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="30dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/box_round"
             android:text="로그인"
@@ -152,7 +146,7 @@
         android:paddingLeft="90dp"
         android:paddingTop="10dp"
         android:paddingRight="50dp"
-        android:paddingBottom="10dp"
+        android:paddingBottom="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -165,6 +159,7 @@
             android:clickable="true"
             android:text="아이디/비밀번호 찾기"
             android:textAlignment="center"
+            android:linksClickable="true"
             android:textColor="@color/colorBlurred"
             android:textSize="@dimen/sub_text_size" />
 
