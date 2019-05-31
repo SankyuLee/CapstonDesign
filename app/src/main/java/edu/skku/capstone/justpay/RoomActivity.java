@@ -42,9 +42,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-// 영수증 DB 연결
-// 상태별 chart layout 변경
-// 버튼 기능 추가
+// TODO: 이벤트 생성 버튼 
+// TODO: 영수증 DB 연결
+// TODO: 영수증-아이템 연결 해결
 
 public class RoomActivity extends AppCompatActivity{
 
@@ -61,6 +61,7 @@ public class RoomActivity extends AppCompatActivity{
     private Event curEvent;
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
+    private ArrayList<Integer> billIds;
     private int curReceiptIndex; // 사용자가 보고 있는 영수증 인덱스
     private int curJoinMemberNum; // 입력에 참여하고 있는 인원 수
 
@@ -495,7 +496,7 @@ public class RoomActivity extends AppCompatActivity{
 
         // 영수증 불러오기
         // 영수증 아이디 목록 불러오기
-        ArrayList<Integer> billIds = new ArrayList<>();
+        billIds = new ArrayList<>();
         JSONObject sqlBillIds = new SQLSender().
                 sendSQL("SELECT id FROM bills WHERE eventId="+curEvent.getEventId());
         try {
@@ -517,6 +518,12 @@ public class RoomActivity extends AppCompatActivity{
         chartItemAdapter = new RoomChartItemAdapter(curEvent.getChartItems(), new RoomChartItemAdapter.ChartItemOnClickListener() {
             @Override
             public void onChartItemDeleteBtnClick(int position) {
+                // DB 에서 아이템 삭제
+                JSONObject sqlDelItem = new SQLSender().
+                        sendSQL("DELETE FROM items WHERE id=" +
+                                chartItemAdapter.getItem(position).getItemId());
+
+                // 레이아웃에 반영
                 chartItemAdapter.removeItem(position);
             }
         });
@@ -616,11 +623,32 @@ public class RoomActivity extends AppCompatActivity{
                         } else {
                             inputCount = Integer.parseInt(itemCountEdit.getText().toString());
                         }
+                        Integer itemId = 0;
+                        String itemName = itemNameEdit.getText().toString();
+                        Integer itemCost = Integer.parseInt(itemCostEdit.getText().toString());
+
+                        // DB에 아이템 추가
+                        JSONObject sqlItem = new SQLSender().
+                                sendSQL("INSERT INTO items (itemname, quantity, price, billId)" +
+                                        "VALUES (" + "'" + itemName + "'" + ", " +
+                                        inputCount + ", " +
+                                        itemCost + ", " +
+                                        billIds.get(0) + ")");
+                        try {
+                            if (!sqlItem.getBoolean("isError")) {
+                                itemId = sqlItem.getJSONObject("result").getInt("insertId");
+                            }
+                        } catch (JSONException e) {
+                            Log.e("Exception", "JSONException occurred in add item");
+                            e.printStackTrace();
+                        }
+
+                        // 레이아웃에 반영
                         RoomChartItem roomChartItem = new RoomChartItem(
                                 // 항목 id 결정 필요
-                                curEvent.getChartItems().size()+3,
-                                itemNameEdit.getText().toString(),
-                                Integer.parseInt(itemCostEdit.getText().toString()),
+                                itemId,
+                                itemName,
+                                itemCost,
                                 inputCount
                         );
                         chartItemAdapter.addItem(roomChartItem);
