@@ -23,10 +23,21 @@ import java.util.HashMap;
 public class RoomChartItemAdapter extends BaseAdapter {
     private ArrayList<RoomChartItem> chartItemList;
     private ChartItemOnClickListener chartItemOnClickListener;
+    private Integer eventStatus;
 
     public RoomChartItemAdapter(ArrayList<RoomChartItem> chartItemList, ChartItemOnClickListener chartItemOnClickListener) {
         this.chartItemList = chartItemList;
         this.chartItemOnClickListener = chartItemOnClickListener;
+        this.eventStatus = Event.MAKE_LIST;
+    }
+
+    public Integer getEventStatus() {
+        return eventStatus;
+    }
+
+    public void setEventStatus(Integer eventStatus) {
+        this.eventStatus = eventStatus;
+        notifyDataSetChanged();
     }
 
     public interface ChartItemOnClickListener {
@@ -64,6 +75,7 @@ public class RoomChartItemAdapter extends BaseAdapter {
         TextView itemCountText = convertView.findViewById(R.id.item_category1_text3);
         CheckBox checkBox = convertView.findViewById(R.id.item_check_box);
         EditText editCount = convertView.findViewById(R.id.item_count_check);
+        TextView countText = convertView.findViewById(R.id.item_count_txt);
         ImageButton delButton = convertView.findViewById(R.id.delete_chart_item_btn);
 
         clearTextListener(editCount);
@@ -74,31 +86,6 @@ public class RoomChartItemAdapter extends BaseAdapter {
         }
         editCount.addTextChangedListener(chartItem.getTextWatcher());
 
-        if (chartItem.getItemCount() != 0) {
-            LinearLayout checkBoxContainer = convertView.findViewById(R.id.item_check_box_container);
-            LinearLayout.LayoutParams checkBoxParams = (LinearLayout.LayoutParams) checkBoxContainer.getLayoutParams();
-            checkBoxParams.weight = 0;
-            checkBoxContainer.setLayoutParams(checkBoxParams);
-
-            LinearLayout editContainer = convertView.findViewById(R.id.item_count_check_container);
-            LinearLayout.LayoutParams containerParams = (LinearLayout.LayoutParams) editContainer.getLayoutParams();
-            containerParams.weight = 2;
-            editContainer.setLayoutParams(containerParams);
-            itemCountText.setVisibility(View.VISIBLE);
-            itemCountText.setText(chartItem.getItemCount().toString());
-        } else {
-            LinearLayout checkBoxContainer = convertView.findViewById(R.id.item_check_box_container);
-            LinearLayout.LayoutParams checkBoxParams = (LinearLayout.LayoutParams) checkBoxContainer.getLayoutParams();
-            checkBoxParams.weight = 2;
-            checkBoxContainer.setLayoutParams(checkBoxParams);
-
-            LinearLayout editContainer = convertView.findViewById(R.id.item_count_check_container);
-            LinearLayout.LayoutParams containerParams = (LinearLayout.LayoutParams) editContainer.getLayoutParams();
-            containerParams.weight = 0;
-            editContainer.setLayoutParams(containerParams);
-            itemCountText.setVisibility(View.INVISIBLE);
-        }
-
         if (checkBox.isChecked()) {
             chartItem.setItemResult(1);
         } else if (editCount.getText().toString().getBytes().length > 0) {
@@ -106,6 +93,155 @@ public class RoomChartItemAdapter extends BaseAdapter {
             chartItem.setItemResult(result);
         } else {
             chartItem.setItemResult(0);
+        }
+
+        switch (eventStatus) {
+            case Event.MAKE_LIST:
+                if (chartItem.getItemCount() != 0) {
+                    LinearLayout itemChart = convertView.findViewById(R.id.item_chart);
+                    itemChart.setBackgroundResource(android.R.color.transparent);
+
+                    delButton.setVisibility(View.VISIBLE);
+                    LinearLayout checkBoxContainer = convertView.findViewById(R.id.item_check_box_container);
+                    checkBoxContainer.setVisibility(View.INVISIBLE);
+                    LinearLayout editContainer = convertView.findViewById(R.id.item_count_check_container);
+                    editContainer.setVisibility(View.INVISIBLE);
+                    LinearLayout countTextContainer = convertView.findViewById(R.id.item_count_txt_container);
+                    countTextContainer.setVisibility(View.INVISIBLE);
+                    itemCountText.setVisibility(View.VISIBLE);
+                    itemCountText.setText(chartItem.getItemCount().toString());
+                } else {
+                    LinearLayout itemChart = convertView.findViewById(R.id.item_chart);
+                    itemChart.setBackgroundResource(android.R.color.transparent);
+
+                    delButton.setVisibility(View.VISIBLE);
+                    LinearLayout checkBoxContainer = convertView.findViewById(R.id.item_check_box_container);
+                    checkBoxContainer.setVisibility(View.INVISIBLE);
+                    LinearLayout editContainer = convertView.findViewById(R.id.item_count_check_container);
+                    editContainer.setVisibility(View.INVISIBLE);
+                    LinearLayout countTextContainer = convertView.findViewById(R.id.item_count_txt_container);
+                    countTextContainer.setVisibility(View.INVISIBLE);
+                    itemCountText.setVisibility(View.INVISIBLE);
+                }
+                break;
+            case Event.PERSONAL_CHECK:
+                if (chartItem.getItemCount() != 0) {
+                    LinearLayout itemChart = convertView.findViewById(R.id.item_chart);
+                    itemChart.setBackgroundResource(android.R.color.transparent);
+
+                    delButton.setVisibility(View.INVISIBLE);
+                    LinearLayout checkBoxContainer = convertView.findViewById(R.id.item_check_box_container);
+                    checkBoxContainer.setVisibility(View.VISIBLE);
+                    LinearLayout.LayoutParams checkBoxParams = (LinearLayout.LayoutParams) checkBoxContainer.getLayoutParams();
+                    checkBoxParams.weight = 0;
+                    checkBoxContainer.setLayoutParams(checkBoxParams);
+                    checkBox.setEnabled(true);
+
+                    LinearLayout editContainer = convertView.findViewById(R.id.item_count_check_container);
+                    editContainer.setVisibility(View.VISIBLE);
+                    LinearLayout.LayoutParams containerParams = (LinearLayout.LayoutParams) editContainer.getLayoutParams();
+                    containerParams.weight = 2;
+                    editContainer.setLayoutParams(containerParams);
+
+                    LinearLayout countTextContainer = convertView.findViewById(R.id.item_count_txt_container);
+                    countTextContainer.setVisibility(View.VISIBLE);
+                    LinearLayout.LayoutParams txtContainerParams = (LinearLayout.LayoutParams) countTextContainer.getLayoutParams();
+                    txtContainerParams.weight = 0;
+                    countTextContainer.setLayoutParams(txtContainerParams);
+
+                    itemCountText.setVisibility(View.VISIBLE);
+                    itemCountText.setText(chartItem.getItemCount().toString());
+                } else {
+                    LinearLayout itemChart = convertView.findViewById(R.id.item_chart);
+                    itemChart.setBackgroundResource(android.R.color.transparent);
+
+                    delButton.setVisibility(View.INVISIBLE);
+                    LinearLayout checkBoxContainer = convertView.findViewById(R.id.item_check_box_container);
+                    checkBoxContainer.setVisibility(View.VISIBLE);
+                    LinearLayout.LayoutParams checkBoxParams = (LinearLayout.LayoutParams) checkBoxContainer.getLayoutParams();
+                    checkBoxParams.weight = 2;
+                    checkBoxContainer.setLayoutParams(checkBoxParams);
+                    checkBox.setEnabled(true);
+
+                    LinearLayout editContainer = convertView.findViewById(R.id.item_count_check_container);
+                    editContainer.setVisibility(View.VISIBLE);
+                    LinearLayout.LayoutParams containerParams = (LinearLayout.LayoutParams) editContainer.getLayoutParams();
+                    containerParams.weight = 0;
+                    editContainer.setLayoutParams(containerParams);
+
+                    LinearLayout countTextContainer = convertView.findViewById(R.id.item_count_txt_container);
+                    countTextContainer.setVisibility(View.VISIBLE);
+                    LinearLayout.LayoutParams txtContainerParams = (LinearLayout.LayoutParams) countTextContainer.getLayoutParams();
+                    txtContainerParams.weight = 0;
+                    countTextContainer.setLayoutParams(txtContainerParams);
+
+                    itemCountText.setVisibility(View.INVISIBLE);
+                }
+                break;
+            case Event.CONFIRM_RESULT:
+                if (chartItem.getItemCount() != 0) {
+                    delButton.setVisibility(View.INVISIBLE);
+                    LinearLayout checkBoxContainer = convertView.findViewById(R.id.item_check_box_container);
+                    checkBoxContainer.setVisibility(View.VISIBLE);
+                    LinearLayout.LayoutParams checkBoxParams = (LinearLayout.LayoutParams) checkBoxContainer.getLayoutParams();
+                    checkBoxParams.weight = 0;
+                    checkBoxContainer.setLayoutParams(checkBoxParams);
+                    checkBox.setEnabled(false);
+
+                    LinearLayout editContainer = convertView.findViewById(R.id.item_count_check_container);
+                    editContainer.setVisibility(View.VISIBLE);
+                    LinearLayout.LayoutParams containerParams = (LinearLayout.LayoutParams) editContainer.getLayoutParams();
+                    containerParams.weight = 0;
+                    editContainer.setLayoutParams(containerParams);
+
+                    LinearLayout countTextContainer = convertView.findViewById(R.id.item_count_txt_container);
+                    countTextContainer.setVisibility(View.VISIBLE);
+                    LinearLayout.LayoutParams txtContainerParams = (LinearLayout.LayoutParams) countTextContainer.getLayoutParams();
+                    txtContainerParams.weight = 2;
+                    countTextContainer.setLayoutParams(txtContainerParams);
+                    if (chartItem.getItemResult() != 0) {
+                        countText.setText(chartItem.getItemResult().toString());
+                        LinearLayout itemChart = convertView.findViewById(R.id.item_chart);
+                        itemChart.setBackgroundResource(R.color.colorJustPaySub);
+                    } else {
+                        countText.setText("");
+                        LinearLayout itemChart = convertView.findViewById(R.id.item_chart);
+                        itemChart.setBackgroundResource(android.R.color.transparent);
+                    }
+
+                    itemCountText.setVisibility(View.VISIBLE);
+                    itemCountText.setText(chartItem.getItemCount().toString());
+                } else {
+                    delButton.setVisibility(View.INVISIBLE);
+                    LinearLayout checkBoxContainer = convertView.findViewById(R.id.item_check_box_container);
+                    checkBoxContainer.setVisibility(View.VISIBLE);
+                    LinearLayout.LayoutParams checkBoxParams = (LinearLayout.LayoutParams) checkBoxContainer.getLayoutParams();
+                    checkBoxParams.weight = 2;
+                    checkBoxContainer.setLayoutParams(checkBoxParams);
+                    checkBox.setEnabled(false);
+                    if (checkBox.isChecked()) {
+                        LinearLayout itemChart = convertView.findViewById(R.id.item_chart);
+                        itemChart.setBackgroundResource(R.color.colorJustPaySub);
+                    } else {
+                        LinearLayout itemChart = convertView.findViewById(R.id.item_chart);
+                        itemChart.setBackgroundResource(android.R.color.transparent);
+                    }
+
+                    LinearLayout editContainer = convertView.findViewById(R.id.item_count_check_container);
+                    editContainer.setVisibility(View.VISIBLE);
+                    LinearLayout.LayoutParams containerParams = (LinearLayout.LayoutParams) editContainer.getLayoutParams();
+                    containerParams.weight = 0;
+                    editContainer.setLayoutParams(containerParams);
+
+                    LinearLayout countTextContainer = convertView.findViewById(R.id.item_count_txt_container);
+                    countTextContainer.setVisibility(View.VISIBLE);
+                    LinearLayout.LayoutParams txtContainerParams = (LinearLayout.LayoutParams) countTextContainer.getLayoutParams();
+                    txtContainerParams.weight = 0;
+                    countTextContainer.setLayoutParams(txtContainerParams);
+
+                    itemCountText.setVisibility(View.INVISIBLE);
+                }
+                break;
         }
 
         itemNameText.setText(chartItem.getItemName());
@@ -130,6 +266,11 @@ public class RoomChartItemAdapter extends BaseAdapter {
 
     public void removeItem(int position) {
         chartItemList.remove(position);
+        notifyDataSetChanged();
+    }
+
+    public void removeAll() {
+        chartItemList.clear();
         notifyDataSetChanged();
     }
 
