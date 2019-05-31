@@ -800,8 +800,9 @@ public class RoomActivity extends AppCompatActivity{
             // 항목 결과 DB 반영
             for (int i = 0; i < chartItemAdapter.getCount(); i++) {
                 JSONObject sqlReset = new SQLSender().
-                        sendSQL("DELETE FROM checkLists " +
-                                "WHERE itemId=" + chartItemAdapter.getItem(i).getItemId());
+                        sendSQL("DELETE FROM checkLists" +
+                                " WHERE itemId=" + chartItemAdapter.getItem(i).getItemId() +
+                                " AND userId=" + userId);
                 if (chartItemAdapter.getItem(i).getItemResult() != 0) {
                     JSONObject sqlResult = new SQLSender().
                             sendSQL("INSERT INTO checkLists (itemId, userId, quantity)" +
