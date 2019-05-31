@@ -69,14 +69,25 @@ public class RoomChartItemAdapter extends BaseAdapter {
                 convertView = inflater.inflate(R.layout.item_chart, parent, false);
         }
 
-        RoomChartItem chartItem = chartItemList.get(position);
+        final RoomChartItem chartItem = chartItemList.get(position);
         TextView itemNameText = convertView.findViewById(R.id.item_category1_text1);
         TextView itemCostText = convertView.findViewById(R.id.item_category1_text2);
         TextView itemCountText = convertView.findViewById(R.id.item_category1_text3);
-        CheckBox checkBox = convertView.findViewById(R.id.item_check_box);
         EditText editCount = convertView.findViewById(R.id.item_count_check);
         TextView countText = convertView.findViewById(R.id.item_count_txt);
         ImageButton delButton = convertView.findViewById(R.id.delete_chart_item_btn);
+        CheckBox checkBox = convertView.findViewById(R.id.item_check_box);
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (chartItem.getChecked()) {
+                    chartItem.setChecked(false);
+                } else {
+                    chartItem.setChecked(true);
+                }
+                notifyDataSetChanged();
+            }
+        });
 
         clearTextListener(editCount);
         if (chartItem.getItemResult() == 0) {
@@ -85,6 +96,7 @@ public class RoomChartItemAdapter extends BaseAdapter {
             editCount.setText(chartItem.getItemResult().toString());
         }
         editCount.addTextChangedListener(chartItem.getTextWatcher());
+        checkBox.setChecked(chartItem.getChecked());
 
         if (checkBox.isChecked()) {
             chartItem.setItemResult(1);
@@ -246,13 +258,6 @@ public class RoomChartItemAdapter extends BaseAdapter {
 
         itemNameText.setText(chartItem.getItemName());
         itemCostText.setText(chartItem.getItemCost().toString());
-
-        checkBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                notifyDataSetChanged();
-            }
-        });
 
         delButton.setOnClickListener(new View.OnClickListener() {
             @Override
