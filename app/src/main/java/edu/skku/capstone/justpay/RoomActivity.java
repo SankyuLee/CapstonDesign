@@ -90,6 +90,7 @@ public class RoomActivity extends AppCompatActivity{
     private RoomChartItemAdapter chartItemAdapter;
 
     private Button prevStatusBtn, nextStatusBtn;
+    private Button chartConfirmBtn;
 
     private TextView typingStatus;
 
@@ -127,6 +128,7 @@ public class RoomActivity extends AppCompatActivity{
         chartItemListView = findViewById(R.id.chart_list_view);
         prevStatusBtn = findViewById(R.id.prev_status_btn);
         nextStatusBtn = findViewById(R.id.next_status_btn);
+        chartConfirmBtn = findViewById(R.id.chart_confirm_btn);
         typingStatus = findViewById(R.id.room_typing_status);
 
         initRoom();
@@ -338,6 +340,13 @@ public class RoomActivity extends AppCompatActivity{
                 JSONObject sqlStatus = new SQLSender().
                         sendSQL("UPDATE events SET step=" + curEvent.getEventStatus() +
                                 " WHERE id = " + curEvent.getEventId());
+            }
+        });
+
+        chartConfirmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveResult();
             }
         });
 
@@ -561,13 +570,13 @@ public class RoomActivity extends AppCompatActivity{
 
         // 사용자 수준에 따른 레이아웃 설정
         if (userId == curEvent.getEventManager().getMemberId()) {
-            LinearLayout chartBtnContainer = findViewById(R.id.room_status_btn_container);
-            chartBtnContainer.setVisibility(View.VISIBLE);
+            nextStatusBtn.setVisibility(View.VISIBLE);
+            prevStatusBtn.setVisibility(View.VISIBLE);
             banBtn.setVisibility(View.VISIBLE);
             payerBtn.setVisibility(View.VISIBLE);
         } else {
-            LinearLayout chartBtnContainer = findViewById(R.id.room_status_btn_container);
-            chartBtnContainer.setVisibility(View.INVISIBLE);
+            nextStatusBtn.setVisibility(View.GONE);
+            prevStatusBtn.setVisibility(View.GONE);
             banBtn.setVisibility(View.INVISIBLE);
             payerBtn.setVisibility(View.INVISIBLE);
         }
@@ -708,8 +717,11 @@ public class RoomActivity extends AppCompatActivity{
                 eventStatus2.setTypeface(eventStatus1.getTypeface(), Typeface.NORMAL);
                 eventStatus3.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
                 eventStatus3.setTypeface(eventStatus1.getTypeface(), Typeface.NORMAL);
-                prevStatusBtn.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
-                nextStatusBtn.setBackgroundColor(getResources().getColor(R.color.colorJustPay));
+                if (userId == curEvent.getEventManager().getMemberId()) {
+                    prevStatusBtn.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+                    nextStatusBtn.setBackgroundColor(getResources().getColor(R.color.colorJustPay));
+                    chartConfirmBtn.setVisibility(View.GONE);
+                }
                 break;
             case Event.PERSONAL_CHECK:
                 curEvent.setEventStatus(Event.PERSONAL_CHECK);
@@ -720,8 +732,13 @@ public class RoomActivity extends AppCompatActivity{
                 eventStatus2.setTypeface(eventStatus1.getTypeface(), Typeface.BOLD);
                 eventStatus3.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
                 eventStatus3.setTypeface(eventStatus1.getTypeface(), Typeface.NORMAL);
-                prevStatusBtn.setBackgroundColor(getResources().getColor(R.color.colorJustPay));
-                nextStatusBtn.setBackgroundColor(getResources().getColor(R.color.colorJustPay));
+                if (userId == curEvent.getEventManager().getMemberId()) {
+                    prevStatusBtn.setBackgroundColor(getResources().getColor(R.color.colorJustPay));
+                    nextStatusBtn.setBackgroundColor(getResources().getColor(R.color.colorJustPay));
+                    chartConfirmBtn.setVisibility(View.GONE);
+                } else {
+                    chartConfirmBtn.setVisibility(View.VISIBLE);
+                }
                 break;
             case Event.CONFIRM_RESULT:
                 curEvent.setEventStatus(Event.CONFIRM_RESULT);
@@ -732,8 +749,12 @@ public class RoomActivity extends AppCompatActivity{
                 eventStatus2.setTypeface(eventStatus1.getTypeface(), Typeface.NORMAL);
                 eventStatus3.setTextColor(getResources().getColor(R.color.colorJustPay));
                 eventStatus3.setTypeface(eventStatus1.getTypeface(), Typeface.BOLD);
-                prevStatusBtn.setBackgroundColor(getResources().getColor(R.color.colorJustPay));
-                nextStatusBtn.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+                if (userId == curEvent.getEventManager().getMemberId()) {
+                    prevStatusBtn.setBackgroundColor(getResources().getColor(R.color.colorJustPay));
+                    nextStatusBtn.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+                    chartConfirmBtn.setVisibility(View.GONE);
+                }
+
                 break;
         }
     }

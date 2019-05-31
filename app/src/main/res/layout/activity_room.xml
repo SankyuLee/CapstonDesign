@@ -412,6 +412,16 @@
                     android:background="@color/colorJustPay"
                     android:text="@string/room_status_next"
                     android:textColor="@android:color/white" />
+
+                <Button
+                    android:id="@+id/chart_confirm_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/colorJustPay"
+                    android:text="입력 완료"
+                    android:textColor="@android:color/background_light"
+                    android:visibility="gone" />
             </LinearLayout>
 
         </LinearLayout>
