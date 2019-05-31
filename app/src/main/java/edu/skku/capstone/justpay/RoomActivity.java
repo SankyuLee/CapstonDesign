@@ -42,9 +42,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-// 영수증 DB 연결
-// 상태별 chart layout 변경
-// 버튼 기능 추가
+// TODO: 이벤트 생성 버튼 
+// TODO: 영수증 DB 연결
+// TODO: 영수증-아이템 연결 해결
 
 public class RoomActivity extends AppCompatActivity{
 
@@ -61,6 +61,7 @@ public class RoomActivity extends AppCompatActivity{
     private Event curEvent;
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
+    private ArrayList<Integer> billIds;
     private int curReceiptIndex; // 사용자가 보고 있는 영수증 인덱스
     private int curJoinMemberNum; // 입력에 참여하고 있는 인원 수
 
@@ -316,6 +317,9 @@ public class RoomActivity extends AppCompatActivity{
                     setEventStatus(Event.PERSONAL_CHECK);
                     setBottomContainer();
                 }
+                JSONObject sqlStatus = new SQLSender().
+                        sendSQL("UPDATE events SET step=" + curEvent.getEventStatus() +
+                                " WHERE id = " + curEvent.getEventId());
             }
         });
 
@@ -331,6 +335,9 @@ public class RoomActivity extends AppCompatActivity{
                         setBottomContainer();
                     }
                 }
+                JSONObject sqlStatus = new SQLSender().
+                        sendSQL("UPDATE events SET step=" + curEvent.getEventStatus() +
+                                " WHERE id = " + curEvent.getEventId());
             }
         });
 
@@ -495,7 +502,7 @@ public class RoomActivity extends AppCompatActivity{
 
         // 영수증 불러오기
         // 영수증 아이디 목록 불러오기
-        ArrayList<Integer> billIds = new ArrayList<>();
+        billIds = new ArrayList<>();
         JSONObject sqlBillIds = new SQLSender().
                 sendSQL("SELECT id FROM bills WHERE eventId="+curEvent.getEventId());
         try {
@@ -517,6 +524,12 @@ public class RoomActivity extends AppCompatActivity{
         chartItemAdapter = new RoomChartItemAdapter(curEvent.getChartItems(), new RoomChartItemAdapter.ChartItemOnClickListener() {
             @Override
             public void onChartItemDeleteBtnClick(int position) {
+                // DB 에서 아이템 삭제
+                JSONObject sqlDelItem = new SQLSender().
+                        sendSQL("DELETE FROM items WHERE id=" +
+                                chartItemAdapter.getItem(position).getItemId());
+
+                // 레이아웃에 반영
                 chartItemAdapter.removeItem(position);
             }
         });
@@ -567,23 +580,19 @@ public class RoomActivity extends AppCompatActivity{
             for (int i = 0; i < chartItemAdapter.getCount(); i++) {
                 JSONObject sqlCheck = new SQLSender().
                         sendSQL("SELECT * FROM checkLists WHERE userId=" + userId +
-                                "AND itemId=" + chartItemAdapter.getItem(i).getItemId());
+                                " AND itemId=" + chartItemAdapter.getItem(i).getItemId());
                 try {
                     if (!sqlCheck.getBoolean("isError")) {
                         JSONArray checkResult = sqlCheck.getJSONArray("result");
-                        for (int j = 0; j < checkResult.length(); j++) {
-                            JSONObject checkItem = checkResult.getJSONObject(j);
-                            curEvent.getChartResult().
-                                    put(chartItemAdapter.getItem(i).getItemId(), checkItem.getInt("quantity"));
-                        }
+                        chartItemAdapter.getItem(i).
+                                setItemResult(checkResult.getJSONObject(0).getInt("quantity"));
                     }
                 } catch (JSONException e) {
                     Log.e("Exception", "JSONException occurred in getting check list");
                     e.printStackTrace();
                 }
             }
-            // 사용 내역 설정
-            applyResult();
+            chartItemAdapter.notifyDataSetChanged();
         }
 
         // 하단바 설정
@@ -616,11 +625,32 @@ public class RoomActivity extends AppCompatActivity{
                         } else {
                             inputCount = Integer.parseInt(itemCountEdit.getText().toString());
                         }
+                        Integer itemId = 0;
+                        String itemName = itemNameEdit.getText().toString();
+                        Integer itemCost = Integer.parseInt(itemCostEdit.getText().toString());
+
+                        // DB에 아이템 추가
+                        JSONObject sqlItem = new SQLSender().
+                                sendSQL("INSERT INTO items (itemname, quantity, price, billId)" +
+                                        "VALUES (" + "'" + itemName + "'" + ", " +
+                                        inputCount + ", " +
+                                        itemCost + ", " +
+                                        billIds.get(0) + ")");
+                        try {
+                            if (!sqlItem.getBoolean("isError")) {
+                                itemId = sqlItem.getJSONObject("result").getInt("insertId");
+                            }
+                        } catch (JSONException e) {
+                            Log.e("Exception", "JSONException occurred in add item");
+                            e.printStackTrace();
+                        }
+
+                        // 레이아웃에 반영
                         RoomChartItem roomChartItem = new RoomChartItem(
                                 // 항목 id 결정 필요
-                                curEvent.getChartItems().size()+3,
-                                itemNameEdit.getText().toString(),
-                                Integer.parseInt(itemCostEdit.getText().toString()),
+                                itemId,
+                                itemName,
+                                itemCost,
                                 inputCount
                         );
                         chartItemAdapter.addItem(roomChartItem);
@@ -647,9 +677,6 @@ public class RoomActivity extends AppCompatActivity{
             confirmBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // 결제자 선택
-                    curEvent.setEventPayer(roomMembers.get(0));
-
                     final CharSequence[] items = {"사용자별 결과 확인", "항목별 결과 확인"};
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
@@ -669,7 +696,7 @@ public class RoomActivity extends AppCompatActivity{
         }
     }
 
-    // 이벤트 상태에 따른 레이아웃 설정
+    // 이벤트 상태에 따른 설정
     private void setEventStatus(int eventStatus) {
         switch (eventStatus) {
             case Event.MAKE_LIST:
@@ -769,17 +796,23 @@ public class RoomActivity extends AppCompatActivity{
     private Boolean saveResult() {
         if (!chartItemAdapter.getResult(this).first) {
             curEvent.setChartResult(chartItemAdapter.getResult(this).second);
+
+            // 항목 결과 DB 반영
+            for (int i = 0; i < chartItemAdapter.getCount(); i++) {
+                JSONObject sqlReset = new SQLSender().
+                        sendSQL("DELETE FROM checkLists " +
+                                "WHERE itemId=" + chartItemAdapter.getItem(i).getItemId());
+                if (chartItemAdapter.getItem(i).getItemResult() != 0) {
+                    JSONObject sqlResult = new SQLSender().
+                            sendSQL("INSERT INTO checkLists (itemId, userId, quantity)" +
+                                    "VALUES (" + chartItemAdapter.getItem(i).getItemId() + ", " +
+                                    userId + ", " +
+                                    chartItemAdapter.getItem(i).getItemResult() + ")");
+                }
+            }
             return true;
         } else {
             return false;
-        }
-    }
-
-    // 사용 내역 적용
-    private void applyResult() {
-        for (int i = 0; i < chartItemAdapter.getCount(); i++) {
-            chartItemAdapter.getItem(i).
-                    setItemResult(curEvent.getChartResult().get(chartItemAdapter.getItem(i).getItemId()));
         }
     }
 

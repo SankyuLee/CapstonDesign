@@ -9,6 +9,7 @@ public class RoomChartItem {
     private Integer itemCost;
     private Integer itemCount;
     private Integer itemResult;
+    private Boolean isChecked;
     private TextWatcher textWatcher;
 
     public RoomChartItem(Integer itemId, String itemName, Integer itemCost, Integer itemCount) {
@@ -17,6 +18,7 @@ public class RoomChartItem {
         this.itemCost = itemCost;
         this.itemCount = itemCount;
         this.itemResult = 0;
+        this.isChecked = false;
         this.textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -89,5 +91,13 @@ public class RoomChartItem {
 
     public void setTextWatcher(TextWatcher textWatcher) {
         this.textWatcher = textWatcher;
+    }
+
+    public Boolean getChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(Boolean checked) {
+        isChecked = checked;
     }
 }
