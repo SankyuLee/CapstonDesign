@@ -75,6 +75,9 @@ public class RoomActivity extends AppCompatActivity{
     private RecyclerView tabListView;
     private EventAdapter eventAdapter;
 
+    private TextView payerResult;
+    private Button payerBtn;
+
     private ImageView receiptImg;
     private ImageButton addReceiptBtn, prevReceiptBtn, nextReceiptBtn;
     private TextView addReceiptText, receiptStatus;
@@ -109,6 +112,8 @@ public class RoomActivity extends AppCompatActivity{
         addBtn = findViewById(R.id.add_user_btn);
         changeBtn = findViewById(R.id.change_user_btn);
         tabListView = findViewById(R.id.room_tab_list);
+        payerResult = findViewById(R.id.payer_result);
+        payerBtn = findViewById(R.id.payer_select_btn);
         receiptImg = findViewById(R.id.receipt_image);
         addReceiptBtn = findViewById(R.id.add_receipt_btn);
         addReceiptText = findViewById(R.id.add_receipt_text);
@@ -210,10 +215,10 @@ public class RoomActivity extends AppCompatActivity{
                             e.printStackTrace();
                         }
 
-//                        // 새로운 멤버 DB에 반영
-//                        JSONObject sqlInsertMember = new SQLSender().
-//                                sendSQL("INSERT INTO roomLists (userId, roomId) VALUES (" +
-//                                        memberIds.get(pos) + ", " + roomId + ")");
+                        // 새로운 멤버 DB에 반영
+                        JSONObject sqlInsertMember = new SQLSender().
+                                sendSQL("INSERT INTO roomLists (userId, roomId) VALUES (" +
+                                        memberIds.get(pos) + ", " + roomId + ")");
                     }
                 });
                 builder.show();
@@ -237,6 +242,35 @@ public class RoomActivity extends AppCompatActivity{
                 builder.setItems(memberNames.toArray(new CharSequence[memberNames.size()]), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int pos) {
                         userId = memberIds.get(pos);
+                        setEvent(curEvent.getEventId());
+                    }
+                });
+                builder.show();
+            }
+        });
+
+        payerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final ArrayList<String> memberNames = new ArrayList<>();
+                final ArrayList<Integer> memberIds = new ArrayList<>();
+                for (int i = 0; i < roomMembers.size(); i++) {
+                    memberNames.add(roomMembers.get(i).getMemberName());
+                    memberIds.add(roomMembers.get(i).getMemberId());
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
+                builder.setTitle("결제자 선택");
+                builder.setItems(memberNames.toArray(new CharSequence[memberNames.size()]), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int pos) {
+                        // 결제자 정보 반영
+                        curEvent.setEventPayer(roomMembers.get(findMemberIndex(memberIds.get(pos))));
+                        payerResult.setText(curEvent.getEventPayer().getMemberName());
+
+                        // 결제자 DB에 반영
+                        JSONObject sqlPayer = new SQLSender().
+                                sendSQL("UPDATE events SET payerId=" + memberIds.get(pos) +
+                                        " WHERE id = " + curEvent.getEventId());
                     }
                 });
                 builder.show();
@@ -456,6 +490,9 @@ public class RoomActivity extends AppCompatActivity{
             }
         }
 
+        // 결제자 불러오기
+        payerResult.setText(curEvent.getEventPayer().getMemberName());
+
         // 영수증 불러오기
         // 영수증 아이디 목록 불러오기
         ArrayList<Integer> billIds = new ArrayList<>();
@@ -507,6 +544,19 @@ public class RoomActivity extends AppCompatActivity{
                 Log.e("Exception", "JSONException occurred in getting items");
                 e.printStackTrace();
             }
+        }
+
+        // 사용자 수준에 따른 레이아웃 설정
+        if (userId == curEvent.getEventManager().getMemberId()) {
+            LinearLayout chartBtnContainer = findViewById(R.id.room_status_btn_container);
+            chartBtnContainer.setVisibility(View.VISIBLE);
+            banBtn.setVisibility(View.VISIBLE);
+            payerBtn.setVisibility(View.VISIBLE);
+        } else {
+            LinearLayout chartBtnContainer = findViewById(R.id.room_status_btn_container);
+            chartBtnContainer.setVisibility(View.INVISIBLE);
+            banBtn.setVisibility(View.INVISIBLE);
+            payerBtn.setVisibility(View.INVISIBLE);
         }
 
         // 현재 이벤트 상태에 따른 레이아웃 설정
