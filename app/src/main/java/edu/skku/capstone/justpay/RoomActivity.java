@@ -210,10 +210,10 @@ public class RoomActivity extends AppCompatActivity{
                             e.printStackTrace();
                         }
 
-//                        // 새로운 멤버 DB에 반영
-//                        JSONObject sqlInsertMember = new SQLSender().
-//                                sendSQL("INSERT INTO roomLists (userId, roomId) VALUES (" +
-//                                        memberIds.get(pos) + ", " + roomId + ")");
+                        // 새로운 멤버 DB에 반영
+                        JSONObject sqlInsertMember = new SQLSender().
+                                sendSQL("INSERT INTO roomLists (userId, roomId) VALUES (" +
+                                        memberIds.get(pos) + ", " + roomId + ")");
                     }
                 });
                 builder.show();
@@ -237,6 +237,12 @@ public class RoomActivity extends AppCompatActivity{
                 builder.setItems(memberNames.toArray(new CharSequence[memberNames.size()]), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int pos) {
                         userId = memberIds.get(pos);
+                        setEvent(curEvent.getEventId());
+                    }
+                });
+                builder.show();
+            }
+        });
                     }
                 });
                 builder.show();
