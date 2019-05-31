@@ -317,6 +317,9 @@ public class RoomActivity extends AppCompatActivity{
                     setEventStatus(Event.PERSONAL_CHECK);
                     setBottomContainer();
                 }
+                JSONObject sqlStatus = new SQLSender().
+                        sendSQL("UPDATE events SET step=" + curEvent.getEventStatus() +
+                                " WHERE id = " + curEvent.getEventId());
             }
         });
 
@@ -332,6 +335,9 @@ public class RoomActivity extends AppCompatActivity{
                         setBottomContainer();
                     }
                 }
+                JSONObject sqlStatus = new SQLSender().
+                        sendSQL("UPDATE events SET step=" + curEvent.getEventStatus() +
+                                " WHERE id = " + curEvent.getEventId());
             }
         });
 
@@ -574,23 +580,19 @@ public class RoomActivity extends AppCompatActivity{
             for (int i = 0; i < chartItemAdapter.getCount(); i++) {
                 JSONObject sqlCheck = new SQLSender().
                         sendSQL("SELECT * FROM checkLists WHERE userId=" + userId +
-                                "AND itemId=" + chartItemAdapter.getItem(i).getItemId());
+                                " AND itemId=" + chartItemAdapter.getItem(i).getItemId());
                 try {
                     if (!sqlCheck.getBoolean("isError")) {
                         JSONArray checkResult = sqlCheck.getJSONArray("result");
-                        for (int j = 0; j < checkResult.length(); j++) {
-                            JSONObject checkItem = checkResult.getJSONObject(j);
-                            curEvent.getChartResult().
-                                    put(chartItemAdapter.getItem(i).getItemId(), checkItem.getInt("quantity"));
-                        }
+                        chartItemAdapter.getItem(i).
+                                setItemResult(checkResult.getJSONObject(0).getInt("quantity"));
                     }
                 } catch (JSONException e) {
                     Log.e("Exception", "JSONException occurred in getting check list");
                     e.printStackTrace();
                 }
             }
-            // 사용 내역 설정
-            applyResult();
+            chartItemAdapter.notifyDataSetChanged();
         }
 
         // 하단바 설정
@@ -675,9 +677,6 @@ public class RoomActivity extends AppCompatActivity{
             confirmBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // 결제자 선택
-                    curEvent.setEventPayer(roomMembers.get(0));
-
                     final CharSequence[] items = {"사용자별 결과 확인", "항목별 결과 확인"};
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
@@ -697,7 +696,7 @@ public class RoomActivity extends AppCompatActivity{
         }
     }
 
-    // 이벤트 상태에 따른 레이아웃 설정
+    // 이벤트 상태에 따른 설정
     private void setEventStatus(int eventStatus) {
         switch (eventStatus) {
             case Event.MAKE_LIST:
@@ -797,17 +796,23 @@ public class RoomActivity extends AppCompatActivity{
     private Boolean saveResult() {
         if (!chartItemAdapter.getResult(this).first) {
             curEvent.setChartResult(chartItemAdapter.getResult(this).second);
+
+            // 항목 결과 DB 반영
+            for (int i = 0; i < chartItemAdapter.getCount(); i++) {
+                if (chartItemAdapter.getItem(i).getItemResult() != 0) {
+                    JSONObject sqlReset = new SQLSender().
+                            sendSQL("DELETE FROM checkLists " +
+                                    "WHERE itemId=" + chartItemAdapter.getItem(i).getItemId());
+                    JSONObject sqlResult = new SQLSender().
+                            sendSQL("INSERT INTO checkLists (itemId, userId, quantity)" +
+                                    "VALUES (" + chartItemAdapter.getItem(i).getItemId() + ", " +
+                                    userId + ", " +
+                                    chartItemAdapter.getItem(i).getItemResult() + ")");
+                }
+            }
             return true;
         } else {
             return false;
-        }
-    }
-
-    // 사용 내역 적용
-    private void applyResult() {
-        for (int i = 0; i < chartItemAdapter.getCount(); i++) {
-            chartItemAdapter.getItem(i).
-                    setItemResult(curEvent.getChartResult().get(chartItemAdapter.getItem(i).getItemId()));
         }
     }
 
