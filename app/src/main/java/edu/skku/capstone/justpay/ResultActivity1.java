@@ -208,17 +208,17 @@ public class ResultActivity1 extends AppCompatActivity {
 
                             FeedTemplate params = FeedTemplate
                                     .newBuilder(ContentObject.newBuilder("정산결과",
-                                            "",
+                                            "https://ifh.cc/g/2wQ5V.png",
                                             LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
                                                     .setMobileWebUrl("https://developers.kakao.com").build())
                                             .setDescrption("오승민님께 100000을 전송해 주세요!!\n1002553176166우리은행")
                                             .build())
-                                    .setSocial(SocialObject.newBuilder().setLikeCount(10).setCommentCount(20)
-                                            .setSharedCount(30).setViewCount(40).build())
+                                    .setSocial(SocialObject.newBuilder().setLikeCount(1008).setCommentCount(1008)
+                                            .setSharedCount(1008).setViewCount(1008).build())
                                     .addButton(new ButtonObject("웹에서 보기", LinkObject.newBuilder().setWebUrl("'https://developers.kakao.com").setMobileWebUrl("'https://developers.kakao.com").build()))
                                     .addButton(new ButtonObject("앱에서 보기", LinkObject.newBuilder()
                                             .setWebUrl("'https://developers.kakao.com")
-                                            .setMobileWebUrl("'https://developers.kakao.com")
+                                            .setMobileWebUrl("'market://details?id=edu.skku.capstone.justpay")
                                             .setAndroidExecutionParams("key1=value1")
                                             .setIosExecutionParams("key1=value1")
                                             .build()))
@@ -239,6 +239,10 @@ public class ResultActivity1 extends AppCompatActivity {
                                     // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
                                 }
                             });
+                        }
+                        else
+                        {
+                            Toast.makeText(ResultActivity1.this,"아직 준비중입니다!",Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
