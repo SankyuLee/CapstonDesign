@@ -181,7 +181,7 @@ public class RoomListActivity extends AppCompatActivity
                                 room_tag = sql_result.getJSONObject("result").getInt("insertId");
 
                                 //리스트에 항목 추가
-                                RoomList_item item = new RoomList_item("#" + room_tag, roomName_s);
+                                RoomList_item item = new RoomList_item(new Integer(room_tag).toString(), roomName_s);
                                 list.add(item);
                                 adapter.notifyDataSetChanged();
 
@@ -228,8 +228,29 @@ public class RoomListActivity extends AppCompatActivity
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                      list.remove(position);
-                      adapter.notifyDataSetChanged();
+                        String room_id = list.get(position).getRoom_tag();
+
+                        //DB에서 항목 제거
+                        JSONObject sql_delete_roomLists = new SQLSender().sendSQL("DELETE from roomLists where userId = '" +
+                                    user_id + "' and roomId = '"+room_id+"';");
+                        //select from roomlist where roomId -> 없으면 rooms에서도 제거하기
+                        JSONObject sql_room_cnt = new SQLSender().sendSQL("SELECT from roomLists where roomId = '"+
+                                room_id+"';");
+
+                        try{
+                            if(!sql_room_cnt.getBoolean("isError")){
+
+                            }else {
+                                //방에 아무도 남아있지 않을 경우
+                                JSONObject sql_delete_rooms = new SQLSender().sendSQL("DELETE from rooms where id = '"+room_id+"';");
+                            }
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+
+                        list.remove(position);
+                        adapter.notifyDataSetChanged();
+
                     }
                 });
                 builder.show();

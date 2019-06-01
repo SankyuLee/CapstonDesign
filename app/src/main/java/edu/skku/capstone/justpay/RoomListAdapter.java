@@ -51,7 +51,7 @@ public class RoomListAdapter extends BaseAdapter implements Filterable {
         TextView room_state = (TextView)convertView.findViewById(R.id.room_state);
 
         room_name.setText(filteredItemList.get(position).getRoom_name());
-        room_tag.setText(filteredItemList.get(position).getRoom_tag());
+        room_tag.setText("#"+filteredItemList.get(position).getRoom_tag());
         room_state.setText("방금 수정됨");
 
         return convertView;
