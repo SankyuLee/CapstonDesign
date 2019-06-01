@@ -98,6 +98,30 @@ public class RoomListActivity extends AppCompatActivity
         final ArrayList<RoomList_item> list = new ArrayList<RoomList_item>();
         final RoomListAdapter adapter = new RoomListAdapter(this, list);
 
+        JSONObject sql_get_room = new SQLSender().sendSQL("SELECT * from roomLists where userId = '"+user_id+"';");
+        try{
+            if(!sql_get_room.getBoolean("isError")){
+                //사용자가 속한 방이 존재
+                int room_cnt = sql_get_room.getJSONArray("result").length();
+                int i=0;
+                String room_id;
+                String room_name;
+
+                for(; i<room_cnt; i++){
+                    room_id = sql_get_room.getJSONArray("result").getJSONObject(i).getString("roomId");
+
+                    JSONObject get_room_name = new SQLSender().sendSQL("SELECT * from rooms where id = '"+room_id+"';");
+                    if(!get_room_name.getBoolean("isError")){
+                        room_name = get_room_name.getJSONArray("result").getJSONObject(0).getString("roomname");
+                        RoomList_item item = new RoomList_item(room_id, room_name);
+                        list.add(item);
+                    }
+                }
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
         roomList.setTextFilterEnabled(true);
         roomList.setAdapter(adapter);
 
@@ -234,7 +258,7 @@ public class RoomListActivity extends AppCompatActivity
                         JSONObject sql_delete_roomLists = new SQLSender().sendSQL("DELETE from roomLists where userId = '" +
                                     user_id + "' and roomId = '"+room_id+"';");
                         //select from roomlist where roomId -> 없으면 rooms에서도 제거하기
-                        JSONObject sql_room_cnt = new SQLSender().sendSQL("SELECT from roomLists where roomId = '"+
+                        JSONObject sql_room_cnt = new SQLSender().sendSQL("SELECT * from roomLists where roomId = '"+
                                 room_id+"';");
 
                         try{
