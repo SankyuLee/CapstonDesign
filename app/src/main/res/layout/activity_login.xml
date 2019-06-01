@@ -13,8 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="100dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
         android:layout_weight="1"
         android:src="@drawable/logo"
         app:layout_constrainedHeight="false"
@@ -29,7 +29,7 @@
         android:layout_marginTop="60dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:paddingLeft="20dp"
+        android:paddingLeft="10dp"
         android:paddingRight="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -107,20 +107,19 @@
 
         <LinearLayout
             android:id="@+id/login_shortcut"
-            android:paddingTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:paddingLeft="220dp"
-            android:paddingRight="40dp">
-
+            android:paddingTop="10dp"
+            >
 
 
             <CheckBox
                 android:id="@+id/option_auto_login"
-                android:layout_width="0dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_marginLeft="100dp"
                 android:text="자동 로그인"
                 android:textColor="@color/colorBlurred"
                 android:textSize="@dimen/sub_text_size" />
@@ -136,43 +135,44 @@
             android:text="로그인"
             android:textSize="@dimen/normal_text_size" />
 
+        <LinearLayout
+            android:id="@+id/sign_up_container"
+            android:layout_width="395dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="50dp"
+            android:paddingTop="10dp"
+            android:paddingRight="50dp"
+            android:paddingBottom="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/link_find_id"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:linksClickable="true"
+                android:text="아이디/비밀번호 찾기"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlurred"
+                android:textSize="@dimen/sub_text_size" />
+
+            <TextView
+                android:id="@+id/link_signup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:text="회원가입"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlurred"
+                android:textSize="@dimen/sub_text_size" />
+        </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/sign_up_container"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="90dp"
-        android:paddingTop="10dp"
-        android:paddingRight="50dp"
-        android:paddingBottom="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:id="@+id/link_find_id"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:text="아이디/비밀번호 찾기"
-            android:textAlignment="center"
-            android:linksClickable="true"
-            android:textColor="@color/colorBlurred"
-            android:textSize="@dimen/sub_text_size" />
-
-        <TextView
-            android:id="@+id/link_signup"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:text="회원가입"
-            android:textAlignment="center"
-            android:textColor="@color/colorBlurred"
-            android:textSize="@dimen/sub_text_size" />
-    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
