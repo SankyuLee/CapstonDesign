@@ -119,6 +119,44 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/room_payer_container"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        app:layout_constraintBottom_toTopOf="@id/room_receipt_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/room_top_bar">
+
+        <TextView
+            android:id="@+id/payer_txt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/room_payer_txt"
+            android:textSize="@dimen/sub_text_size" />
+
+        <TextView
+            android:id="@+id/payer_result"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/payer_select_btn"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:background="@drawable/box_round_blue"
+            android:text="@string/room_payer_btn"
+            android:textColor="@android:color/background_light"
+            android:textSize="@dimen/sub_text_size" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/room_receipt_container"
         android:layout_width="match_parent"
         android:layout_height="120dp"
@@ -129,7 +167,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/room_top_bar">
+        app:layout_constraintTop_toBottomOf="@+id/room_payer_container">
 
         <ImageButton
             android:id="@+id/receipt_prev_btn"
@@ -374,6 +412,16 @@
                     android:background="@color/colorJustPay"
                     android:text="@string/room_status_next"
                     android:textColor="@android:color/white" />
+
+                <Button
+                    android:id="@+id/chart_confirm_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/colorJustPay"
+                    android:text="입력 완료"
+                    android:textColor="@android:color/background_light"
+                    android:visibility="gone" />
             </LinearLayout>
 
         </LinearLayout>

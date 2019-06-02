@@ -2,6 +2,7 @@ package edu.skku.capstone.justpay;
 
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,13 @@ public class ResultActivity2 extends AppCompatActivity {
     int userId;
     int itemId;
     String userName;
+    JSONObject loginUser;
+    int loginUserId;// 현재 로그인한 유
+    int loginTotalPay;
+    int eventId; // 현재 event
+    int payerId;
+    int totalPay = 0; // 유저의 전체 금액
+    String payerName;
     String itemName;
 
     @Override
@@ -38,7 +46,11 @@ public class ResultActivity2 extends AppCompatActivity {
         // 리스트뷰 참조 및 Adapter달기
         ExpandableListView listview = (ExpandableListView)findViewById(R.id.listView);
         customadapter.itemlists = new ArrayList<> ();
-        roomId = 1;
+        Intent intent = getIntent(); /*데이터 수신*/
+
+        roomId = intent.getExtras().getInt("roomId"); /*int형*/
+        eventId = intent.getExtras().getInt("eventId"); /*int형*/
+
         ArrayList<ArrayList<items_person>> personlistbyitem = new ArrayList<>() ;
         customadapter.personlists = personlistbyitem;
         String sql = "SELECT id from bills where roomId = "+roomId;
@@ -97,7 +109,17 @@ public class ResultActivity2 extends AppCompatActivity {
         customadapter.addPerson(5,neew items_prson("이지훈",1500,1));
 */
         listview.setAdapter(customadapter);
+        Button buttonRule = (Button) findViewById(R.id.toolbar_button);//항목별 -> 사용자별
+        buttonRule.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent;intent = new Intent(ResultActivity2.this, ResultActivity1.class);
+                intent.putExtra("roomId", roomId);
+                intent.putExtra("eventId", eventId);
+                startActivity(intent);
+            }
 
+        });
         Button buttonNoAsc = (Button) findViewById(R.id.orderbutton) ;
         buttonNoAsc.setOnClickListener(new Button.OnClickListener() {
             int state=0;

@@ -6,4 +6,5 @@ package edu.skku.capstone.justpay;
  */
 final class Constant {
     static final String SERVER_IP = "52.68.56.145";
+    static final String ER_DUP_ENTRY = "ER_DUP_ENTRY";
 }

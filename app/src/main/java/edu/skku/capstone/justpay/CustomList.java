@@ -2,6 +2,7 @@ package edu.skku.capstone.justpay;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,9 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import edu.skku.capstone.justpay.resultlist_item;
@@ -17,7 +21,8 @@ public class CustomList extends BaseExpandableListAdapter {
     Context mContext;
     ArrayList<resultlist_item> personlists;
     ArrayList<ArrayList<personal_item>> itemlists;
-
+    private JSONObject loginUser;
+    private String userName;
     @Override
     public int getGroupCount() {
         return personlists.size();
@@ -73,9 +78,21 @@ public class CustomList extends BaseExpandableListAdapter {
         ImageView arrowIcon = (ImageView) v.findViewById(R.id.imageView);
         TextView name = (TextView) v.findViewById(R.id.textView1);
         TextView pay = (TextView) v.findViewById(R.id.textView2);
+        try{
+            loginUser = UserLoggedIn.getUser();
+            if(loginUser == null)
+                userName = "";
+            else
+                userName = loginUser.getString("nickname");
 
+
+        }
+        catch (JSONException e) {
+            Log.e("Exception", "JSONException occurred in ResultActivity1.java");
+            e.printStackTrace();
+        }
         //그룹 펼쳐짐 여부에 따라 아이콘 변경
-        if (getGroup(groupPosition).getName() == "오승민")
+        if (getGroup(groupPosition).getName() == userName)
             arrowIcon.setImageResource(R.drawable.check_mark);
         else
            arrowIcon.setImageResource(R.drawable.empty_background);

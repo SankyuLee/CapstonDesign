@@ -20,32 +20,37 @@
         <activity
             android:name=".RoomListActivity"
             android:label="@string/title_activity_room_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden"></activity>
         <activity android:name=".LoginActivity">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+        <activity android:name="FindInfo"></activity>
         <activity android:name=".RoomActivity"></activity>
+
         <activity android:name=".ResultActivity1">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
                 <data android:scheme="@string/kakao_scheme"
                     android:host="@string/kakaolink_host" />
             </intent-filter>
         </activity>
         <activity android:name=".ResultActivity2">
-            <intent-filter>
-                <action android:name="android.intent.action.Sub" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity android:name=".DialogTestActivity"></activity>
         <activity android:name=".SignupActivity">
 
+            <intent-filter>
+                <action android:name="android.intent.action.Sub" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <meta-data
         android:name="com.kakao.sdk.AppKey"

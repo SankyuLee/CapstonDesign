@@ -152,8 +152,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="end"
-            android:text="입력한 비밀번호와 일치합니다"
-            android:textColor="#000000"
+            android:text="입력한 비밀번호와 일치하지 않습니다"
+            android:textColor="#ff0000"
             android:paddingRight="20dp"
             android:textSize="@dimen/sub_text_size" />
 
@@ -186,6 +186,37 @@
                 android:textSize="@dimen/sub_text_size" />
 
         </LinearLayout>
+
+        <!--  Phone Label -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <TextView
+                android:id="@+id/text_phone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="핸드폰 번호"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/sub_text_size" />
+
+            <EditText
+                android:id="@+id/input_phone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:inputType="phone"
+                android:textSize="@dimen/sub_text_size" />
+
+        </LinearLayout>
+
         <!--Confirm/Cancel button-->
         <LinearLayout
             android:layout_width="match_parent"

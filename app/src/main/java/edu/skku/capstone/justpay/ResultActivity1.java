@@ -3,6 +3,7 @@ package edu.skku.capstone.justpay;
 
 import android.content.DialogInterface;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -63,6 +64,7 @@ public class ResultActivity1 extends AppCompatActivity {
     int roomId;//현재 방 번호
     int userId;
     String userName;
+    JSONObject loginUser;
     int loginUserId;// 현재 로그인한 유
     int loginTotalPay;
     int eventId; // 현재 event
@@ -82,16 +84,32 @@ public class ResultActivity1 extends AppCompatActivity {
 
         ArrayList<ArrayList<personal_item>> itemlists = new ArrayList<>() ;
         customadapter.itemlists = itemlists;
-        roomId = 1;
-        eventId = 1;
-        loginUserId = 1;
+
+        Intent intent = getIntent(); /*데이터 수신*/
+
+        roomId = intent.getExtras().getInt("roomId"); /*int형*/
+        eventId = intent.getExtras().getInt("eventId"); /*int형*/
+
+        try{
+            loginUser = UserLoggedIn.getUser();
+            if(loginUser == null)
+                loginUserId = 0;
+            else
+                loginUserId = loginUser.getInt("id");
+
+
+        }
+        catch (JSONException e) {
+            Log.e("Exception", "JSONException occurred in ResultActivity1.java");
+            e.printStackTrace();
+        }
         /*        JSONObject roomlists = new SQLSender().sendSQL( "SELECT userId from roomLists"); //방의 유저목록 휙득
         try {
         } catch (JSONException e) {
             Log.e("Exception", "JSONException occurred in ExampleActivity.java");
             e.printStackTrace();
         }*/
-
+        loginTotalPay = 0;
         // Get data from Database
          String sql = "SELECT * from roomLists where roomId = "+roomId;
          JSONObject userLists = new SQLSender().sendSQL(sql); //방의 유저목록 휙득
@@ -103,8 +121,6 @@ public class ResultActivity1 extends AppCompatActivity {
 
                       JSONObject usertemp = new SQLSender().sendSQL("SELECT nickname from users where id ="+userId); //유저 이름 알아내기
                       userName = usertemp.getJSONArray("result").getJSONObject(0).getString("nickname");
-
-
 
 
                       customadapter.personlists.add(new resultlist_item(userName, totalPay));
@@ -178,6 +194,19 @@ public class ResultActivity1 extends AppCompatActivity {
         customadapter.addItem(5,new personal_item("군고구라떼",1000,1));*/
         listview.setAdapter(customadapter);
 
+        Button buttonRule = (Button) findViewById(R.id.toolbar_button);//사용자별 -> 항목
+        buttonRule.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent;
+                intent = new Intent(ResultActivity1.this, ResultActivity2.class);
+                intent.putExtra("roomId", roomId);
+                intent.putExtra("eventId", eventId);
+                startActivity(intent);
+            }
+
+        });
+
         Button buttonNoAsc = (Button) findViewById(R.id.orderbutton) ;
         buttonNoAsc.setOnClickListener(new Button.OnClickListener() {
             int state=0;
@@ -249,11 +278,11 @@ public class ResultActivity1 extends AppCompatActivity {
                                             "https://ifh.cc/g/2wQ5V.png",
                                             LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
                                                     .setMobileWebUrl("https://developers.kakao.com").build())
-                                            .setDescrption(payerName+"님께 100000을 전송해 주세요!!\n1002553176166우리은행")
+                                            .setDescrption(payerName+"님께 "+loginTotalPay+"을 전송해 주세요!!\n1002553176166우리은행")
                                             .build())
                                     .setSocial(SocialObject.newBuilder().setLikeCount(1008).setCommentCount(1008)
                                             .setSharedCount(1008).setViewCount(1008).build())
-                                    .addButton(new ButtonObject("웹에서 보기", LinkObject.newBuilder().setWebUrl("'https://developers.kakao.com").setMobileWebUrl("'https://developers.kakao.com").build()))
+                                    //.addButton(new ButtonObject("웹에서 보기", LinkObject.newBuilder().setWebUrl("'https://developers.kakao.com").setMobileWebUrl("'https://developers.kakao.com").build()))
                                     .addButton(new ButtonObject("앱에서 보기", LinkObject.newBuilder()
                                             .setWebUrl("'https://developers.kakao.com")
                                             .setMobileWebUrl("'market://details?id=edu.skku.capstone.justpay")

@@ -4,6 +4,8 @@
     <string name="room_name">5지조</string>
     <string name="room_id">#1234</string>
 
+    <string name="manager_selection">결제자 선택</string>
+
     <string name="receipt_add">영수증 추가하기</string>
     <string name="receipt_status">3 / 5</string>
 
@@ -24,8 +26,12 @@
     <string name="item_chart_category2">6000</string>
     <string name="item_chart_category3">2</string>
 
+    <string name="room_payer_txt">"결제자 : "</string>
+    <string name="room_payer_btn">"결제자 선택"</string>
+
     <string name="room_status_prev">이전 단계로</string>
     <string name="room_status_next">다음 단계로</string>
+    <string name="room_item_alert">" 수량 오류"</string>
 
     <string name="room_typing_status">2명이 작업중 ⋯ 이지훈, 오승민</string>
 
@@ -40,4 +46,7 @@
     <string name="menu_logout">로그아웃</string>
 
     <string name="delete_room">방을 나가시겠습니까?</string>
+    <string name="new_room">새로운 채팅</string>
+    <string name="create_room">방 생성</string>
+    <string name="search_room">방 검색</string>
 </resources>

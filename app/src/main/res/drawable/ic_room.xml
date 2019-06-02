@@ -1,0 +1,15 @@
+<vector android:height="30dp" android:viewportHeight="32"
+    android:viewportWidth="32" android:width="30dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#00000000"
+        android:pathData="M31,1l-30,0l0,22l9,0l0,8l8,-8l13,0l0,-22z"
+        android:strokeColor="@color/colorJustPay" android:strokeLineJoin="round" android:strokeWidth="2"/>
+    <path android:fillColor="#00000000"
+        android:pathData="M16,12m-1,0a1,1 0,1 1,2 0a1,1 0,1 1,-2 0"
+        android:strokeColor="@color/colorJustPay" android:strokeLineJoin="round" android:strokeWidth="2"/>
+    <path android:fillColor="#00000000"
+        android:pathData="M23,12m-1,0a1,1 0,1 1,2 0a1,1 0,1 1,-2 0"
+        android:strokeColor="@color/colorJustPay" android:strokeLineJoin="round" android:strokeWidth="2"/>
+    <path android:fillColor="#00000000"
+        android:pathData="M9,12m-1,0a1,1 0,1 1,2 0a1,1 0,1 1,-2 0"
+        android:strokeColor="@color/colorJustPay" android:strokeLineJoin="round" android:strokeWidth="2"/>
+</vector>
