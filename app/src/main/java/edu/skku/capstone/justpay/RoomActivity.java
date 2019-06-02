@@ -152,14 +152,16 @@ public class RoomActivity extends AppCompatActivity{
         dropdown = findViewById(R.id.base_cur);
         currency = new String[]{"대한민국 원", "미국 달러","일본 엔","유로"};
         showCur = findViewById(R.id.viewCur);
-        String sitename = "조회";
-        showCur.setText(Html.fromHtml("<u>"+sitename+"</u>"));
+        String seeCur = "조회";
+        showCur.setText(Html.fromHtml("<u>"+seeCur+"</u>"));
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,currency);
         dropdown.setAdapter(adapter);
+
 
         showCur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(RoomActivity.this,String.valueOf(dropdown.getSelectedItem()),Toast.LENGTH_LONG).show();
                 String url = "https://www.google.com/search?rlz=1C1SQJL_koKR817KR817&ei=Xn3zXPb0I9yAr7wPkJaH8Ac&q=currency+rate&oq=currency+rate&gs_l=psy-ab.3..0i70i258j0j0i20i263j0j0i203l6.1532.1934..2050...0.0..0.112.534.0j5......0....1..gws-wiz.......0i71j35i39j0i67.c06_il-k6yA";
                 Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
                 startActivity(intent);
