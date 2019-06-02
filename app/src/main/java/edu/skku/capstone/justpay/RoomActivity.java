@@ -526,7 +526,8 @@ public class RoomActivity extends AppCompatActivity{
                             new ArrayList<File>(),
                             new ArrayList<RoomChartItem>(),
                             new HashMap<Integer, Integer>(),
-                            event.getInt("step")
+                            event.getInt("step"),
+                            event.getInt("currencyType")
                     ));
                 }
             }

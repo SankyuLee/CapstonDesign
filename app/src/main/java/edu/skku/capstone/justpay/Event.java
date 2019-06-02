@@ -21,6 +21,8 @@ public class Event {
     public static final int PERSONAL_CHECK = 1;
     public static final int CONFIRM_RESULT = 2;
 
+    // 환율 초기상태 : 대한민국 원
+
     public Event(Integer eventId, String eventTitle) {
         this.eventId = eventId;
         this.eventTitle = eventTitle;
@@ -30,11 +32,12 @@ public class Event {
         this.chartItems = new ArrayList<>();
         this.chartResult = new HashMap<>();
         this.eventStatus = MAKE_LIST;
+        this.currency = 0;
     }
 
     public Event(Integer eventId, String eventTitle, Member eventManager, Member eventPayer,
                  ArrayList<File> receiptList, ArrayList<RoomChartItem> chartItems,
-                 HashMap<Integer, Integer> chartResult, int eventStatus) {
+                 HashMap<Integer, Integer> chartResult, int eventStatus, int currency) {
         this.eventId = eventId;
         this.eventTitle = eventTitle;
         this.eventManager = eventManager;
@@ -43,6 +46,7 @@ public class Event {
         this.chartItems = chartItems;
         this.chartResult = chartResult;
         this.eventStatus = eventStatus;
+        this.currency = currency;
     }
 
     public Integer getEventId() {
@@ -88,6 +92,8 @@ public class Event {
     public int getEventStatus() {
         return eventStatus;
     }
+
+    public int getCurrency() {return currency; }
 
     public void setEventStatus(int eventStatus) {
         this.eventStatus = eventStatus;
