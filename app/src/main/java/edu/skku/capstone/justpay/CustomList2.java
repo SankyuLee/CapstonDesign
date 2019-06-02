@@ -22,7 +22,10 @@ public class CustomList2 extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return personlists.get(groupPosition).size();
+        if(personlists.size()>groupPosition)
+            return personlists.get(groupPosition).size();
+        else
+            return 0;
     }
 
     //리스트의 아이템 반환

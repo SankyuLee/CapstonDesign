@@ -166,7 +166,7 @@ public class ResultActivity1 extends AppCompatActivity {
             JSONObject usertemp = new SQLSender().sendSQL("SELECT nickname from users where id ="+payerId); //유저 이름 알아내기
             payerName = usertemp.getJSONArray("result").getJSONObject(0).getString("nickname");
             TextView payerResult = (TextView)findViewById(R.id.textView5);
-            payerResult.setText(payerName+"님께 "+loginTotalPay+"을 전송해 주세요");
+            payerResult.setText(payerName+"님께 "+loginTotalPay+"월을 전송해 주세요");
 
         } catch (JSONException e) {
             Log.e("Exception", "JSONException occurred in ExampleActivity.java");
@@ -259,6 +259,16 @@ public class ResultActivity1 extends AppCompatActivity {
             }
         });*/
 
+        JSONObject eventtemp = new SQLSender().sendSQL("SELECT * from events where id = "+eventId); //툴바 제목 변경
+        try {
+            String eventName = eventtemp.getJSONArray("result").getJSONObject(0).getString("eventname");
+            TextView payerResult = findViewById(R.id.toolbar_title);
+            payerResult.setText(eventName);
+
+        } catch (JSONException e) {
+            Log.e("Exception", "JSONException occurred in ExampleActivity.java");
+            e.printStackTrace();
+        }
         shareBtn = findViewById(R.id.button);
 
         shareBtn.setOnClickListener(new View.OnClickListener() {
@@ -278,7 +288,7 @@ public class ResultActivity1 extends AppCompatActivity {
                                             "https://ifh.cc/g/2wQ5V.png",
                                             LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
                                                     .setMobileWebUrl("https://developers.kakao.com").build())
-                                            .setDescrption(payerName+"님께 "+loginTotalPay+"을 전송해 주세요!!\n1002553176166우리은행")
+                                            .setDescrption(payerName+"님께 "+loginTotalPay+"원을 전송해 주세요!!")
                                             .build())
                                     .setSocial(SocialObject.newBuilder().setLikeCount(1008).setCommentCount(1008)
                                             .setSharedCount(1008).setViewCount(1008).build())
