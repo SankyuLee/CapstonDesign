@@ -261,6 +261,27 @@
         app:layout_constraintTop_toBottomOf="@+id/room_receipt_container">
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity = "center"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="사용할 화폐 단위 : "/>
+            <Spinner
+                android:id="@+id/base_cur"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown"></Spinner>
+            <TextView
+                android:id="@+id/viewCur"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:text="조회" />
+        </LinearLayout>
+        <LinearLayout
             android:id="@+id/room_status_container"
             android:layout_width="match_parent"
             android:layout_height="50dp"
