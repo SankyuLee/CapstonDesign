@@ -160,28 +160,12 @@ public class RoomActivity extends AppCompatActivity{
         showCur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url_str = "https://api.exchangerate-api.com/v4/latest/KRW";
-                try {
-                    URL url = new URL(url_str);
-                    HttpURLConnection request = (HttpURLConnection) url.openConnection();
-                    request.connect();
-
-                    JSONObject root = (JSONObject) request.getContent();
-                    String base = root.getString("base");
-                    String rates ;
-                    
-                    Toast.makeText(RoomActivity.this, (CharSequence) base,Toast.LENGTH_SHORT).show();
-
-
-                } catch (MalformedURLException | JSONException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
+                String url = "https://www.google.com/search?rlz=1C1SQJL_koKR817KR817&ei=Xn3zXPb0I9yAr7wPkJaH8Ac&q=currency+rate&oq=currency+rate&gs_l=psy-ab.3..0i70i258j0j0i20i263j0j0i203l6.1532.1934..2050...0.0..0.112.534.0j5......0....1..gws-wiz.......0i71j35i39j0i67.c06_il-k6yA";
+                Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
+                startActivity(intent);
             }
         });
+
 
 
         initRoom();
