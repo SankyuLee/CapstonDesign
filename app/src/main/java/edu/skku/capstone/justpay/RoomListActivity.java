@@ -32,12 +32,18 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 public class RoomListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    public static final int REQUEST_WO_EVENT = 101;
+    public static final int REQUEST_W_EVENT = 102;
 
     EditText search_editText;
 
@@ -53,12 +59,21 @@ public class RoomListActivity extends AppCompatActivity
     ListView roomList;
     ConstraintLayout room_list_layout;
 
+    TextView textView_name;
+    TextView textView_email;
+
+    private static int user_id;
+    private static String user_email;
+    private static String user_nickname;
+
     private boolean isMenuCollapsed = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_list);
+
+        setUser();
 
         search_editText = (EditText)findViewById(R.id.search_editText);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -76,8 +91,38 @@ public class RoomListActivity extends AppCompatActivity
         roomList = (ListView)findViewById(R.id.roomList);
         room_list_layout = (ConstraintLayout)findViewById(R.id.room_list_layout);
 
+        textView_name = (TextView)findViewById(R.id.textView_name);
+        textView_email = (TextView)findViewById(R.id.textView_email);
+
+        textView_name.setText(user_nickname);
+        textView_email.setText(user_email);
+
         final ArrayList<RoomList_item> list = new ArrayList<RoomList_item>();
         final RoomListAdapter adapter = new RoomListAdapter(this, list);
+
+        JSONObject sql_get_room = new SQLSender().sendSQL("SELECT * from roomLists where userId = '"+user_id+"';");
+        try{
+            if(!sql_get_room.getBoolean("isError")){
+                //사용자가 속한 방이 존재
+                int room_cnt = sql_get_room.getJSONArray("result").length();
+                int i=0;
+                String room_id;
+                String room_name;
+
+                for(; i<room_cnt; i++){
+                    room_id = sql_get_room.getJSONArray("result").getJSONObject(i).getString("roomId");
+
+                    JSONObject get_room_name = new SQLSender().sendSQL("SELECT * from rooms where id = '"+room_id+"';");
+                    if(!get_room_name.getBoolean("isError")){
+                        room_name = get_room_name.getJSONArray("result").getJSONObject(0).getString("roomname");
+                        RoomList_item item = new RoomList_item(room_id, room_name);
+                        list.add(item);
+                    }
+                }
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
 
         roomList.setTextFilterEnabled(true);
         roomList.setAdapter(adapter);
@@ -110,6 +155,18 @@ public class RoomListActivity extends AppCompatActivity
                 constraintSet.applyTo(room_list_layout);
 
                 isMenuCollapsed = !isMenuCollapsed;
+            }
+        });
+
+        //방 들어가기
+        roomList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(RoomListActivity.this, RoomActivity.class);
+                String room_id = list.get(position).getRoom_tag();
+
+                intent.putExtra("room_id",room_id);
+                startActivityForResult(intent,REQUEST_WO_EVENT);
             }
         });
 
@@ -148,19 +205,39 @@ public class RoomListActivity extends AppCompatActivity
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //리스트에 항목 추가
                         String roomName_s = roomName.getText().toString();
                         String roomPW_s = roomPW.getText().toString();
                         String eventName_s = eventName.getText().toString();
-                        int tag = 1000;
+                        int room_tag;
 
-                        RoomList_item item = new RoomList_item("#"+tag,roomName_s);
-                        list.add(item);
-                        adapter.notifyDataSetChanged();
+                        //DB에 항목 추가
+                        JSONObject sql_result = new SQLSender().sendSQL("INSERT into rooms(roomname, password) values" +
+                                "('"+roomName_s+"','"+roomPW_s+"');");
 
-                        Intent intent;
-                        intent = new Intent(RoomListActivity.this, RoomActivity.class);
-                        startActivity(intent);
+                        try{
+                            if(!sql_result.getBoolean("isError")) {
+                                room_tag = sql_result.getJSONObject("result").getInt("insertId");
+
+                                //리스트에 항목 추가
+                                RoomList_item item = new RoomList_item(new Integer(room_tag).toString(), roomName_s);
+                                list.add(item);
+                                adapter.notifyDataSetChanged();
+
+                                JSONObject sql_roomList = new SQLSender().sendSQL("INSERT into roomLists(userId, roomId) values" +
+                                        "('"+user_id+"','"+room_tag+"');");
+
+                                Intent intent;
+                                intent = new Intent(RoomListActivity.this, RoomActivity.class);
+
+                                intent.putExtra("room_id",(new Integer(room_tag)).toString());
+                                intent.putExtra("event_name",eventName_s);
+
+                                startActivityForResult(intent,REQUEST_W_EVENT);
+                            }
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+
                     }
                 });
                 builder.show();
@@ -194,8 +271,29 @@ public class RoomListActivity extends AppCompatActivity
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                      list.remove(position);
-                      adapter.notifyDataSetChanged();
+                        String room_id = list.get(position).getRoom_tag();
+
+                        //DB에서 항목 제거
+                        JSONObject sql_delete_roomLists = new SQLSender().sendSQL("DELETE from roomLists where userId = '" +
+                                    user_id + "' and roomId = '"+room_id+"';");
+                        //select from roomlist where roomId -> 없으면 rooms에서도 제거하기
+                        JSONObject sql_room_cnt = new SQLSender().sendSQL("SELECT * from roomLists where roomId = '"+
+                                room_id+"';");
+
+                        try{
+                            if(!sql_room_cnt.getBoolean("isError")){
+
+                            }else {
+                                //방에 아무도 남아있지 않을 경우
+                                JSONObject sql_delete_rooms = new SQLSender().sendSQL("DELETE from rooms where id = '"+room_id+"';");
+                            }
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+
+                        list.remove(position);
+                        adapter.notifyDataSetChanged();
+
                     }
                 });
                 builder.show();
@@ -282,15 +380,29 @@ public class RoomListActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_modify) {
-            Toast.makeText(this, "touched", Toast.LENGTH_LONG).show();
-        } else if (id == R.id.nav_logout) {
-            Intent intent = new Intent(this, LoginActivity.class);
+            Intent intent = new Intent(RoomListActivity.this, PersonalActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_logout) {
             finish();
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void setUser(){
+        JSONObject user_info = null;
+        try{
+            user_info = UserLoggedIn.getUser();
+
+            user_id = user_info.getInt("id");
+            user_email = user_info.getString("email");
+            user_nickname = user_info.getString("nickname");
+
+
+        }catch(NullPointerException | JSONException e){
+            e.printStackTrace();
+        }
     }
 
 }
