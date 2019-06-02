@@ -42,6 +42,8 @@ import java.util.ArrayList;
 
 public class RoomListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    public static final int REQUEST_WO_EVENT = 101;
+    public static final int REQUEST_W_EVENT = 102;
 
     EditText search_editText;
 
@@ -156,6 +158,18 @@ public class RoomListActivity extends AppCompatActivity
             }
         });
 
+        //방 들어가기
+        roomList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(RoomListActivity.this, RoomActivity.class);
+                String room_id = list.get(position).getRoom_tag();
+
+                intent.putExtra("room_id",room_id);
+                startActivityForResult(intent,REQUEST_WO_EVENT);
+            }
+        });
+
         //방 생성 버튼
         room_add_fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,14 +225,19 @@ public class RoomListActivity extends AppCompatActivity
 
                                 JSONObject sql_roomList = new SQLSender().sendSQL("INSERT into roomLists(userId, roomId) values" +
                                         "('"+user_id+"','"+room_tag+"');");
+
+                                Intent intent;
+                                intent = new Intent(RoomListActivity.this, RoomActivity.class);
+
+                                intent.putExtra("room_id",(new Integer(room_tag)).toString());
+                                intent.putExtra("event_name",eventName_s);
+
+                                startActivityForResult(intent,REQUEST_W_EVENT);
                             }
                         }catch (JSONException e){
                             e.printStackTrace();
                         }
 
-                        Intent intent;
-                        intent = new Intent(RoomListActivity.this, RoomActivity.class);
-                        startActivity(intent);
                     }
                 });
                 builder.show();
