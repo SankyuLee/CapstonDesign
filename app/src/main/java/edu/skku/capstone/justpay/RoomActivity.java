@@ -16,15 +16,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +42,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Array;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -98,6 +109,12 @@ public class RoomActivity extends AppCompatActivity{
     private ImageButton addItemBtn;
     private Button confirmBtn;
 
+    /////////////////////////////////////////////////////
+    // 환율 관련 dropdown list 및 popup
+    Spinner  dropdown;
+    String[] currency;
+    TextView showCur;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,6 +147,42 @@ public class RoomActivity extends AppCompatActivity{
         nextStatusBtn = findViewById(R.id.next_status_btn);
         chartConfirmBtn = findViewById(R.id.chart_confirm_btn);
         typingStatus = findViewById(R.id.room_typing_status);
+
+        // Currency
+        dropdown = findViewById(R.id.base_cur);
+        currency = new String[]{"대한민국 원", "미국 달러","일본 엔","유로"};
+        showCur = findViewById(R.id.viewCur);
+        String sitename = "조회";
+        showCur.setText(Html.fromHtml("<u>"+sitename+"</u>"));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,currency);
+        dropdown.setAdapter(adapter);
+
+        showCur.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url_str = "https://api.exchangerate-api.com/v4/latest/KRW";
+                try {
+                    URL url = new URL(url_str);
+                    HttpURLConnection request = (HttpURLConnection) url.openConnection();
+                    request.connect();
+
+                    JSONObject root = (JSONObject) request.getContent();
+                    String base = root.getString("base");
+                    String rates ;
+                    
+                    Toast.makeText(RoomActivity.this, (CharSequence) base,Toast.LENGTH_SHORT).show();
+
+
+                } catch (MalformedURLException | JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+
 
         initRoom();
 
