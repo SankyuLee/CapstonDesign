@@ -14,6 +14,7 @@ public class Event {
     private ArrayList<RoomChartItem> chartItems;        // 등록된 항목 목록
     private HashMap<Integer, Integer> chartResult;      // 사용자의 항목별 참여 결과 <항목 이름, 수량>
     private int eventStatus;                            // 상태
+    private int currency;
 
     // 이벤트의 상태를 나타내는 상수
     public static final int MAKE_LIST = 0;

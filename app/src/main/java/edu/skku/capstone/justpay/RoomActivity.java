@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -107,7 +108,8 @@ public class RoomActivity extends AppCompatActivity{
 
     private EditText itemNameEdit, itemCostEdit, itemCountEdit;
     private ImageButton addItemBtn;
-    private Button confirmBtn;
+    private Button  confirmBtn;
+    private int cur_currency;
 
     /////////////////////////////////////////////////////
     // 환율 관련 dropdown list 및 popup
@@ -156,8 +158,28 @@ public class RoomActivity extends AppCompatActivity{
         showCur.setText(Html.fromHtml("<u>"+seeCur+"</u>"));
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,currency);
         dropdown.setAdapter(adapter);
+        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (dropdown.getSelectedItem().toString() == "대한민국 원") {
+                    cur_currency = 0;
+                }
+                if (dropdown.getSelectedItem().toString() == "미국 달러") {
+                    cur_currency = 1;
+                }
+                if (dropdown.getSelectedItem().toString() == "일본 엔") {
+                    cur_currency = 2;
+                }
+                if (dropdown.getSelectedItem().toString() == "유로") {
+                    cur_currency = 3;
+                }
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
         showCur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -679,11 +701,11 @@ public class RoomActivity extends AppCompatActivity{
 
                         // DB에 아이템 추가
                         JSONObject sqlItem = new SQLSender().
-                                sendSQL("INSERT INTO items (itemname, quantity, price, billId)" +
+                                sendSQL("INSERT INTO items (itemname, quantity, price, billId, currencyType)" +
                                         "VALUES (" + "'" + itemName + "'" + ", " +
                                         inputCount + ", " +
                                         itemCost + ", " +
-                                        billIds.get(0) + ")");
+                                        billIds.get(0) + ","+ cur_currency + ")");
                         try {
                             if (!sqlItem.getBoolean("isError")) {
                                 itemId = sqlItem.getJSONObject("result").getInt("insertId");
