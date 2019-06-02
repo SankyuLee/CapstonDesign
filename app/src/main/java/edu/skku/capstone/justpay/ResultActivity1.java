@@ -63,7 +63,12 @@ public class ResultActivity1 extends AppCompatActivity {
     int roomId;//현재 방 번호
     int userId;
     String userName;
-    int triger;//다이얼로그 컨트롤
+    int loginUserId;// 현재 로그인한 유
+    int loginTotalPay;
+    int eventId; // 현재 event
+    int payerId;
+    int totalPay = 0; // 유저의 전체 금액
+    String payerName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,38 +83,60 @@ public class ResultActivity1 extends AppCompatActivity {
         ArrayList<ArrayList<personal_item>> itemlists = new ArrayList<>() ;
         customadapter.itemlists = itemlists;
         roomId = 1;
+        eventId = 1;
+        loginUserId = 1;
+        /*        JSONObject roomlists = new SQLSender().sendSQL( "SELECT userId from roomLists"); //방의 유저목록 휙득
+        try {
+        } catch (JSONException e) {
+            Log.e("Exception", "JSONException occurred in ExampleActivity.java");
+            e.printStackTrace();
+        }*/
 
         // Get data from Database
-         String sql = "SELECT userId from roomLists";
+         String sql = "SELECT * from roomLists where roomId = "+roomId;
          JSONObject userLists = new SQLSender().sendSQL(sql); //방의 유저목록 휙득
           try {
               if (!userLists.getBoolean("isError")) {
-                  for(int i = 0;i < userLists.getJSONArray("result").length();i++)
+                  for(int i = 0;i < userLists.getJSONArray("result").length();i++)// room의 user수만큼 반
                   {
                       userId = userLists.getJSONArray("result").getJSONObject(i).getInt("userId");
 
                       JSONObject usertemp = new SQLSender().sendSQL("SELECT nickname from users where id ="+userId); //유저 이름 알아내기
                       userName = usertemp.getJSONArray("result").getJSONObject(0).getString("nickname");
-                      int totalPay = 0; // 유저의 전체 금액
+
+
+
+
+                      customadapter.personlists.add(new resultlist_item(userName, totalPay));
+                      customadapter.itemlists.add(new ArrayList<personal_item>());
                       int billId;
-                      JSONObject billLists = new SQLSender().sendSQL("SELECT id from bills where roomId="+String.valueOf(roomId)); //현재 bill;
-                      billId = billLists.getJSONArray("result").getJSONObject(0).getInt("id"); // 해당 event의 아이디
+                      JSONObject billLists = new SQLSender().sendSQL("SELECT * from bills where eventId="+String.valueOf(eventId)); //현재 이벤트의 bill들;
                       JSONObject itemLists = new SQLSender().sendSQL("SELECT * from checkLists where userId=" + String.valueOf(userId)); //유저의 아이템 목록 휙득
+
                       for(int j = 0;j < itemLists.getJSONArray("result").length();j++) {
                           JSONObject billtemp = new SQLSender().sendSQL("SELECT * from items where id="+itemLists.getJSONArray("result").getJSONObject(j).getInt("itemId")); //item의 bill;
-                          int itemBillId = billtemp.getJSONArray("result").getJSONObject(j).getInt("billId");
-                          if(itemBillId == billId) {
-                              customadapter.itemlists.add(new ArrayList<personal_item>());
-                              String itemName = billtemp.getJSONArray("result").getJSONObject(j).getString("itemname");
-                              int itempay = billtemp.getJSONArray("result").getJSONObject(j).getInt("price");
-                              int itemnum = billtemp.getJSONArray("result").getJSONObject(j).getInt("quantity");
-                              totalPay = totalPay + itempay * itemnum;
-                              customadapter.addItem(0,new personal_item(itemName,itempay,itemnum));
+                          int itemBillId = billtemp.getJSONArray("result").getJSONObject(j).getInt("billId");//item의 billId
 
-                              customadapter.personlists.add(new resultlist_item(userName,totalPay));
+                          for(int k = 0;k<billLists.length();k++) {
+                              billId = billtemp.getJSONArray("result").getJSONObject(k).getInt("billId");
+
+                              if (itemBillId == billId) { // 해당 billId를 가진 bill이 속한 이벤트에 있는지 확인
+                                  String itemName = billtemp.getJSONArray("result").getJSONObject(j).getString("itemname");
+                                  int itempay = billtemp.getJSONArray("result").getJSONObject(j).getInt("price");
+                                  int itemnum = billtemp.getJSONArray("result").getJSONObject(j).getInt("quantity");
+                                  totalPay = totalPay + itempay * itemnum;
+                                  customadapter.personlists.set(i,new resultlist_item(userName,this.totalPay));
+                                  customadapter.addItem(i, new personal_item(itemName, itempay, itemnum));
+
+                              }
+
                           }
+
                       }
 
+
+                      if(userId == loginUserId)
+                          loginTotalPay = totalPay;
                   }
 
               }
@@ -117,7 +144,18 @@ public class ResultActivity1 extends AppCompatActivity {
               Log.e("Exception", "JSONException occurred in ExampleActivity.java");
               e.printStackTrace();
           }
+        JSONObject payertemp = new SQLSender().sendSQL("SELECT * from events where id = "+eventId); //방의 돈낸사람 휙득
+        try {
+            payerId = payertemp.getJSONArray("result").getJSONObject(0).getInt("payerId");
+            JSONObject usertemp = new SQLSender().sendSQL("SELECT nickname from users where id ="+payerId); //유저 이름 알아내기
+            payerName = usertemp.getJSONArray("result").getJSONObject(0).getString("nickname");
+            TextView payerResult = (TextView)findViewById(R.id.textView5);
+            payerResult.setText(payerName+"님께 "+loginTotalPay+"을 전송해 주세요");
 
+        } catch (JSONException e) {
+            Log.e("Exception", "JSONException occurred in ExampleActivity.java");
+            e.printStackTrace();
+        }
         //create Data
         /*customadapter.addPerson(new resultlist_item(test,1000));
         customadapter.personlists.add(new resultlist_item("오승민",3000));
@@ -211,7 +249,7 @@ public class ResultActivity1 extends AppCompatActivity {
                                             "https://ifh.cc/g/2wQ5V.png",
                                             LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
                                                     .setMobileWebUrl("https://developers.kakao.com").build())
-                                            .setDescrption("오승민님께 100000을 전송해 주세요!!\n1002553176166우리은행")
+                                            .setDescrption(payerName+"님께 100000을 전송해 주세요!!\n1002553176166우리은행")
                                             .build())
                                     .setSocial(SocialObject.newBuilder().setLikeCount(1008).setCommentCount(1008)
                                             .setSharedCount(1008).setViewCount(1008).build())

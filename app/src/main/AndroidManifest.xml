@@ -27,7 +27,11 @@
         <activity android:name=".RoomActivity"></activity>
         <activity android:name=".ResultActivity1">
             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
                 <data android:scheme="@string/kakao_scheme"
                     android:host="@string/kakaolink_host" />
@@ -44,8 +48,8 @@
 
         </activity>
         <meta-data
-            android:name="com.kakao.sdk.AppKey"
-            android:value="@string/kakao_app_key" />
+        android:name="com.kakao.sdk.AppKey"
+        android:value="@string/kakao_app_key" />
     </application>
 
 </manifest>
