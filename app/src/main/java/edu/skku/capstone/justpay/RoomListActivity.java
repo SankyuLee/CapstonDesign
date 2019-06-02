@@ -361,10 +361,9 @@ public class RoomListActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_modify) {
-
-        } else if (id == R.id.nav_logout) {
-            Intent intent = new Intent(this, LoginActivity.class);
+            Intent intent = new Intent(RoomListActivity.this, PersonalActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_logout) {
             finish();
         }
 
