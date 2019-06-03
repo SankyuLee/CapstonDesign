@@ -165,8 +165,6 @@ public class RoomListActivity extends AppCompatActivity
                 Intent intent = new Intent(RoomListActivity.this, RoomActivity.class);
                 String room_id = list.get(position).getRoom_tag();
 
-                Toast.makeText(RoomListActivity.this,"room_id:"+new Integer(room_id),Toast.LENGTH_LONG).show();
-
                 intent.putExtra("room_id",new Integer(room_id));
                 startActivity(intent);
             }
@@ -235,7 +233,7 @@ public class RoomListActivity extends AppCompatActivity
                                 intent = new Intent(RoomListActivity.this, RoomActivity.class);
 
                                 intent.putExtra("room_id",room_tag);
-                                //startActivity(intent);
+                                startActivity(intent);
                             }
                         }catch (JSONException e){
                             e.printStackTrace();
