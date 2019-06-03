@@ -65,7 +65,7 @@ public class ResultActivity2 extends AppCompatActivity {
 
         roomId = intent.getExtras().getInt("roomId"); /*int형*/
         eventId = intent.getExtras().getInt("eventId"); /*int형*/
-
+        int countup = 0;
         ArrayList<ArrayList<items_person>> personlistbyitem = new ArrayList<>() ;
         customadapter.personlists = personlistbyitem;
         String sql = "SELECT * from bills where eventId = " + eventId;
@@ -83,21 +83,23 @@ public class ResultActivity2 extends AppCompatActivity {
                         itemId = itemLists.getJSONArray("result").getJSONObject(j).getInt("id");//item들의 id를 하나씩 가져옴
 
                         itemName = itemLists.getJSONArray("result").getJSONObject(j).getString("itemname");//이름도
-                        customadapter.addItem(new personal_item(itemName,itemLists.getJSONArray("result").getJSONObject(j).getInt("price"),itemLists.getJSONArray("result").getJSONObject(i).getInt("quantity")));
+                        customadapter.addItem(new personal_item(itemName,itemLists.getJSONArray("result").getJSONObject(j).getInt("price"),itemLists.getJSONArray("result").getJSONObject(j).getInt("quantity")));
                         JSONObject userLists = new SQLSender().sendSQL("SELECT * from checkLists where itemId=" + String.valueOf(itemId)); //아이템 유저 목록 휙득
-                        Toast.makeText(getApplicationContext(), String.valueOf(userLists.getJSONArray("result").length()), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), String.valueOf(userLists.getJSONArray("result").length()), Toast.LENGTH_SHORT).show();
                         for(int k = 0;k < userLists.getJSONArray("result").length();k++) {//체크리스트의 아이템들 검사
                             JSONObject usertemp = new SQLSender().sendSQL("SELECT * from users where id="+userLists.getJSONArray("result").getJSONObject(k).getInt("userId")); //user의 정보 다 가져오기
-                                customadapter.personlists.add(new ArrayList<items_person>());
-                                String userName = usertemp.getJSONArray("result").getJSONObject(k).getString("username");//유저이름
-                                int itempay = itemLists.getJSONArray("result").getJSONObject(j).getInt("price");//
-                                int itemnum = userLists.getJSONArray("result").getJSONObject(j).getInt("quantity");
+                            customadapter.personlists.add(new ArrayList<items_person>());
+                            String userName = usertemp.getJSONArray("result").getJSONObject(0).getString("nickname");//유저이름
+                            int itempay = itemLists.getJSONArray("result").getJSONObject(j).getInt("price");//
+                            int itemnum = userLists.getJSONArray("result").getJSONObject(k).getInt("quantity");
 
 
-                            customadapter.addPerson(j, new items_person(userName,itempay,itemnum));
+                            customadapter.addPerson(j+countup, new items_person(userName,itempay,itemnum));
 
                         }
+
                     }
+                    countup +=itemLists.getJSONArray("result").length();
 
                 }
 

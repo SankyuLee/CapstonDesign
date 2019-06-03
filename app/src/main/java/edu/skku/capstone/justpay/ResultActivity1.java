@@ -89,7 +89,8 @@ public class ResultActivity1 extends AppCompatActivity {
 
         roomId = intent.getExtras().getInt("roomId"); /*int형*/
         eventId = intent.getExtras().getInt("eventId"); /*int형*/
-
+        //roomId = 1;
+        //eventId = 1;
         try{
             loginUser = UserLoggedIn.getUser();
             if(loginUser == null)
@@ -117,11 +118,13 @@ public class ResultActivity1 extends AppCompatActivity {
               if (!userLists.getBoolean("isError")) {
                   for(int i = 0;i < userLists.getJSONArray("result").length();i++)// room의 user수만큼 반
                   {
+
                       userId = userLists.getJSONArray("result").getJSONObject(i).getInt("userId");
 
                       JSONObject usertemp = new SQLSender().sendSQL("SELECT nickname from users where id ="+userId); //유저 이름 알아내기
                       userName = usertemp.getJSONArray("result").getJSONObject(0).getString("nickname");
 
+                      Toast.makeText(getApplicationContext(), userName, Toast.LENGTH_SHORT).show();
 
                       customadapter.personlists.add(new resultlist_item(userName, totalPay));
                       customadapter.itemlists.add(new ArrayList<personal_item>());
@@ -131,15 +134,15 @@ public class ResultActivity1 extends AppCompatActivity {
 
                       for(int j = 0;j < itemLists.getJSONArray("result").length();j++) {
                           JSONObject billtemp = new SQLSender().sendSQL("SELECT * from items where id="+itemLists.getJSONArray("result").getJSONObject(j).getInt("itemId")); //item의 bill;
-                          int itemBillId = billtemp.getJSONArray("result").getJSONObject(j).getInt("billId");//item의 billId
+                          int itemBillId = billtemp.getJSONArray("result").getJSONObject(0).getInt("billId");//item의 billId
 
                           for(int k = 0;k<billLists.length();k++) {
-                              billId = billtemp.getJSONArray("result").getJSONObject(k).getInt("billId");
+                              billId = billLists.getJSONArray("result").getJSONObject(k).getInt("id");
 
                               if (itemBillId == billId) { // 해당 billId를 가진 bill이 속한 이벤트에 있는지 확인
-                                  String itemName = billtemp.getJSONArray("result").getJSONObject(j).getString("itemname");
-                                  int itempay = billtemp.getJSONArray("result").getJSONObject(j).getInt("price");
-                                  int itemnum = billtemp.getJSONArray("result").getJSONObject(j).getInt("quantity");
+                                  String itemName = billtemp.getJSONArray("result").getJSONObject(0).getString("itemname");
+                                  int itempay = billtemp.getJSONArray("result").getJSONObject(0).getInt("price");
+                                  int itemnum = itemLists.getJSONArray("result").getJSONObject(j).getInt("quantity");
                                   totalPay = totalPay + itempay * itemnum;
                                   customadapter.personlists.set(i,new resultlist_item(userName,this.totalPay));
                                   customadapter.addItem(i, new personal_item(itemName, itempay, itemnum));
@@ -153,6 +156,7 @@ public class ResultActivity1 extends AppCompatActivity {
 
                       if(userId == loginUserId)
                           loginTotalPay = totalPay;
+                      totalPay = 0;
                   }
 
               }
