@@ -449,17 +449,15 @@ public class RoomActivity extends AppCompatActivity{
     private void initRoom() {
         Intent intent = getIntent();
         // 사용자 아이디 설정
-//        try {
-//            userId = UserLoggedIn.getUser().getInt("id");
-//        } catch (JSONException e) {
-//            Log.e("Exception", "JSONException occurred in setting user");
-//            e.printStackTrace();
-//        }
-        userId = 1;
-
+        try {
+            userId = UserLoggedIn.getUser().getInt("id");
+        } catch (JSONException e) {
+            Log.e("Exception", "JSONException occurred in setting user");
+            e.printStackTrace();
+        }
+        
         // 방 아이디 설정
         roomId = intent.getExtras().getInt("room_id");
-        Toast.makeText(this, "roomid: "+roomId,Toast.LENGTH_LONG).show();
 
         // 방 이름 불러오기
         JSONObject sqlName = new SQLSender().
@@ -502,10 +500,8 @@ public class RoomActivity extends AppCompatActivity{
         roomIdView.setText("#"+roomId.toString());
 
         // 방 내부에 이벤트 목록 생성 및 기본 이벤트 설정
-        // Integer initEventId = intent.getExtras().getInt("eventId");
-        Integer initEventId = 1;
         initEvents();
-        setEvent(initEventId);
+        setEvent(roomEvents.get(0).getEventId());
     }
 
     private void initEvents() {

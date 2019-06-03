@@ -168,7 +168,7 @@ public class RoomListActivity extends AppCompatActivity
                 Toast.makeText(RoomListActivity.this,"room_id:"+new Integer(room_id),Toast.LENGTH_LONG).show();
 
                 intent.putExtra("room_id",new Integer(room_id));
-                //startActivity(intent);
+                startActivity(intent);
             }
         });
 
