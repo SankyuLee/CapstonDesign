@@ -16,15 +16,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,12 +43,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Array;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-// TODO: 이벤트 생성 버튼 
+// TODO: 이벤트 생성 버튼
 // TODO: 영수증 DB 연결
 // TODO: 영수증-아이템 연결 해결
 
@@ -96,7 +108,14 @@ public class RoomActivity extends AppCompatActivity{
 
     private EditText itemNameEdit, itemCostEdit, itemCountEdit;
     private ImageButton addItemBtn;
-    private Button confirmBtn;
+    private Button  confirmBtn;
+    private int cur_currency;
+
+    /////////////////////////////////////////////////////
+    // 환율 관련 dropdown list 및 popup
+    Spinner  dropdown;
+    String[] currency;
+    TextView showCur;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +149,48 @@ public class RoomActivity extends AppCompatActivity{
         nextStatusBtn = findViewById(R.id.next_status_btn);
         chartConfirmBtn = findViewById(R.id.chart_confirm_btn);
         typingStatus = findViewById(R.id.room_typing_status);
+
+        // Currency
+        dropdown = findViewById(R.id.base_cur);
+        currency = new String[]{"대한민국 원", "미국 달러","일본 엔","유로"};
+        showCur = findViewById(R.id.viewCur);
+        String seeCur = "조회";
+        showCur.setText(Html.fromHtml("<u>"+seeCur+"</u>"));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,currency);
+        dropdown.setAdapter(adapter);
+        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (dropdown.getSelectedItem().toString() == "대한민국 원") {
+                    cur_currency = 0;
+                }
+                if (dropdown.getSelectedItem().toString() == "미국 달러") {
+                    cur_currency = 1;
+                }
+                if (dropdown.getSelectedItem().toString() == "일본 엔") {
+                    cur_currency = 2;
+                }
+                if (dropdown.getSelectedItem().toString() == "유로") {
+                    cur_currency = 3;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        showCur.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(RoomActivity.this,String.valueOf(dropdown.getSelectedItem()),Toast.LENGTH_LONG).show();
+                String url = "https://www.google.com/search?rlz=1C1SQJL_koKR817KR817&ei=Xn3zXPb0I9yAr7wPkJaH8Ac&q=currency+rate&oq=currency+rate&gs_l=psy-ab.3..0i70i258j0j0i20i263j0j0i203l6.1532.1934..2050...0.0..0.112.534.0j5......0....1..gws-wiz.......0i71j35i39j0i67.c06_il-k6yA";
+                Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
+                startActivity(intent);
+            }
+        });
+
+
 
         initRoom();
 
@@ -408,8 +469,8 @@ public class RoomActivity extends AppCompatActivity{
                 roomName = sqlName.
                         getJSONArray("result").getJSONObject(0).getString("roomname");
         } catch (JSONException e) {
-                Log.e("Exception", "JSONException occurred in setting room name");
-                e.printStackTrace();
+            Log.e("Exception", "JSONException occurred in setting room name");
+            e.printStackTrace();
         }
 
         // 방 멤버 불러오기
@@ -465,7 +526,8 @@ public class RoomActivity extends AppCompatActivity{
                             new ArrayList<File>(),
                             new ArrayList<RoomChartItem>(),
                             new HashMap<Integer, Integer>(),
-                            event.getInt("step")
+                            event.getInt("step"),
+                            event.getInt("currencyType")
                     ));
                 }
             }
@@ -640,11 +702,11 @@ public class RoomActivity extends AppCompatActivity{
 
                         // DB에 아이템 추가
                         JSONObject sqlItem = new SQLSender().
-                                sendSQL("INSERT INTO items (itemname, quantity, price, billId)" +
+                                sendSQL("INSERT INTO items (itemname, quantity, price, billId, currencyType)" +
                                         "VALUES (" + "'" + itemName + "'" + ", " +
                                         inputCount + ", " +
                                         itemCost + ", " +
-                                        billIds.get(0) + ")");
+                                        billIds.get(0) + ","+ cur_currency + ")");
                         try {
                             if (!sqlItem.getBoolean("isError")) {
                                 itemId = sqlItem.getJSONObject("result").getInt("insertId");
