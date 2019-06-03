@@ -129,11 +129,23 @@
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="15dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/box_round"
             android:text="로그인"
             android:textSize="@dimen/normal_text_size" />
+        <LinearLayout
+            android:id="@+id/kakaotalk_login_container"
+            android:layout_width="395dp"
+            android:layout_height="wrap_content">
+            <com.kakao.usermgmt.LoginButton
+                android:id="@+id/com_kakao_login"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:text="카카오톡으로 로그인"/>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/sign_up_container"

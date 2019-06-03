@@ -12,7 +12,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.kakao.auth.IApplicationConfig;
+import com.kakao.auth.ISessionCallback;
+import com.kakao.auth.KakaoAdapter;
+import com.kakao.auth.KakaoSDK;
+import com.kakao.auth.Session;
+import com.kakao.util.exception.KakaoException;
+import com.kakao.util.helper.log.Logger;
+
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -24,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btn_login;
     private EditText etid;
     private EditText etps;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
