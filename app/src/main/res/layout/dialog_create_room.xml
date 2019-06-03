@@ -9,7 +9,9 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal">
+
         <TextView
+            android:id="@+id/room_name_txt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".3"
@@ -28,7 +30,9 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal">
+
         <TextView
+            android:id="@+id/room_pwd_txt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".3"
@@ -70,9 +74,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/roomCreateCheckBox"/>
+
         <TextView
+            android:id="@+id/create_check_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="세부 항목 정산하기"/>
+            android:text="세부 항목 정산하기" />
     </LinearLayout>
 </LinearLayout>

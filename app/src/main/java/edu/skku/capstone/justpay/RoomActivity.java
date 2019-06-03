@@ -24,6 +24,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -87,6 +89,7 @@ public class RoomActivity extends AppCompatActivity{
 
     private RecyclerView tabListView;
     private EventAdapter eventAdapter;
+    private ImageButton addTabBtn;
 
     private TextView payerResult;
     private Button payerBtn;
@@ -133,6 +136,7 @@ public class RoomActivity extends AppCompatActivity{
         addBtn = findViewById(R.id.add_user_btn);
         changeBtn = findViewById(R.id.change_user_btn);
         tabListView = findViewById(R.id.room_tab_list);
+        addTabBtn = findViewById(R.id.add_tab_btn);
         payerResult = findViewById(R.id.payer_result);
         payerBtn = findViewById(R.id.payer_select_btn);
         receiptImg = findViewById(R.id.receipt_image);
@@ -190,6 +194,16 @@ public class RoomActivity extends AppCompatActivity{
             }
         });
 
+        Intent intent = getIntent();
+        // 사용자 아이디 설정
+        try {
+            userId = UserLoggedIn.getUser().getInt("id");
+        } catch (JSONException e) {
+            Log.e("Exception", "JSONException occurred in setting user");
+            e.printStackTrace();
+        }
+        // 방 아이디 설정
+        roomId = intent.getExtras().getInt("room_id");
 
 
         initRoom();
@@ -307,6 +321,69 @@ public class RoomActivity extends AppCompatActivity{
                     public void onClick(DialogInterface dialog, int pos) {
                         userId = memberIds.get(pos);
                         setEvent(curEvent.getEventId());
+                    }
+                });
+                builder.show();
+            }
+        });
+
+        addTabBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater inflater = getLayoutInflater();
+                View alertLayoutView = inflater.inflate(R.layout.dialog_create_room, null);
+                final EditText roomName = alertLayoutView.findViewById(R.id.roomNameEditText);
+                final EditText roomPW = alertLayoutView.findViewById(R.id.roomPWEditText);
+                final EditText eventName = alertLayoutView.findViewById(R.id.eventNameEditText);
+                final CheckBox checkBox = alertLayoutView.findViewById(R.id.roomCreateCheckBox);
+                TextView roomNameTxt, roomPwdTxt, checkTxt;
+
+                roomNameTxt = alertLayoutView.findViewById(R.id.room_name_txt);
+                roomPwdTxt = alertLayoutView.findViewById(R.id.room_pwd_txt);
+                checkTxt = alertLayoutView.findViewById(R.id.create_check_txt);
+
+                roomNameTxt.setVisibility(View.GONE);
+                roomPwdTxt.setVisibility(View.GONE);
+                checkTxt.setVisibility(View.GONE);
+
+                roomName.setVisibility(View.GONE);
+                roomPW.setVisibility(View.GONE);
+                checkBox.setVisibility(View.GONE);
+
+                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        if (isChecked) {
+                            // 세부 항목 정산
+                        } else {
+                            // 세부 항목 정산 X
+                        }
+                    }
+                });
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
+                builder.setTitle("이벤트 생성하기");
+                builder.setView(alertLayoutView);
+                builder.setCancelable(false); // 바깥 클릭해도 안꺼지게
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // 방 생성 취소시 액션
+                    }
+                });
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String eventName_s = eventName.getText().toString();
+
+                        //DB에 항목 추가
+                        JSONObject sql_event = new SQLSender().
+                                sendSQL("INSERT into events (eventname, roomId, managerId, payerId," +
+                                "step, currencyType) values ('"+ eventName_s+ "','" +
+                                        roomId +"','"+
+                                        userId +"','"+
+                                        userId+"','0','0');");
+                        initRoom();
                     }
                 });
                 builder.show();
@@ -447,18 +524,6 @@ public class RoomActivity extends AppCompatActivity{
     }
 
     private void initRoom() {
-        Intent intent = getIntent();
-        // 사용자 아이디 설정
-        try {
-            userId = UserLoggedIn.getUser().getInt("id");
-        } catch (JSONException e) {
-            Log.e("Exception", "JSONException occurred in setting user");
-            e.printStackTrace();
-        }
-        
-        // 방 아이디 설정
-        roomId = intent.getExtras().getInt("room_id");
-
         // 방 이름 불러오기
         JSONObject sqlName = new SQLSender().
                 sendSQL("SELECT roomname FROM rooms WHERE id="+roomId);
@@ -538,6 +603,8 @@ public class RoomActivity extends AppCompatActivity{
         LinearLayoutManager layoutManager =
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         tabListView.setLayoutManager(layoutManager);
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
 
         eventAdapter = new EventAdapter(roomEvents, new EventAdapter.TabOnClickListener() {
             @Override
@@ -551,9 +618,6 @@ public class RoomActivity extends AppCompatActivity{
             }
         });
         tabListView.setAdapter(eventAdapter);
-
-        RoomTabDecoration tabDecoration = new RoomTabDecoration();
-        tabListView.addItemDecoration(tabDecoration);
     }
 
     private void setEvent(Integer eventId) {
