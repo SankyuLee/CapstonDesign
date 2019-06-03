@@ -165,8 +165,10 @@ public class RoomListActivity extends AppCompatActivity
                 Intent intent = new Intent(RoomListActivity.this, RoomActivity.class);
                 String room_id = list.get(position).getRoom_tag();
 
-                intent.putExtra("room_id",room_id);
-                startActivityForResult(intent,REQUEST_WO_EVENT);
+                Toast.makeText(RoomListActivity.this,"room_id:"+new Integer(room_id),Toast.LENGTH_LONG).show();
+
+                intent.putExtra("room_id",new Integer(room_id));
+                //startActivity(intent);
             }
         });
 
@@ -226,13 +228,14 @@ public class RoomListActivity extends AppCompatActivity
                                 JSONObject sql_roomList = new SQLSender().sendSQL("INSERT into roomLists(userId, roomId) values" +
                                         "('"+user_id+"','"+room_tag+"');");
 
+                                JSONObject sql_event = new SQLSender().sendSQL("INSERT into events(eventname, roomId, managerId, payerId," +
+                                        "step, currencyType) values ('"+ eventName_s+"','"+room_tag+"','"+user_id+"','"+user_id+"','0','0');");
+
                                 Intent intent;
                                 intent = new Intent(RoomListActivity.this, RoomActivity.class);
 
-                                intent.putExtra("room_id",(new Integer(room_tag)).toString());
-                                intent.putExtra("event_name",eventName_s);
-
-                                startActivityForResult(intent,REQUEST_W_EVENT);
+                                intent.putExtra("room_id",room_tag);
+                                //startActivity(intent);
                             }
                         }catch (JSONException e){
                             e.printStackTrace();

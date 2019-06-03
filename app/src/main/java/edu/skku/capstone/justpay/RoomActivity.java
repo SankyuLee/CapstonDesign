@@ -397,8 +397,8 @@ public class RoomActivity extends AppCompatActivity{
         userId = 1;
 
         // 방 아이디 설정
-        // roomId = intent.getExtras().getInt("roomId");
-        roomId = 1;
+        roomId = intent.getExtras().getInt("room_id");
+        Toast.makeText(this, "roomid: "+roomId,Toast.LENGTH_LONG).show();
 
         // 방 이름 불러오기
         JSONObject sqlName = new SQLSender().
