@@ -566,7 +566,7 @@ public class RoomActivity extends AppCompatActivity{
 
         // 방 내부에 이벤트 목록 생성 및 기본 이벤트 설정
         initEvents();
-        setEvent(roomEvents.get(0).getEventId());
+        setEvent(roomEvents.get(roomEvents.size()-1).getEventId());
     }
 
     private void initEvents() {
@@ -609,6 +609,8 @@ public class RoomActivity extends AppCompatActivity{
         eventAdapter = new EventAdapter(roomEvents, new EventAdapter.TabOnClickListener() {
             @Override
             public void onTabClicked(int position) {
+                eventAdapter.setLastSelectedIndex(position);
+                eventAdapter.notifyDataSetChanged();
                 setEvent(roomEvents.get(position).getEventId());
             }
 
