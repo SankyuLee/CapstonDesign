@@ -483,7 +483,7 @@ public class RoomActivity extends AppCompatActivity{
                 for (int i = 0; i < memberResult.length(); i++) {
                     JSONObject member = memberResult.getJSONObject(i);
                     roomMembers.add(new Member(
-                            member.getInt("id"),
+                            member.getInt("userId"),
                             member.getString("nickname"),
                             member.getString("email"),
                             member.getString("phone")
