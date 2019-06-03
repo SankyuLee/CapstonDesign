@@ -63,8 +63,39 @@ public class ResultActivity2 extends AppCompatActivity {
         customadapter.itemlists = new ArrayList<> ();
         Intent intent = getIntent(); /*데이터 수신*/
 
-        roomId = intent.getExtras().getInt("roomId"); /*int형*/
-        eventId = intent.getExtras().getInt("eventId"); /*int형*/
+        try{
+            roomId = intent.getExtras().getInt("roomId"); /*int형*/
+            eventId = intent.getExtras().getInt("eventId"); /*int형*/
+        }
+        catch (NullPointerException e) {
+            Log.e("Exception", "NullPointerException occurred in ResultActivity1.java");
+            e.printStackTrace();
+        }
+        try{
+            eventId = intent.getData().toString().indexOf("eventId=");
+            eventId = Integer.parseInt(intent.getData().toString().substring(eventId+8, eventId+9));
+            roomId = intent.getData().toString().indexOf("roomId=");
+            roomId = Integer.parseInt(intent.getData().toString().substring(roomId+7, roomId+8));
+
+        }
+        catch (NullPointerException e) {
+            Log.e("Exception", "NullPointerException occurred in ResultActivity1.java");
+            e.printStackTrace();
+        }
+
+        try{
+            loginUser = UserLoggedIn.getUser();
+            if(loginUser == null)
+                loginUserId = 0;
+            else
+                loginUserId = loginUser.getInt("id");
+
+
+        }
+        catch (JSONException e) {
+            Log.e("Exception", "JSONException occurred in ResultActivity1.java");
+            e.printStackTrace();
+        }
         int countup = 0;
         ArrayList<ArrayList<items_person>> personlistbyitem = new ArrayList<>() ;
         customadapter.personlists = personlistbyitem;
@@ -192,7 +223,10 @@ public class ResultActivity2 extends AppCompatActivity {
             JSONObject usertemp = new SQLSender().sendSQL("SELECT nickname from users where id ="+payerId); //유저 이름 알아내기
             payerName = usertemp.getJSONArray("result").getJSONObject(0).getString("nickname");
             TextView payerResult = (TextView)findViewById(R.id.textView6);
-            payerResult.setText(payerName+"님께 "+loginTotalPay+"원을 전송해 주세요");
+            if(loginTotalPay != 0)
+                payerResult.setText(payerName+"님께 "+loginTotalPay+"원을 전송해 주세요");
+            else
+                payerResult.setText(payerName+"님께서 결제하셨습니다");
 
         } catch (JSONException e) {
             Log.e("Exception", "JSONException occurred in ExampleActivity.java");
@@ -245,8 +279,8 @@ public class ResultActivity2 extends AppCompatActivity {
                                     .addButton(new ButtonObject("앱에서 보기", LinkObject.newBuilder()
                                             .setWebUrl("'https://developers.kakao.com")
                                             .setMobileWebUrl("'market://details?id=edu.skku.capstone.justpay")
-                                            .setAndroidExecutionParams("key1=value1")
-                                            .setIosExecutionParams("key1=value1")
+                                            .setAndroidExecutionParams("eventId="+eventId +"&" +"roomId="+roomId)
+                                            .setIosExecutionParams("eventId="+eventId +"&" +"roomId="+roomId)
                                             .build()))
                                     .build();
 
