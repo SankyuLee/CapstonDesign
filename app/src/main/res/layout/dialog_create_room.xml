@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="15dp">
+    android:padding="30dp">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,15 +17,17 @@
             android:layout_height="wrap_content"
             android:layout_weight=".3"
             android:text="방 이름" />
+
         <EditText
+            android:id="@+id/roomNameEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".7"
-            android:id="@+id/roomNameEditText"
             android:imeOptions="actionNext"
-            android:maxLines="1"
-            android:inputType="text" />
+            android:inputType="text"
+            android:maxLines="1" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,43 +40,49 @@
             android:layout_height="wrap_content"
             android:layout_weight=".3"
             android:text="방 비밀번호" />
+
         <EditText
+            android:id="@+id/roomPWEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".7"
-            android:inputType="textPassword"
-            android:id="@+id/roomPWEditText"
-            android:imeOptions="actionNext" />
+            android:imeOptions="actionNext"
+            android:inputType="textPassword" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal">
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".3"
             android:text="이벤트 이름" />
+
         <EditText
+            android:id="@+id/eventNameEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".7"
-            android:id="@+id/eventNameEditText"
             android:imeOptions="actionDone"
-            android:maxLines="1"
-            android:inputType="text" />
+            android:inputType="text"
+            android:maxLines="1" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_marginTop="25dp">
+        android:orientation="horizontal">
+
         <CheckBox
+            android:id="@+id/roomCreateCheckBox"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/roomCreateCheckBox"/>
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/create_check_txt"

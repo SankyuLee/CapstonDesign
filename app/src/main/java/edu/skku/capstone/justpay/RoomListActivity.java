@@ -68,6 +68,9 @@ public class RoomListActivity extends AppCompatActivity
 
     private boolean isMenuCollapsed = true;
 
+    ArrayList<RoomList_item> list;
+    RoomListAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,8 +100,8 @@ public class RoomListActivity extends AppCompatActivity
         textView_name.setText(user_nickname);
         textView_email.setText(user_email);
 
-        final ArrayList<RoomList_item> list = new ArrayList<RoomList_item>();
-        final RoomListAdapter adapter = new RoomListAdapter(this, list);
+        list = new ArrayList<RoomList_item>();
+        adapter = new RoomListAdapter(this, list);
 
         JSONObject sql_get_room = new SQLSender().sendSQL("SELECT * from roomLists where userId = '"+user_id+"';");
         try{
@@ -249,6 +252,29 @@ public class RoomListActivity extends AppCompatActivity
         room_search_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                LayoutInflater inflater = getLayoutInflater();
+                View alertLayoutView = inflater.inflate(R.layout.dialog_search_room, null);
+
+                final EditText room_id_edit = alertLayoutView.findViewById(R.id.room_id_edit);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(RoomListActivity.this); // context 변경 (-Activity.this -> this)
+                builder.setTitle("방 검색하기");
+                builder.setView(alertLayoutView);
+                builder.setCancelable(false); // 바깥 클릭해도 안꺼지게
+
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        int room_id = new Integer(room_id_edit.getText().toString());
+                        enterRoom(room_id);
+                    }
+                });
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+                builder.show();
 
             }
         });
@@ -389,6 +415,62 @@ public class RoomListActivity extends AppCompatActivity
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void enterRoom(final int room_id){
+        final String room_name;
+        final String room_pw;
+
+        JSONObject get_room_name = new SQLSender().sendSQL("SELECT * from rooms where id = '"+room_id+"';");
+        try {
+            if(!get_room_name.getBoolean("isError")){
+                room_name = get_room_name.getJSONArray("result").getJSONObject(0).getString("roomname");
+                room_pw = get_room_name.getJSONArray("result").getJSONObject(0).getString("password");
+
+                LayoutInflater inflater = getLayoutInflater();
+                View alertLayoutView = inflater.inflate(R.layout.dialog_enter_room, null);
+
+                TextView room_name_text= alertLayoutView.findViewById(R.id.room_name_text);
+                final EditText room_pw_edit = alertLayoutView.findViewById(R.id.room_pw_edit);
+
+                room_name_text.setText(room_name);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(RoomListActivity.this); // context 변경 (-Activity.this -> this)
+                builder.setTitle("방 입장하기");
+                builder.setView(alertLayoutView);
+                builder.setCancelable(false); // 바깥 클릭해도 안꺼지게
+
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String room_pw_entered = room_pw_edit.getText().toString();
+                        if(room_pw_entered.equals(room_pw)){
+                            //방 입장
+                            RoomList_item item = new RoomList_item(new Integer(room_id).toString(), room_name);
+                            list.add(item);
+                            adapter.notifyDataSetChanged();
+
+                            JSONObject sql_roomList = new SQLSender().sendSQL("INSERT into roomLists(userId, roomId) values" +
+                                    "('"+user_id+"','"+room_id+"');");
+
+                            Intent intent = new Intent(RoomListActivity.this, RoomActivity.class);
+                            intent.putExtra("room_id",new Integer(room_id));
+                            startActivity(intent);
+                        }else{
+                            Toast.makeText(RoomListActivity.this, "비밀번호가 틀렸습니다",Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+                builder.show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setUser(){
