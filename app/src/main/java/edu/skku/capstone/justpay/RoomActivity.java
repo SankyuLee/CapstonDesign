@@ -817,10 +817,15 @@ public class RoomActivity extends AppCompatActivity{
                     builder.setItems(items, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int pos) {  // pos 0: 사용자별 결과 확인, pos 1: 항목별 결과 확인
                             Intent intent;
-                            intent = new Intent(RoomActivity.this, ResultActivity1.class);
+                            if (pos == 0 ) {
+                                intent = new Intent(RoomActivity.this, ResultActivity1.class);
+                            } else {
+                                intent = new Intent(RoomActivity.this, ResultActivity2.class);
+                            }
                             intent.putExtra("roomId", roomId);
                             intent.putExtra("eventId", curEvent.getEventId());
                             startActivity(intent);
+                            finish();
                         }
                     });
                     builder.show();
