@@ -1,6 +1,7 @@
 package edu.skku.capstone.justpay;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
 import com.kakao.auth.Session;
+import com.kakao.usermgmt.LoginButton;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
 
@@ -32,11 +34,18 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etid;
     private EditText etps;
 
+    private Context mContext;
+    private LoginButton btn_kakao_login;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        mContext = getApplicationContext();
+
+        // Kakao login
+        btn_kakao_login = (LoginButton) findViewById(R.id.btn_kakao_login);
 
         appData = getSharedPreferences("appData",MODE_PRIVATE);
         saveLoginData = appData.getBoolean("SAVE_LOGIN_DATA",false);
