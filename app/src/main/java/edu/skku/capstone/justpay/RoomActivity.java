@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -75,9 +76,11 @@ public class RoomActivity extends AppCompatActivity{
     private Event curEvent;
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
+    private AsyncTask<Integer, String, String> eventJoinCheckTask; // 입력 인원 상태를 분석하는 태스크
+    private ArrayList<Member> curJoinMembers; // 입력에 참여하고 있는 멤버 목록
+
     private ArrayList<Integer> billIds;
     private int curReceiptIndex; // 사용자가 보고 있는 영수증 인덱스
-    private int curJoinMemberNum; // 입력에 참여하고 있는 인원 수
 
     // 앨범에서 사진을 요청하는 Flag
     private static final int PICK_FROM_ALBUM = 1;
@@ -496,6 +499,18 @@ public class RoomActivity extends AppCompatActivity{
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            if (eventJoinCheckTask.getStatus() == AsyncTask.Status.RUNNING) {
+                eventJoinCheckTask.cancel(true);
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
     // 갤러리에서 사진을 가지고 왔을 때의 행동 규정
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -730,6 +745,70 @@ public class RoomActivity extends AppCompatActivity{
 
         // 하단바 설정
         setBottomContainer();
+
+        // 이벤트 접속 인원 확인
+        curJoinMembers = new ArrayList<>();
+        eventJoinCheckTask = new AsyncTask<Integer, String, String>() {
+            @Override
+            protected String doInBackground(Integer... integers) {
+                String joinMemberResult = "";
+                while (true) {
+                    curJoinMembers.clear();
+                    joinMemberResult = "";
+                    // DB 에서 현재 접속중인 인원 명단 받아옴
+                    JSONObject sqlJoinMember = new SQLSender().
+                            sendSQL("SELECT * FROM usersWorkingOn " +
+                                    "JOIN users ON usersWorkingOn.userId = users.id " +
+                                    "WHERE eventId="+curEvent.getEventId());
+                    try {
+                        if (!sqlJoinMember.getBoolean("isError")) {
+                            JSONArray memberJoinResult = sqlJoinMember.getJSONArray("result");
+                            for (int i = 0; i < memberJoinResult.length(); i++) {
+                                JSONObject member = memberJoinResult.getJSONObject(i);
+                                curJoinMembers.add(new Member(
+                                        member.getInt("userId"),
+                                        member.getString("nickname"),
+                                        member.getString("email"),
+                                        member.getString("phone")
+                                ));
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    // 레이아웃에 결과 적용
+                    joinMemberResult = "" + curJoinMembers.size() + "명이 작업중 ⋯ ";
+                    for (int i = 0; i < curJoinMembers.size(); i++) {
+                        joinMemberResult += curJoinMembers.get(i).getMemberName() + " ";
+                    }
+                    publishProgress(joinMemberResult);
+
+                    // 5초마다 실행
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (isCancelled()) break;
+                }
+
+                return joinMemberResult;
+            }
+
+            @Override
+            protected void onProgressUpdate(String... values) {
+                super.onProgressUpdate(values);
+                typingStatus.setText(values[0]);
+            }
+
+            @Override
+            protected void onCancelled() {
+                super.onCancelled();
+            }
+        };
+        eventJoinCheckTask.execute();
     }
 
     // 하단바 설정
