@@ -1,26 +1,32 @@
 package edu.skku.capstone.justpay;
 
+import android.app.Activity;
 import android.app.Application;
 
-import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
 
 public class GlobalApplication extends Application {
     private static GlobalApplication instance;
+    private static volatile Activity currentActivity = null;
 
-    public static GlobalApplication getGlobalApplicationContext() {
-        if (instance == null) {
-            throw new IllegalStateException("This Application does not inherit com.kakao.GlobalApplication");
-        }
+    public static GlobalApplication getInstance() {
         return instance;
     }
-    @Override
+
     public void onCreate() {
         super.onCreate();
-        instance = this;
-
+        GlobalApplication.instance = this;
         KakaoSDK.init(new KakaoSDKAdapter());
     }
+
+    public static Activity getCurrentActivity() {
+        return currentActivity;
+    }
+
+    public static void setCurrentActivity(Activity currentActivity) {
+        GlobalApplication.currentActivity = currentActivity;
+    }
+
     @Override
     public void onTerminate() {
         super.onTerminate();

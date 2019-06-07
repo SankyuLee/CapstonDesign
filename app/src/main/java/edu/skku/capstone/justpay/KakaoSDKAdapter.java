@@ -1,7 +1,7 @@
 package edu.skku.capstone.justpay;
 
+import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.Nullable;
 
 import com.kakao.auth.ApprovalType;
 import com.kakao.auth.AuthType;
@@ -15,7 +15,7 @@ public class KakaoSDKAdapter extends KakaoAdapter {
         return new ISessionConfig() {
             @Override
             public AuthType[] getAuthTypes() {
-                return new AuthType[] {AuthType.KAKAO_ACCOUNT};
+                return new AuthType[] {AuthType.KAKAO_LOGIN_ALL};
             }
 
             @Override
@@ -28,7 +28,6 @@ public class KakaoSDKAdapter extends KakaoAdapter {
                 return false;
             }
 
-            @Nullable
             @Override
             public ApprovalType getApprovalType() {
                 return ApprovalType.INDIVIDUAL;
@@ -42,9 +41,12 @@ public class KakaoSDKAdapter extends KakaoAdapter {
     }
     public IApplicationConfig getApplicationConfig() {
         return new IApplicationConfig() {
+
+            protected Activity getTopActivity() {return GlobalApplication.getCurrentActivity();}
+
             @Override
             public Context getApplicationContext() {
-                return GlobalApplication.getGlobalApplicationContext();
+                return GlobalApplication.getInstance();
             }
         };
     }

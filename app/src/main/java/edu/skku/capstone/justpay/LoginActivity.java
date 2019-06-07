@@ -33,9 +33,9 @@ public class LoginActivity extends AppCompatActivity {
     private Button btn_login;
     private EditText etid;
     private EditText etps;
-
     private Context mContext;
     private LoginButton btn_kakao_login;
+    private ISessionCallback callback;
 
 
     @Override
@@ -44,8 +44,22 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         mContext = getApplicationContext();
 
+
         // Kakao login
         btn_kakao_login = (LoginButton) findViewById(R.id.btn_kakao_login);
+        callback = new ISessionCallback() {
+            @Override
+            public void onSessionOpened() {
+                Session.getCurrentSession().addCallback(callback);
+            }
+
+            @Override
+            public void onSessionOpenFailed(KakaoException exception) {
+
+            }
+        };
+
+
 
         appData = getSharedPreferences("appData",MODE_PRIVATE);
         saveLoginData = appData.getBoolean("SAVE_LOGIN_DATA",false);
