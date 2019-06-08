@@ -2,18 +2,21 @@ package edu.skku.capstone.justpay;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.kakao.auth.ErrorCode;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
-import com.kakao.usermgmt.callback.MeResponseCallback;
-import com.kakao.usermgmt.response.model.UserProfile;
+import com.kakao.usermgmt.callback.MeV2ResponseCallback;
+import com.kakao.usermgmt.response.MeV2Response;
 import com.kakao.util.helper.log.Logger;
 
-public class KakaoSignupActivity extends Activity {
 
+public class KakaoSignupActivity extends Activity {
+    String username = null;
+    private SharedPreferences appData;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +24,7 @@ public class KakaoSignupActivity extends Activity {
     }
 
     protected void requestMe() {
-        UserManagement.getInstance().requestMe(new MeResponseCallback() {
+        UserManagement.getInstance().me(new MeV2ResponseCallback() {
             @Override
             public void onFailure(ErrorResult errorResult) {
                 String message = "Failed to get user info. msg = " + errorResult;
@@ -36,19 +39,16 @@ public class KakaoSignupActivity extends Activity {
                     redirectLoginActivity(); // when failed
                 }
             }
+            @Override
             public void onSessionClosed(ErrorResult errorResult) {redirectLoginActivity();}
 
             @Override
-            public void onNotSignedUp() {
-                showSignup();
-            }
-            @Override
-            public void onSuccess(UserProfile result) {
-                Logger.d("UserProfile : " + result);
-                Log.v("user ",result.toString());
-                redirectMainActivity(); // when success
+            public void onSuccess(MeV2Response response) {
+                username = response.getNickname();
+                redirectSignupActivity(); // when success
             }
         });
+
     }
     protected void showSignup() {
         redirectLoginActivity();
@@ -60,8 +60,14 @@ public class KakaoSignupActivity extends Activity {
         finish();
     }
 
-    private void redirectMainActivity() {
-        startActivity(new Intent(this, RoomListActivity.class));
+    private void redirectSignupActivity() {
+        Intent intent = new Intent(this, SignupActivity.class);
+        intent.putExtra("nickname",username);
+        appData = getSharedPreferences("appData",MODE_PRIVATE);
+        SharedPreferences.Editor editor = appData.edit();
+        editor.putString("nn",username);
+        editor.commit();
+        startActivity(new Intent(this, SignupActivity.class));
         finish();
     }
 }
