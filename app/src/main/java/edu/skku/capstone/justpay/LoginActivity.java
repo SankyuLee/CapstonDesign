@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInstaller;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -47,17 +48,9 @@ public class LoginActivity extends AppCompatActivity {
 
         // Kakao login
         btn_kakao_login = (LoginButton) findViewById(R.id.btn_kakao_login);
-        callback = new ISessionCallback() {
-            @Override
-            public void onSessionOpened() {
-                Session.getCurrentSession().addCallback(callback);
-            }
+        callback = new SessionCallback();
+        Session.getCurrentSession().addCallback(callback);
 
-            @Override
-            public void onSessionOpenFailed(KakaoException exception) {
-
-            }
-        };
 
 
 
@@ -119,4 +112,39 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        Session.getCurrentSession().removeCallback(callback);
+    }
+
+    private class SessionCallback implements ISessionCallback{
+
+        @Override
+        public void onSessionOpened() {
+            redirectSignupActivity();
+        }
+
+        @Override
+        public void onSessionOpenFailed(KakaoException exception) {
+            if (exception != null) {
+                Logger.e(exception);
+            }
+            setContentView(R.layout.activity_login);
+        }
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    protected void redirectSignupActivity() {
+        final Intent intent = new Intent(this, KakaoSignupActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(intent);
+        finish();
+    }
+
 }
