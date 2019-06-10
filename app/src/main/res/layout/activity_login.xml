@@ -139,7 +139,7 @@
             android:layout_width="395dp"
             android:layout_height="wrap_content">
             <com.kakao.usermgmt.LoginButton
-                android:id="@+id/com_kakao_login"
+                android:id="@+id/btn_kakao_login"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
                 android:layout_weight="1"

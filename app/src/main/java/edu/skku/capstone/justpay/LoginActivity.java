@@ -1,9 +1,11 @@
 package edu.skku.capstone.justpay;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
 import com.kakao.auth.Session;
+import com.kakao.usermgmt.LoginButton;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
 
@@ -38,24 +41,42 @@ public class LoginActivity extends AppCompatActivity {
     private Button btn_login;
     private EditText etid;
     private EditText etps;
+    private Context mContext;
+    private LoginButton btn_kakao_login;
+    private ISessionCallback callback;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-         /*   try {
-                PackageInfo info = getPackageManager().getPackageInfo("edu.skku.capstone.justpay", PackageManager.GET_SIGNATURES);
-                for (Signature signature : info.signatures) {
-                    MessageDigest md = MessageDigest.getInstance("SHA");
-                    md.update(signature.toByteArray());
-                    Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-                }
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }*/
+        mContext = getApplicationContext();
+
+        // kakao login -> default = false
+        //SharedPreferences.Editor editor  = appData.edit();
+        //editor.putBoolean("kakao",false);
+        //editor.commit();
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md;
+                md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String some = new String(Base64.encode(md.digest(),0));
+                Log.e("Hash : ",some);
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        // Kakao login
+        btn_kakao_login = (LoginButton) findViewById(R.id.btn_kakao_login);
+        callback = new SessionCallback();
+        Session.getCurrentSession().addCallback(callback);
+
+
 
 
         appData = getSharedPreferences("appData",MODE_PRIVATE);
@@ -69,11 +90,11 @@ public class LoginActivity extends AppCompatActivity {
 
         //etid.requestFocus();
 
-       if (saveLoginData) {
-           etid.setText(str_id);
-           etps.setText(str_ps);
-           checkBox.setChecked(saveLoginData);
-       }
+        if (saveLoginData) {
+            etid.setText(str_id);
+            etps.setText(str_ps);
+            checkBox.setChecked(saveLoginData);
+        }
 
 
         btn_login = findViewById(R.id.btn_login);
@@ -116,4 +137,39 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        Session.getCurrentSession().removeCallback(callback);
+    }
+
+    private class SessionCallback implements ISessionCallback{
+
+        @Override
+        public void onSessionOpened() {
+            redirectSignupActivity();
+        }
+
+        @Override
+        public void onSessionOpenFailed(KakaoException exception) {
+            if (exception != null) {
+                Logger.e(exception);
+            }
+            setContentView(R.layout.activity_login);
+        }
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    protected void redirectSignupActivity() {
+        final Intent intent = new Intent(this, KakaoSignupActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(intent);
+        finish();
+    }
+
 }

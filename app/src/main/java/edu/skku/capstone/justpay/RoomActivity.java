@@ -9,8 +9,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.annotation.XmlRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,12 +20,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
+import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -73,9 +78,11 @@ public class RoomActivity extends AppCompatActivity{
     private Event curEvent;
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
+    private AsyncTask<Integer, String, String> eventJoinCheckTask; // 입력 인원 상태를 분석하는 태스크
+    private ArrayList<Member> curJoinMembers; // 입력에 참여하고 있는 멤버 목록
+
     private ArrayList<Integer> billIds;
     private int curReceiptIndex; // 사용자가 보고 있는 영수증 인덱스
-    private int curJoinMemberNum; // 입력에 참여하고 있는 인원 수
 
     // 앨범에서 사진을 요청하는 Flag
     private static final int PICK_FROM_ALBUM = 1;
@@ -87,6 +94,7 @@ public class RoomActivity extends AppCompatActivity{
 
     private RecyclerView tabListView;
     private EventAdapter eventAdapter;
+    private ImageButton addTabBtn;
 
     private TextView payerResult;
     private Button payerBtn;
@@ -133,6 +141,7 @@ public class RoomActivity extends AppCompatActivity{
         addBtn = findViewById(R.id.add_user_btn);
         changeBtn = findViewById(R.id.change_user_btn);
         tabListView = findViewById(R.id.room_tab_list);
+        addTabBtn = findViewById(R.id.add_tab_btn);
         payerResult = findViewById(R.id.payer_result);
         payerBtn = findViewById(R.id.payer_select_btn);
         receiptImg = findViewById(R.id.receipt_image);
@@ -152,7 +161,7 @@ public class RoomActivity extends AppCompatActivity{
 
         // Currency
         dropdown = findViewById(R.id.base_cur);
-        currency = new String[]{"대한민국 원", "미국 달러","일본 엔","유로"};
+        currency = new String[]{"KRW", "USD","JPY","EUR"};
         showCur = findViewById(R.id.viewCur);
         String seeCur = "조회";
         showCur.setText(Html.fromHtml("<u>"+seeCur+"</u>"));
@@ -161,16 +170,17 @@ public class RoomActivity extends AppCompatActivity{
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (dropdown.getSelectedItem().toString() == "대한민국 원") {
+                if (dropdown.getSelectedItem().toString() == "KRW") {
                     cur_currency = 0;
+
                 }
-                if (dropdown.getSelectedItem().toString() == "미국 달러") {
+                if (dropdown.getSelectedItem().toString() == "USD") {
                     cur_currency = 1;
                 }
-                if (dropdown.getSelectedItem().toString() == "일본 엔") {
+                if (dropdown.getSelectedItem().toString() == "JPY") {
                     cur_currency = 2;
                 }
-                if (dropdown.getSelectedItem().toString() == "유로") {
+                if (dropdown.getSelectedItem().toString() == "EUR") {
                     cur_currency = 3;
                 }
             }
@@ -180,16 +190,29 @@ public class RoomActivity extends AppCompatActivity{
 
             }
         });
+
         showCur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(RoomActivity.this,String.valueOf(dropdown.getSelectedItem()),Toast.LENGTH_LONG).show();
-                String url = "https://www.google.com/search?rlz=1C1SQJL_koKR817KR817&ei=Xn3zXPb0I9yAr7wPkJaH8Ac&q=currency+rate&oq=currency+rate&gs_l=psy-ab.3..0i70i258j0j0i20i263j0j0i203l6.1532.1934..2050...0.0..0.112.534.0j5......0....1..gws-wiz.......0i71j35i39j0i67.c06_il-k6yA";
+                String strlSO = dropdown.getSelectedItem().toString() + "KRW";
+                String strRate = "";
+                String url = String.format("http://earthquake.kr:23490/query/" + strlSO);
+                Toast.makeText(RoomActivity.this,url,Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
                 startActivity(intent);
             }
         });
 
+        Intent intent = getIntent();
+        // 사용자 아이디 설정
+        try {
+            userId = UserLoggedIn.getUser().getInt("id");
+        } catch (JSONException e) {
+            Log.e("Exception", "JSONException occurred in setting user");
+            e.printStackTrace();
+        }
+        // 방 아이디 설정
+        roomId = intent.getExtras().getInt("room_id");
 
 
         initRoom();
@@ -313,6 +336,69 @@ public class RoomActivity extends AppCompatActivity{
             }
         });
 
+        addTabBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater inflater = getLayoutInflater();
+                View alertLayoutView = inflater.inflate(R.layout.dialog_create_room, null);
+                final EditText roomName = alertLayoutView.findViewById(R.id.roomNameEditText);
+                final EditText roomPW = alertLayoutView.findViewById(R.id.roomPWEditText);
+                final EditText eventName = alertLayoutView.findViewById(R.id.eventNameEditText);
+                final CheckBox checkBox = alertLayoutView.findViewById(R.id.roomCreateCheckBox);
+                TextView roomNameTxt, roomPwdTxt, checkTxt;
+
+                roomNameTxt = alertLayoutView.findViewById(R.id.room_name_txt);
+                roomPwdTxt = alertLayoutView.findViewById(R.id.room_pwd_txt);
+                checkTxt = alertLayoutView.findViewById(R.id.create_check_txt);
+
+                roomNameTxt.setVisibility(View.GONE);
+                roomPwdTxt.setVisibility(View.GONE);
+                checkTxt.setVisibility(View.GONE);
+
+                roomName.setVisibility(View.GONE);
+                roomPW.setVisibility(View.GONE);
+                checkBox.setVisibility(View.GONE);
+
+                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        if (isChecked) {
+                            // 세부 항목 정산
+                        } else {
+                            // 세부 항목 정산 X
+                        }
+                    }
+                });
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
+                builder.setTitle("이벤트 생성하기");
+                builder.setView(alertLayoutView);
+                builder.setCancelable(false); // 바깥 클릭해도 안꺼지게
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // 방 생성 취소시 액션
+                    }
+                });
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String eventName_s = eventName.getText().toString();
+
+                        //DB에 항목 추가
+                        JSONObject sql_event = new SQLSender().
+                                sendSQL("INSERT into events (eventname, roomId, managerId, payerId," +
+                                "step, currencyType) values ('"+ eventName_s+ "','" +
+                                        roomId +"','"+
+                                        userId +"','"+
+                                        userId+"','0','0');");
+                        initRoom();
+                    }
+                });
+                builder.show();
+            }
+        });
+
         payerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -419,6 +505,18 @@ public class RoomActivity extends AppCompatActivity{
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            if (eventJoinCheckTask.getStatus() == AsyncTask.Status.RUNNING) {
+                eventJoinCheckTask.cancel(true);
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
     // 갤러리에서 사진을 가지고 왔을 때의 행동 규정
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -447,18 +545,6 @@ public class RoomActivity extends AppCompatActivity{
     }
 
     private void initRoom() {
-        Intent intent = getIntent();
-        // 사용자 아이디 설정
-        try {
-            userId = UserLoggedIn.getUser().getInt("id");
-        } catch (JSONException e) {
-            Log.e("Exception", "JSONException occurred in setting user");
-            e.printStackTrace();
-        }
-        
-        // 방 아이디 설정
-        roomId = intent.getExtras().getInt("room_id");
-
         // 방 이름 불러오기
         JSONObject sqlName = new SQLSender().
                 sendSQL("SELECT roomname FROM rooms WHERE id="+roomId);
@@ -483,7 +569,7 @@ public class RoomActivity extends AppCompatActivity{
                 for (int i = 0; i < memberResult.length(); i++) {
                     JSONObject member = memberResult.getJSONObject(i);
                     roomMembers.add(new Member(
-                            member.getInt("id"),
+                            member.getInt("userId"),
                             member.getString("nickname"),
                             member.getString("email"),
                             member.getString("phone")
@@ -501,7 +587,7 @@ public class RoomActivity extends AppCompatActivity{
 
         // 방 내부에 이벤트 목록 생성 및 기본 이벤트 설정
         initEvents();
-        setEvent(roomEvents.get(0).getEventId());
+        setEvent(roomEvents.get(roomEvents.size()-1).getEventId());
     }
 
     private void initEvents() {
@@ -538,10 +624,14 @@ public class RoomActivity extends AppCompatActivity{
         LinearLayoutManager layoutManager =
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         tabListView.setLayoutManager(layoutManager);
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
 
         eventAdapter = new EventAdapter(roomEvents, new EventAdapter.TabOnClickListener() {
             @Override
             public void onTabClicked(int position) {
+                eventAdapter.setLastSelectedIndex(position);
+                eventAdapter.notifyDataSetChanged();
                 setEvent(roomEvents.get(position).getEventId());
             }
 
@@ -551,9 +641,6 @@ public class RoomActivity extends AppCompatActivity{
             }
         });
         tabListView.setAdapter(eventAdapter);
-
-        RoomTabDecoration tabDecoration = new RoomTabDecoration();
-        tabListView.addItemDecoration(tabDecoration);
     }
 
     private void setEvent(Integer eventId) {
@@ -664,6 +751,70 @@ public class RoomActivity extends AppCompatActivity{
 
         // 하단바 설정
         setBottomContainer();
+
+        // 이벤트 접속 인원 확인
+        curJoinMembers = new ArrayList<>();
+        eventJoinCheckTask = new AsyncTask<Integer, String, String>() {
+            @Override
+            protected String doInBackground(Integer... integers) {
+                String joinMemberResult = "";
+                while (true) {
+                    curJoinMembers.clear();
+                    joinMemberResult = "";
+                    // DB 에서 현재 접속중인 인원 명단 받아옴
+                    JSONObject sqlJoinMember = new SQLSender().
+                            sendSQL("SELECT * FROM usersWorkingOn " +
+                                    "JOIN users ON usersWorkingOn.userId = users.id " +
+                                    "WHERE eventId="+curEvent.getEventId());
+                    try {
+                        if (!sqlJoinMember.getBoolean("isError")) {
+                            JSONArray memberJoinResult = sqlJoinMember.getJSONArray("result");
+                            for (int i = 0; i < memberJoinResult.length(); i++) {
+                                JSONObject member = memberJoinResult.getJSONObject(i);
+                                curJoinMembers.add(new Member(
+                                        member.getInt("userId"),
+                                        member.getString("nickname"),
+                                        member.getString("email"),
+                                        member.getString("phone")
+                                ));
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    // 레이아웃에 결과 적용
+                    joinMemberResult = "" + curJoinMembers.size() + "명이 작업중 ⋯ ";
+                    for (int i = 0; i < curJoinMembers.size(); i++) {
+                        joinMemberResult += curJoinMembers.get(i).getMemberName() + " ";
+                    }
+                    publishProgress(joinMemberResult);
+
+                    // 5초마다 실행
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (isCancelled()) break;
+                }
+
+                return joinMemberResult;
+            }
+
+            @Override
+            protected void onProgressUpdate(String... values) {
+                super.onProgressUpdate(values);
+                typingStatus.setText(values[0]);
+            }
+
+            @Override
+            protected void onCancelled() {
+                super.onCancelled();
+            }
+        };
+        eventJoinCheckTask.execute();
     }
 
     // 하단바 설정
@@ -751,10 +902,15 @@ public class RoomActivity extends AppCompatActivity{
                     builder.setItems(items, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int pos) {  // pos 0: 사용자별 결과 확인, pos 1: 항목별 결과 확인
                             Intent intent;
-                            intent = new Intent(RoomActivity.this, ResultActivity1.class);
+                            if (pos == 0 ) {
+                                intent = new Intent(RoomActivity.this, ResultActivity1.class);
+                            } else {
+                                intent = new Intent(RoomActivity.this, ResultActivity2.class);
+                            }
                             intent.putExtra("roomId", roomId);
                             intent.putExtra("eventId", curEvent.getEventId());
                             startActivity(intent);
+                            finish();
                         }
                     });
                     builder.show();

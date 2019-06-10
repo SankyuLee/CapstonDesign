@@ -11,6 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/tob_bar_size"
         android:background="@color/colorJustPay"
+        android:elevation="10dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -108,20 +109,34 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/add_tab_btn"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/add_tab_btn" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/room_tab_list"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:scrollbars="horizontal" />
+                android:scrollbars="none">
+
+            </android.support.v7.widget.RecyclerView>
+
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/room_payer_container"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="50dp"
@@ -281,10 +296,11 @@
                 android:clickable="true"
                 android:text="조회" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/room_status_container"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingLeft="40dp"
@@ -451,9 +467,8 @@
     <TextView
         android:id="@+id/room_typing_status"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:gravity="center"
-        android:text="@string/room_typing_status"
         app:layout_constraintBottom_toTopOf="@+id/room_bottom_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

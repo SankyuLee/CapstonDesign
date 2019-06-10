@@ -15,33 +15,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".3"
-            android:text="방 이름" />
-
-        <TextView
-            android:id="@+id/room_name_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".7" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".3"
-            android:text="방 비밀번호" />
+            android:text="방 번호" />
 
         <EditText
-            android:id="@+id/room_pw_edit"
+            android:id="@+id/room_id_edit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".7"
             android:imeOptions="actionDone"
-            android:inputType="textPassword" />
+            android:inputType="number" />
     </LinearLayout>
 </LinearLayout>

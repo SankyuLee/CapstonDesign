@@ -15,6 +15,7 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:name=".GlobalApplication"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".PersonalActivity"></activity>
@@ -53,6 +54,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".KakaoSignupActivity"></activity>
         <meta-data
         android:name="com.kakao.sdk.AppKey"
         android:value="@string/kakao_app_key" />

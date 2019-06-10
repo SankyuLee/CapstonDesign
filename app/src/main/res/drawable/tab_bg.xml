@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- 출처: https://wimir-dev.tistory.com/ [[위미르 개발팀] Android, iOS , Web 제작] -->
+    <item
+        android:bottom="0dp"
+        android:left="0dp"
+        android:right="0dp"
+        android:top="0dp">
+        <shape android:shape="rectangle" >
+            <solid android:color="#FFF" />
+        </shape>
+    </item>
+
+</layer-list>
