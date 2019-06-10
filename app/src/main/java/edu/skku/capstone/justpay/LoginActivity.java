@@ -52,6 +52,10 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         mContext = getApplicationContext();
 
+        // kakao login -> default = false
+        //SharedPreferences.Editor editor  = appData.edit();
+        //editor.putBoolean("kakao",false);
+        //editor.commit();
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {

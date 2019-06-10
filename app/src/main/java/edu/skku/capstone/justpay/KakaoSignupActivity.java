@@ -66,6 +66,7 @@ public class KakaoSignupActivity extends Activity {
         appData = getSharedPreferences("appData",MODE_PRIVATE);
         SharedPreferences.Editor editor = appData.edit();
         editor.putString("nn",username);
+        editor.putBoolean("kakao",true);
         editor.commit();
         startActivity(new Intent(this, SignupActivity.class));
         finish();

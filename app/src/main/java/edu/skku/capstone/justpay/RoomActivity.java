@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.annotation.XmlRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
+import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -159,7 +161,7 @@ public class RoomActivity extends AppCompatActivity{
 
         // Currency
         dropdown = findViewById(R.id.base_cur);
-        currency = new String[]{"대한민국 원", "미국 달러","일본 엔","유로"};
+        currency = new String[]{"KRW", "USD","JPY","EUR"};
         showCur = findViewById(R.id.viewCur);
         String seeCur = "조회";
         showCur.setText(Html.fromHtml("<u>"+seeCur+"</u>"));
@@ -168,16 +170,17 @@ public class RoomActivity extends AppCompatActivity{
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (dropdown.getSelectedItem().toString() == "대한민국 원") {
+                if (dropdown.getSelectedItem().toString() == "KRW") {
                     cur_currency = 0;
+
                 }
-                if (dropdown.getSelectedItem().toString() == "미국 달러") {
+                if (dropdown.getSelectedItem().toString() == "USD") {
                     cur_currency = 1;
                 }
-                if (dropdown.getSelectedItem().toString() == "일본 엔") {
+                if (dropdown.getSelectedItem().toString() == "JPY") {
                     cur_currency = 2;
                 }
-                if (dropdown.getSelectedItem().toString() == "유로") {
+                if (dropdown.getSelectedItem().toString() == "EUR") {
                     cur_currency = 3;
                 }
             }
@@ -187,11 +190,14 @@ public class RoomActivity extends AppCompatActivity{
 
             }
         });
+
         showCur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(RoomActivity.this,String.valueOf(dropdown.getSelectedItem()),Toast.LENGTH_LONG).show();
-                String url = "https://www.google.com/search?rlz=1C1SQJL_koKR817KR817&ei=Xn3zXPb0I9yAr7wPkJaH8Ac&q=currency+rate&oq=currency+rate&gs_l=psy-ab.3..0i70i258j0j0i20i263j0j0i203l6.1532.1934..2050...0.0..0.112.534.0j5......0....1..gws-wiz.......0i71j35i39j0i67.c06_il-k6yA";
+                String strlSO = dropdown.getSelectedItem().toString() + "KRW";
+                String strRate = "";
+                String url = String.format("http://earthquake.kr:23490/query/" + strlSO);
+                Toast.makeText(RoomActivity.this,url,Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
                 startActivity(intent);
             }
