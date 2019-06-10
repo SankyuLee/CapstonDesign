@@ -3,6 +3,7 @@ package edu.skku.capstone.justpay;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -299,10 +300,14 @@ public class ResultActivity2 extends AppCompatActivity {
                                     // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
                                 }
                             });
-                        }
-                        else
-                        {
-                            Toast.makeText(ResultActivity2.this,"아직 준비중입니다!",Toast.LENGTH_SHORT).show();
+                        } else if (pos == 1) { // Excel
+                            Uri uri = Uri.parse("http://52.68.56.145/excel?eventId="+eventId);
+                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                            startActivity(intent);
+                        } else if (pos == 2) { // URL
+                            Uri uri = Uri.parse("http://52.68.56.145/result?eventId="+eventId);
+                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                            startActivity(intent);
                         }
                     }
                 });
