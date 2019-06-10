@@ -31,6 +31,8 @@ import com.kakao.util.helper.log.Logger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import javax.xml.transform.Result;
+
 
 public class LoginActivity extends AppCompatActivity {
     private boolean saveLoginData;
@@ -44,8 +46,9 @@ public class LoginActivity extends AppCompatActivity {
     private Context mContext;
     private LoginButton btn_kakao_login;
     private ISessionCallback callback;
-
-
+    private int eventId;
+    private int roomId;
+    private boolean KakaoPath = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +58,19 @@ public class LoginActivity extends AppCompatActivity {
         // kakao login -> default = false
         //SharedPreferences.Editor editor  = appData.edit();
         //editor.putBoolean("kakao",false);
-        //editor.commit();
+        try{
+
+            Intent intent = getIntent(); /*데이터 수신*/
+            KakaoPath = intent.getBooleanExtra("KakaoPath",false);
+            roomId = intent.getExtras().getInt("roomId"); /*int형*/
+            eventId = intent.getExtras().getInt("eventId"); /*int형*/
+        }
+        catch (NullPointerException e) {
+            Log.e("Exception", "NullPointerException occurred in LoginAcitivity.java");
+            e.printStackTrace();
+        }
+
+
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
@@ -112,6 +127,12 @@ public class LoginActivity extends AppCompatActivity {
                 if (UserLoggedIn.LoginCheck(etid.getText().toString(), etps.getText().toString())) {
                     Toast.makeText(LoginActivity.this, "로그인에 성공하였습니다."+UserLoggedIn.getUser(), Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(LoginActivity.this, RoomListActivity.class);
+                    if(KakaoPath)
+                    {
+                        intent = new Intent(LoginActivity.this, ResultActivity1.class);
+                        intent.putExtra("roomId", roomId);
+                        intent.putExtra("eventId", eventId);
+                    }
                     startActivity(intent);
                 } else {
                     Toast.makeText(LoginActivity.this, "아이디 또는 비밀번호가 잘못되었습니다.", Toast.LENGTH_LONG).show();

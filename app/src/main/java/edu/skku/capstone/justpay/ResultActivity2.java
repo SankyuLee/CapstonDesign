@@ -1,6 +1,8 @@
 package edu.skku.capstone.justpay;
 
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -308,6 +310,10 @@ public class ResultActivity2 extends AppCompatActivity {
                             Uri uri = Uri.parse("http://52.68.56.145/result?eventId="+eventId);
                             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                             startActivity(intent);
+                            ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                            ClipData clipData = ClipData.newPlainText("resultURL", "http://52.68.56.145/result?eventId="+eventId);
+                            clipboardManager.setPrimaryClip(clipData);
+                            Toast.makeText(getApplication(), "URL이 복사되었습니다.",Toast.LENGTH_LONG).show();
                         }
                     }
                 });

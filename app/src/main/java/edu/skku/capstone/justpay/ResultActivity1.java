@@ -1,6 +1,8 @@
 package edu.skku.capstone.justpay;
 
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.DialogInterface;
 
 import android.content.Intent;
@@ -96,12 +98,17 @@ public class ResultActivity1 extends AppCompatActivity {
             Log.e("Exception", "NullPointerException occurred in ResultActivity1.java");
             e.printStackTrace();
         }
-        try{
+       try{
             eventId = intent.getData().toString().indexOf("eventId=");
             eventId = Integer.parseInt(intent.getData().toString().substring(eventId+8, eventId+9));
             roomId = intent.getData().toString().indexOf("roomId=");
             roomId = Integer.parseInt(intent.getData().toString().substring(roomId+7, roomId+8));
-
+           intent = new Intent(this, LoginActivity.class);
+           intent.putExtra("roomId", roomId);
+           intent.putExtra("eventId", eventId);
+           intent.putExtra("KakaoPath", true);
+           intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+           startActivity(intent);
         }
         catch (NullPointerException e) {
             Log.e("Exception", "NullPointerException occurred in ResultActivity1.java");
@@ -349,6 +356,12 @@ public class ResultActivity1 extends AppCompatActivity {
                             Uri uri = Uri.parse("http://52.68.56.145/result?eventId="+eventId);
                             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                             startActivity(intent);
+                            ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                            ClipData clipData = ClipData.newPlainText("resultURL", "http://52.68.56.145/result?eventId="+eventId);
+                            clipboardManager.setPrimaryClip(clipData);
+                            Toast.makeText(getApplication(), "URL이 복사되었습니다.",Toast.LENGTH_LONG).show();
+
+
                         }
                     }
                 });
