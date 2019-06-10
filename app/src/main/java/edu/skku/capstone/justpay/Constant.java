@@ -7,4 +7,8 @@ package edu.skku.capstone.justpay;
 final class Constant {
     static final String SERVER_IP = "52.68.56.145";
     static final String ER_DUP_ENTRY = "ER_DUP_ENTRY";
+    static final int KRW = 0;
+    static final int USD = 1;
+    static final int JPY = 2;
+    static final int EUR = 3;
 }

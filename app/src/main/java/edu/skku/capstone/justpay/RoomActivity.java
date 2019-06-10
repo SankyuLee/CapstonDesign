@@ -1,6 +1,7 @@
 package edu.skku.capstone.justpay;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -643,6 +644,7 @@ public class RoomActivity extends AppCompatActivity{
         tabListView.setAdapter(eventAdapter);
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void setEvent(Integer eventId) {
         // 이벤트 정보 설정
         for (int i = 0; i < roomEvents.size(); i++) {
@@ -751,6 +753,17 @@ public class RoomActivity extends AppCompatActivity{
 
         // 하단바 설정
         setBottomContainer();
+
+        // 현재 이벤트 접속 인원에 자신 추가 및 과거 접속 기록 삭제
+        try {
+            int id = UserLoggedIn.getUser().getInt("id");
+            new SQLSender().sendSQL("DELETE FROM usersWorkingOn WHERE userId=" + id + ";");
+            new SQLSender().sendSQL("INSERT INTO usersWorkingOn(userId, eventId) VALUES("+ id + ", "
+                    + curEvent.getEventId() + ");");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.d("Exception", "JSONException related to usersWorkingOn");
+        }
 
         // 이벤트 접속 인원 확인
         curJoinMembers = new ArrayList<>();
@@ -1076,5 +1089,15 @@ public class RoomActivity extends AppCompatActivity{
         Log.d("event", curEvent.getChartResult().keySet().toString());
         Log.d("event", curEvent.getChartResult().values().toString());
         Log.d("event", new Integer(curEvent.getEventStatus()).toString());
+    }
+
+    protected void onPause() {
+        super.onPause();
+        try {
+            new SQLSender().sendSQL("DELETE FROM usersWorkingOn WHERE userid="+UserLoggedIn.getUser().getInt("id")+";");
+        } catch (JSONException e) {
+            Log.d("Exception", "JSONException related to usersWorkingOn");
+            e.printStackTrace();
+        }
     }
 }
