@@ -864,11 +864,11 @@ public class RoomActivity extends AppCompatActivity{
 
                         // DB에 아이템 추가
                         JSONObject sqlItem = new SQLSender().
-                                sendSQL("INSERT INTO items (itemname, quantity, price, billId, currencyType)" +
+                                sendSQL("INSERT INTO items (itemname, quantity, price, billId) " +
                                         "VALUES (" + "'" + itemName + "'" + ", " +
                                         inputCount + ", " +
                                         itemCost + ", " +
-                                        billIds.get(0) + ","+ cur_currency + ")");
+                                        billIds.get(0) + ")");
                         try {
                             if (!sqlItem.getBoolean("isError")) {
                                 itemId = sqlItem.getJSONObject("result").getInt("insertId");
