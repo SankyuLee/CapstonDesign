@@ -274,7 +274,7 @@ public class ResultActivity2 extends AppCompatActivity {
                                             "https://ifh.cc/g/2wQ5V.png",
                                             LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
                                                     .setMobileWebUrl("https://developers.kakao.com").build())
-                                            .setDescrption(payerName+"님께 "+loginTotalPay+"원을 전송해 주세요!!")
+                                            .setDescrption(payerName+"님께서 정산 결과를 공유하셨습니다. \n Justpay로 접속해 지금 바로\n 결과를 확인하세요!!" )
                                             .build())
                                     .setSocial(SocialObject.newBuilder().setLikeCount(1008).setCommentCount(1008)
                                             .setSharedCount(1008).setViewCount(1008).build())

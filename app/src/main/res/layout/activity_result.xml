@@ -10,10 +10,15 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
 
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="1dp"
+        >
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -107,11 +112,11 @@
         <ExpandableListView
             android:id="@+id/listView"
             style="@style/Widget.AppCompat.ListView.DropDown"
-            android:groupIndicator="@null"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="#A8A8A8"
-            android:dividerHeight="1dp"></ExpandableListView>
+            android:dividerHeight="1dp"
+            android:groupIndicator="@null"></ExpandableListView>
     </LinearLayout>
 
     <Button

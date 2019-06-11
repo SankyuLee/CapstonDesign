@@ -149,7 +149,7 @@ public class ResultActivity1 extends AppCompatActivity {
                       JSONObject usertemp = new SQLSender().sendSQL("SELECT nickname from users where id ="+userId); //유저 이름 알아내기
                       userName = usertemp.getJSONArray("result").getJSONObject(0).getString("nickname");
 
-                      Toast.makeText(getApplicationContext(), userName, Toast.LENGTH_SHORT).show();
+                      //Toast.makeText(getApplicationContext(), userName, Toast.LENGTH_SHORT).show();
 
                       customadapter.personlists.add(new resultlist_item(userName, totalPay));
                       customadapter.itemlists.add(new ArrayList<personal_item>());
@@ -320,7 +320,7 @@ public class ResultActivity1 extends AppCompatActivity {
                                             "https://ifh.cc/g/2wQ5V.png",
                                             LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
                                                     .setMobileWebUrl("https://developers.kakao.com").build())
-                                            .setDescrption(payerName+"님께 "+loginTotalPay+"원을 전송해 주세요!!")
+                                            .setDescrption(payerName+"님께서 정산 결과를 공유하셨습니다. \n Justpay로 접속해 지금 바로 \n결과를 확인하세요!!" )
                                             .build())
                                     .setSocial(SocialObject.newBuilder().setLikeCount(1008).setCommentCount(1008)
                                             .setSharedCount(1008).setViewCount(1008).build())
