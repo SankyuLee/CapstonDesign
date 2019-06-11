@@ -513,8 +513,10 @@ public class RoomActivity extends AppCompatActivity{
             if (eventJoinCheckTask.getStatus() == AsyncTask.Status.RUNNING) {
                 eventJoinCheckTask.cancel(true);
             }
+            new SQLSender().sendSQL("DELETE FROM usersWorkingOn WHERE userid="+UserLoggedIn.getUser().getInt("id")+";");
         } catch (Exception e) {
-
+            Log.d("Exception", "JSONException related to onDestroy");
+            e.printStackTrace();
         }
     }
 
@@ -1091,13 +1093,4 @@ public class RoomActivity extends AppCompatActivity{
         Log.d("event", new Integer(curEvent.getEventStatus()).toString());
     }
 
-    protected void onPause() {
-        super.onPause();
-        try {
-            new SQLSender().sendSQL("DELETE FROM usersWorkingOn WHERE userid="+UserLoggedIn.getUser().getInt("id")+";");
-        } catch (JSONException e) {
-            Log.d("Exception", "JSONException related to usersWorkingOn");
-            e.printStackTrace();
-        }
-    }
 }
