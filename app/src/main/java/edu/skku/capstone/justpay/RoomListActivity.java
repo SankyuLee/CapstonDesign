@@ -469,6 +469,7 @@ public class RoomListActivity extends AppCompatActivity
                 builder.show();
             }
         } catch (JSONException e) {
+            Toast.makeText(RoomListActivity.this, "방이 존재하지 않습니다",Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
