@@ -127,8 +127,14 @@ public class ResultActivity2 extends AppCompatActivity {
                             int itempay = itemLists.getJSONArray("result").getJSONObject(j).getInt("price");//
                             int itemnum = userLists.getJSONArray("result").getJSONObject(k).getInt("quantity");
 
-
-                            customadapter.addPerson(j+countup, new items_person(userName,itempay,itemnum));
+                            try {
+                                customadapter.addPerson(j + countup, new items_person(userName, itempay, itemnum));
+                            }
+                            catch(IndexOutOfBoundsException e)
+                            {
+                                Log.e("Exception", "JSONException occurred in ResultActivity2.java");
+                                e.printStackTrace();
+                            }
 
                         }
 
