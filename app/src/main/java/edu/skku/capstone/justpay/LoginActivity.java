@@ -125,7 +125,6 @@ public class LoginActivity extends AppCompatActivity {
                 editor.commit();
 
                 if (UserLoggedIn.LoginCheck(etid.getText().toString(), etps.getText().toString())) {
-                    Toast.makeText(LoginActivity.this, "로그인에 성공하였습니다."+UserLoggedIn.getUser(), Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(LoginActivity.this, RoomListActivity.class);
                     if(KakaoPath)
                     {
