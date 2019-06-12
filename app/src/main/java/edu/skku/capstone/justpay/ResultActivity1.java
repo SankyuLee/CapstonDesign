@@ -32,6 +32,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -235,10 +236,22 @@ public class ResultActivity1 extends AppCompatActivity {
                 intent.putExtra("roomId", roomId);
                 intent.putExtra("eventId", eventId);
                 startActivity(intent);
+                finish();
             }
 
         });
+        ImageButton buttonBack = findViewById(R.id.backbutton);//뒤로가기
+        buttonBack.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent;
+                intent = new Intent(ResultActivity1.this, RoomActivity.class);
+                intent.putExtra("room_id", roomId);
+                startActivity(intent);
+                finish();
+            }
 
+        });
         Button buttonNoAsc = (Button) findViewById(R.id.orderbutton) ;
         buttonNoAsc.setOnClickListener(new Button.OnClickListener() {
             int state=0;
