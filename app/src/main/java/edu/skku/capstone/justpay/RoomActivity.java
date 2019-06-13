@@ -125,7 +125,7 @@ public class RoomActivity extends AppCompatActivity{
     Spinner  dropdown;
     String[] currency;
     TextView showCur;
-
+    String cur_val;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -195,12 +195,20 @@ public class RoomActivity extends AppCompatActivity{
         showCur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String strlSO = dropdown.getSelectedItem().toString() + "KRW";
-                String strRate = "";
-                String url = String.format("http://earthquake.kr:23490/query/" + strlSO);
-                Toast.makeText(RoomActivity.this,url,Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
-                startActivity(intent);
+                JSONObject sql_cur = new SQLSender().sendSQL("select value from currency where target ='" + dropdown.getSelectedItem().toString() + "';");
+
+                try {
+                    if(sql_cur.getBoolean("isError")) {
+                        Toast.makeText(RoomActivity.this, "error", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(RoomActivity.this,"1000 KWR은 "+sql_cur.getJSONArray("result").getJSONObject(0).getString("value")+ dropdown.getSelectedItem().toString() + " 입니다.",Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
             }
         });
 
