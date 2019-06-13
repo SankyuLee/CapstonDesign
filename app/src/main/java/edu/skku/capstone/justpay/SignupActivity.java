@@ -166,6 +166,9 @@ public class SignupActivity extends AppCompatActivity {
                             }
                         } else {
                             // 회원가입 성공
+                            SharedPreferences.Editor editor = appData.edit();
+                            editor.remove("nn");
+                            editor.commit();
                             Toast.makeText(SignupActivity.this, "회원가입에 성공하였습니다. 다시 로그인해 주세요.", Toast.LENGTH_LONG).show();
                             finish();
                         }
